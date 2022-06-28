@@ -90,7 +90,7 @@
             dataTpl.vendorTpl = '';
             if (dataTpl.vendor) {
                 dataTpl.vendorTpl = String.format(`<div class="container info-container">
-                        <span>Vendor</span> {name}
+                        <span>Area</span> {name}
                         <div class="info">{address} <br> <i>(Phone: {phone}, Email: {email})</i>
                         </div>
                     </div>`, dataTpl.vendor)

@@ -181,10 +181,10 @@ class WorkOrder extends Controller
             if(!$request->input('remove_site_id') && !$request->input('site_id')) return ['success' => false, 'message' => 'site_id OR remove_site_id Is Null'];
             if(!$request->input('activity_id')) return ['success' => false, 'message' => 'activity_id Is Null'];
             if(!$request->input('client_id')) return ['success' => false, 'message' => 'client_id Is Null'];
-            if(!$request->input('service_id')) return ['success' => false, 'message' => 'service_id Is Null'];
-            if(!$request->input('owner_id')) return ['success' => false, 'message' => 'owner_id Is Null'];
+            //if(!$request->input('service_id')) return ['success' => false, 'message' => 'service_id Is Null'];
+            //if(!$request->input('owner_id')) return ['success' => false, 'message' => 'owner_id Is Null'];
             if(!$request->input('description')) return ['success' => false, 'message' => 'description Is Null'];
-            if(!$request->input('no_wo')) return ['success' => false, 'message' => 'no_wo Is Null'];
+            //if(!$request->input('no_wo')) return ['success' => false, 'message' => 'no_wo Is Null'];
 
             $input = [
                 'site_id' => $request->input('site_id'),

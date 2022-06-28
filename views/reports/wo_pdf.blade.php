@@ -2,13 +2,13 @@
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
   overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .subtitle{font-family: "Times New Roman", Times, serif;font-size: 14;font-weight: bold; text-transform: uppercase;border: none;text-align:center;vertical-align:top;padding:3px 5px;}  
+.tg .subtitle{font-family: "Times New Roman", Times, serif;font-size: 14;font-weight: bold; text-transform: uppercase;border: none;text-align:center;vertical-align:top;padding:3px 5px;}
 .tg .subtitle2{font-weight: bold; border: none;text-align:left;vertical-align:top;padding: 3px}
 .tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top;padding: 2px}
 .page-break {
         page-break-after: always;
     }
-.title{font-family: "Times New Roman", Times, serif;font-size: 30;text-transform: uppercase;border: none;text-align:center;vertical-align:top;padding:3px 5px;}    
+.title{font-family: "Times New Roman", Times, serif;font-size: 30;text-transform: uppercase;border: none;text-align:center;vertical-align:top;padding:3px 5px;}
     header { position: fixed; top: -10px; left: 80%; right: 0px;height: 30px; }
     footer { position: fixed; bottom: -60px; left: 70%; right: 0px; height: 50px; }
 </style>
@@ -27,16 +27,10 @@
 @endforeach
 <body>
     <header>
-      @if($data->owner->id==1)
-        <img src="{{ public_path('images/logo_p1.jpeg') }}" style="height: 50">
-      @else <img src="{{ public_path('images/logo_5mb.png') }}" style="height: 50px">
-      @endif
+        <img src="{{ public_path('images/logo.jpeg') }}" style="height: 50">
     </header>
-    <footer>{{ $data->owner->name }}</footer>
 
-    <h2 class="title" style="padding-top: 200px">{{ $data->activity->name }} REPORT</h2>    
-    <h2 class="title">{{ $data->service->name }}</h2>
-    <h2 class="title">{{ $data->owner->name }}</h2>
+    <h2 class="title" style="padding-top: 200px">{{ $data->activity->name }} REPORT</h2>
     <div style="height:20px"></div>
     <h2 class="title">Nama Site</h2>
     <h2 class="title">
@@ -56,17 +50,15 @@
     <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 80px">
         <tr>
           <td class="tg-0pky" style="padding: 55px; padding-right: 220px" colspan="12">
-            @if($data->owner->id==1)
-              <img src="{{ public_path('images/logo_p1.jpeg') }}" style="height: 150">
-            @else <img src="{{ public_path('images/logo_5mb.png') }}" style="height: 150px">
-            @endif <br>{{ $data->owner->name }}<br> {{ $data->owner->address }}
+              <img src="{{ public_path('images/logo.jpeg') }}" style="height: 150">
+
           </td>
         </tr>
         <tr>
           <td class="tg-0pky" style="height:10px;border: none"colspan="12"></td>
         </tr>
         <tr>
-          <td class="tg-0pky" colspan="12">No Kontrak : 
+          <td class="tg-0pky" colspan="12">No Kontrak :
           @foreach($data->actions as $act)
             @foreach($act->details as $detail)
                 @if($detail->detail->name=='COF ID' && $detail->value<>''){{ $detail->value }}
@@ -134,14 +126,14 @@
       </tr>
       <tr>
         <td class="subtitle2" colspan="12">Data Site/ Location</td>
-      </tr>       
+      </tr>
       <tr>
         <td class="tg-0pky" style="font-weight: bold;text-align: center;" colspan="4">Items</td>
         <td class="tg-0pky" style="font-weight: bold;text-align: center;" colspan="8">Value</td>
-      </tr>     
+      </tr>
       <tr>
         <td class="tg-0pky" colspan="4">Nama Lokasi</td>
-        <td class="tg-0pky" colspan="8">        
+        <td class="tg-0pky" colspan="8">
           @if($data->site){{ $data->site->name }}
           @else {{ $data->removeSite->name }}
           @endif</td>
@@ -156,7 +148,7 @@
       </tr>
       <tr>
         <td class="tg-0pky" colspan="4">Latitude</td>
-        <td class="tg-0pky" colspan="8">        
+        <td class="tg-0pky" colspan="8">
           @if($data->site){{ $data->site->lat }}
           @else {{ $data->removeSite->lat }}
           @endif</td>
@@ -177,7 +169,7 @@
         <td class="tg-0pky" colspan="4">Nomor Telepon</td>
         <td class="tg-0pky" colspan="8">{{ $pic_phone }}</td>
       </tr>
-    </table>    
+    </table>
 
     <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 20px">
       <tr>
@@ -200,7 +192,7 @@
         <td class="tg-0pky" colspan="8">
           @if($data->site){{ $data->client->address }}
           @else {{ $data->removeSite->client->address }}
-          @endif          
+          @endif
         </td>
       </tr>
       <tr>
@@ -216,7 +208,7 @@
         <td class="tg-0pky" colspan="8">
           @if($data->site){{ $data->client->email }}
           @else {{ $data->removeSite->client->email }}
-          @endif          
+          @endif
         </td>
       </tr>
     </table>
@@ -245,13 +237,13 @@
         <td class="tg-0pky" colspan="4">Email</td>
         <td class="tg-0pky" colspan="8">{{ $data->vendor->email }}</td>
       </tr>
-    </table>    
+    </table>
     <div class="page-break"></div>
 
     <h2 class="subtitle" style="text-align: center;padding-top: 80px">HISTORY PROGRESS STATUS</h2>
 
     @foreach($data->actions as $act)
-      <?php $count = 0; $count_image = 0; $last_group =""; $value=""; $act_id = $act->id; $note = str_replace("\n", '<br>', $act->note)?> 
+      <?php $count = 0; $count_image = 0; $last_group =""; $value=""; $act_id = $act->id; $note = str_replace("\n", '<br>', $act->note)?>
       <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 80px">
         <tr style="padding-top: 20px">
           <td class="subtitle2" colspan="8">STATUS: {{ $act->status->name }}</td>
@@ -263,34 +255,34 @@
           <td class="subtitle2" style="font-style: italic;font-size: 10px;"colspan="12">Created by: {{ $act->createdBy->name }} ({{ $act->createdBy->role->name }})</td>
         </tr>
         <tr>
-          <td class="subtitle2" style="font-style: italic;font-size: 10px" colspan="12">Note / Description: {{ $note }}</td>          
+          <td class="subtitle2" style="font-style: italic;font-size: 10px" colspan="12">Note / Description: {{ $note }}</td>
         </tr>
       @foreach($act->status->details as $sts)
         @foreach($sts->actionDetails as $act_dtl)
-          @if($act_id == $act_dtl->action_id ) 
-            @if($act_dtl->value!="")               
+          @if($act_id == $act_dtl->action_id )
+            @if($act_dtl->value!="")
               @if($sts->type=='text')
-                <?php $value = $act_dtl->value; ?>  
+                <?php $value = $act_dtl->value; ?>
               @elseif($sts->type=='textarea')
                 <?php $value = str_replace("\n", '<br>', $act_dtl->value); ?>
               @elseif($sts->type=='datetime')
                 <?php $value = date('d M Y H:i', strtotime($act_dtl->value)); ?>
               @elseif($sts->type=='date')
-                <?php $value = date('d M Y', strtotime($act_dtl->value)); ?>  
+                <?php $value = date('d M Y', strtotime($act_dtl->value)); ?>
               @elseif($sts->type=='time')
-                <?php $value = date('H:i', strtotime($act_dtl->value)); ?> 
+                <?php $value = date('H:i', strtotime($act_dtl->value)); ?>
               @elseif($sts->type=='signature')
-                <?php $value = date('H:i', strtotime($act_dtl->value)); ?>                                   
+                <?php $value = date('H:i', strtotime($act_dtl->value)); ?>
               @endif
             @endif
 
-            @if($sts->type!='file' && $sts->type!='hide' && $value!="") 
-             <?php $count ++; ?>             
-              @if($count<=1) 
+            @if($sts->type!='file' && $sts->type!='hide' && $value!="")
+             <?php $count ++; ?>
+              @if($count<=1)
                 <tr>
                   <td class="tg-0pky" style="font-weight: bold; text-align: center;" colspan="4">Data</td>
                   <td class="tg-0pky" style="font-weight: bold; text-align: center;" colspan="8">Value</td>
-                </tr>  
+                </tr>
               @endif
               @if($value!=="")
                 @if($last_group!=$sts->group)
@@ -298,7 +290,7 @@
                   <tr>
                     <td class="tg-0pky" style="font-weight: bold;font-style: italic;"colspan="12">{{ $sts->group }}</td>
                   </tr>
-                @endif               
+                @endif
                   <tr>
                       <td class="tg-0pky" colspan="4">{{ $sts->name }}</td>
                         @if($sts->type=='signature')
@@ -307,18 +299,18 @@
                               <img src="{{ public_path('storage/uploads/') }}{{ $act_dtl->value }}.jpeg" style="height: 50px">
                           @else
                               <img src="{{ public_path('storage/uploads/') }}{{ $act_dtl->value }}.png" style="height: 50px">
-                          @endif  
-                          </td>              
-                        @else 
+                          @endif
+                          </td>
+                        @else
                           <td class="tg-0pky" colspan="8">{{ $value }}</td>
                         @endif
                   </tr>
-              @endif              
-            @elseif($sts->type=='file') 
-             <?php $count_image ++; ?>                         
+              @endif
+            @elseif($sts->type=='file')
+             <?php $count_image ++; ?>
               <tr>
                 <td class="subtitle2" colspan="12">
-                  @if($count_image<=1) 
+                  @if($count_image<=1)
                   <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 20px">
                   @else <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 80px">
                   @endif
@@ -330,29 +322,29 @@
                             <tr>
                               <td class="subtitle2" style="text-align: center;" colspan="12"> {{ $act_dtl->detail->name }}</td>
                             </tr>
-                    @endforeach  
-                    </table>            
+                    @endforeach
+                    </table>
                 </td>
-              </tr>                            
-            @elseif($sts->type=='hide' && $sts->property=='fieldtech')                     
+              </tr>
+            @elseif($sts->type=='hide' && $sts->property=='fieldtech')
                 <tr>
                   <td class="subtitle2" style="font-weight: bold; text-align: center;" colspan="12">
-                    <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 20px">  
+                    <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 20px">
                       <tr>
-                        <td class="subtitle2" colspan="2" rowspan="4">                    
+                        <td class="subtitle2" colspan="2" rowspan="4">
                           @if(file_exists(public_path('storage/uploads/' . $act_dtl->fieldtech->photo . '.jpeg')))
                             <img src="{{ public_path('storage/uploads/') }}{{ $act_dtl->fieldtech->photo }}.jpeg" style="height: 100px">
                           @elseif(file_exists(public_path('storage/uploads/' . $act_dtl->fieldtech->photo . '.png')))
                             <img src="{{ public_path('storage/uploads/') }}{{ $act_dtl->fieldtech->photo }}.png" style="height: 100px">
                           @else
-                          <img src="{{ public_path('images/nouser.png') }}" style="height: 100px">                      
+                          <img src="{{ public_path('images/nouser.png') }}" style="height: 100px">
                           @endif
                         </td>
                         <td class="subtitle2" style="font-size: 10px;" colspan="10">Vendor : {{ $data->vendor->name }}</td>
                       </tr>
                       <tr>
                         <td class="subtitle2" style="font-size: 10px;" colspan="10">Name : {{ $act_dtl->fieldtech->name }}</td>
-                      </tr>                      
+                      </tr>
                       <tr>
                         <td class="subtitle2" style="font-size: 10px;" colspan="10">Phone : {{ $act_dtl->fieldtech->phone }}</td>
                       </tr>
@@ -361,17 +353,17 @@
                       </tr>
                       <tr style="border: none;">
                         <td class="subtitle2" style="font-style: italic;font-size: 10px;"colspan="12">Assigned Fieldtech</td>
-                      </tr>   
-                    </table>                                   
+                      </tr>
+                    </table>
                   </td>
-                </tr>             
-            @endif    
+                </tr>
+            @endif
           @endif
         @endforeach
       @endforeach
       </table>
-      <div class="page-break"></div>      
-    @endforeach    
+      <div class="page-break"></div>
+    @endforeach
      @if($data->parts!='[]')
      <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 80px">
       <tr>
@@ -415,7 +407,7 @@
           <td class="tg-0pky" colspan="3">{{ $part->description }}</td>
         </tr>
         @endif
-      @endforeach      
-    </table>  
-    @endif                                                                                                       
+      @endforeach
+    </table>
+    @endif
 </body>

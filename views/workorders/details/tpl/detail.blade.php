@@ -2,8 +2,7 @@
     <div class="header-title">Information</div>
     <div>
         <div class="container info-container">
-            <span>Workorder Id</span> {no_wo}
-            <div>{owner.name}</div>
+            <span>Workorder Id</span> {id}
         </div>
 
         <div class="container info-container" style="display: flex; padding: 0px">
@@ -11,11 +10,6 @@
                 <span>Activity</span>
                 {activity.name} <br>
                 <div class="box-color" style="background: #{activity.color}">{activity.alias}</div>
-            </div>
-            <div style="flex: 1; padding: 15px; text-align: left;">
-                <span>Service</span>
-                {service.name} <br>
-                <div class="box-color" style="background: #{service.color}">{service.alias}</div>
             </div>
         </div>
 
@@ -95,6 +89,7 @@
         </div>
     </div>
 
+{{--
     <div class="part" style="position: relative">
         <div class="header-title" style="margin-top: 20px">Spare Part</div>
         {partTpl}
@@ -109,6 +104,6 @@
     <a href="{link_wo}" target="_blank" style="text-decoration: none">
     <div class="btn" id="download-doc" style="background: #CC0000">DOCUMENTATION</div>
     </a>
-
+--}}
 
 </div>

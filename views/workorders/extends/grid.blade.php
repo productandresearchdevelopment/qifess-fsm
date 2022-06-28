@@ -95,14 +95,6 @@
 
                     '-',
                     {
-                        text: 'Add Spare Part', iconCls: 'icon-plus',
-                        handler: function(){
-                            formPart.create(grids.getRec(true));
-                        }
-                    },
-
-                    '-',
-                    {
                         text: 'Download BAST (PDF)', iconCls: 'icon-pdf',
                         handler: function(){
                             console.error("ERROR PAGES INCREMENT");
@@ -178,22 +170,15 @@
                 },
                 @endif
 
-                {id: 'service', name: 'Service', items: services},
-
                 @if(!$user->vendor_id && !$user->fieldtech_id)
-                {id: 'vendor', name: 'Vendor', items: vendors},
+                {id: 'vendor', name: 'Area', items: vendors},
                 @endif
 
                 @if(!$user->client_id)
                 {id: 'client', name: 'Client', items: clients},
                 @endif
 
-                @if(!$user->owner_id)
-                {
-                    id: 'owner', name: 'Owner', items: owners,
-                    property: {name: 'alias'},
-                },
-                @endif
+
             ]
 
             me.grid  = Ext.create('Ext.grid.Panel', {
@@ -220,21 +205,7 @@
                         }
                     },
 
-                    {text: "ID", dataIndex: 'no_wo', width: 115},
-                    {
-                        text: "SERVICE", dataIndex: 'service_id', width: 100,
-                        renderer: function(val){
-                            let data = find(services, val);
-                            return data ? data.name : '';
-                        }
-                    },
-                    {
-                        text: "OWNER", dataIndex: 'owner_id', width: 80,
-                        renderer: function(val, meta, rec){
-                            let data = find(owners, val);
-                            return data ? me.renderText(data.alias, data.name, meta) : '-';
-                        }
-                    },
+                    {text: "ID", dataIndex: 'id', width: 115},
                     {
                         text: "CLIENT", dataIndex: 'client_id', width: 150,
                         renderer: function(val, meta, rec){
@@ -253,14 +224,14 @@
                             return data ? data.name : '';
                         }
                     },
+                    // {
+                    //     text: "DISMANTLE SITE", dataIndex: 'remove_site', width: 200,
+                    //     renderer: function(data){
+                    //         return data ? data.name : '';
+                    //     }
+                    // },
                     {
-                        text: "DISMANTLE SITE", dataIndex: 'remove_site', width: 200,
-                        renderer: function(data){
-                            return data ? data.name : '';
-                        }
-                    },
-                    {
-                        text: "VENDOR", dataIndex: 'vendor_id', width: 150,
+                        text: "AREA", dataIndex: 'vendor_id', width: 150,
                         renderer: function(val){
                             if(val) {
                                 let data = find(vendors, val);
@@ -320,7 +291,7 @@
                         },
                         itemclick: function(obj, rec){
                             me.detailWo.load(rec.data);
-                            Ext.getCmp('panel-detail').setTitle('View ('+rec.get('no_wo')+')');
+                            Ext.getCmp('panel-detail').setTitle('View ('+rec.get('id')+')');
                         },
                         itemdblclick : function(obj, rec){
                             Ext.getCmp('panel-detail').expand();

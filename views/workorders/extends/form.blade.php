@@ -273,7 +273,7 @@
                                 items: [
                                     // OWNER -----------------------------------------------------------------
                                     {
-                                        xtype: 'combo', name: 'owner_id', fieldLabel: 'Owner', margin: '0 15 0 0', flex: 1,
+                                        xtype: 'combo', name: 'owner_id', fieldLabel: 'Owner', margin: '0 15 0 0', flex: 1, hidden: true, allowBlank:true,
                                         forceSelection: true, editable: false, queryMode: 'local', triggerAction: 'all',
                                         displayField: 'name', valueField: 'id', value: 4,
                                         store: Ext.create('Ext.data.Store', {
@@ -324,7 +324,7 @@
                         items:[
                             // VENDOR  -------------------------------------------------------------------------
                             {
-                                xtype: 'combo', name: 'vendor_id', fieldLabel: 'Vendor', margin: '5 0 0 0',
+                                xtype: 'combo', name: 'vendor_id', fieldLabel: 'Area', margin: '5 0 0 0',
                                 forceSelection: true, editable: false, queryMode: 'local', triggerAction: 'all',
                                 displayField: 'name', valueField: 'id', allowBlank: true,
                                 store: Ext.create('Ext.data.Store', {

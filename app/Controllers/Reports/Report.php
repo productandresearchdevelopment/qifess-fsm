@@ -20,7 +20,7 @@ class Report extends Controller
         //return view($view, $params);
         $html = view($view, $params);
         $pdf = PDF::loadHTML($html);
-        return $pdf->stream("DOCUMENT-".$data->no_wo." (".$data->service->name.").pdf");
+        return $pdf->stream("DOCUMENT-".$data->id.".pdf");
     }
 
     public function bastPdf(Request $request, $id = null){
@@ -35,7 +35,7 @@ class Report extends Controller
         //return view($view, $params);
         $html = view($view, $params);
         $pdf = PDF::loadHTML($html);
-        return $pdf->stream("BAST-".$data->no_wo." (".$data->service->name.").pdf");
+        return $pdf->stream("BAST-".$data->id.".pdf");
     }
 
 

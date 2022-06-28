@@ -43,10 +43,7 @@
 </colgroup>
   <tr>
     <th class="tg-0pky" colspan="1">
-      @if($data->owner->id==1)
-        <img src="{{ public_path('images/logo_p1.jpeg') }}" style="height: 50px">
-      @else <img src="{{ public_path('images/logo_5mb.png') }}" style="height: 75px">
-      @endif
+        <img src="{{ public_path('images/logo.jpeg') }}" style="height: 50px">
     </th>
     <th class="tg-title" colspan="6">Berita Acara Serah Terima (BAST)</th>
   </tr>
@@ -55,11 +52,11 @@
     <td class="tg-0pky" colspan="7"></td>
   </tr>
   <tr>
-    <td class="tg-0pky" colspan="7">Pada hari ini       
+    <td class="tg-0pky" colspan="7">Pada hari ini
       @foreach($data->actions as $act)
         @foreach($act->details as $detail)
             @if($detail->detail->name=='Active Date')
-              <?php 
+              <?php
               $day = date('D', strtotime($detail->value));
               $date = date('d', strtotime($detail->value));
               $month = date('m', strtotime($detail->value));
@@ -73,8 +70,8 @@
                 'Fri' => 'Jumat',
                 'Sat' => 'Sabtu'
               );
-              echo $dayList[$day]; ?>, tanggal {{ $date }}, bulan 
-              <?php 
+              echo $dayList[$day]; ?>, tanggal {{ $date }}, bulan
+              <?php
               $monthList = array(
                 '01' => 'Januari',
                 '02' => 'Pebruari',
@@ -89,7 +86,7 @@
                 '11' => 'November',
                 '12' => 'Desember',
               );
-              echo $monthList[$month]; ?>, tahun {{ $year }}. Kami yang bertandatangan dibawah ini:</td>          
+              echo $monthList[$month]; ?>, tahun {{ $year }}. Kami yang bertandatangan dibawah ini:</td>
             @endif
         @endforeach
       @endforeach
@@ -107,7 +104,7 @@
     <td class="tg-0pky" colspan="3">(
         @if($data->site){{ $data->client->name }}
         @else {{ $data->removeSite->client->name }}
-        @endif 
+        @endif
     )</td>
   </tr>
   <tr>
@@ -171,11 +168,7 @@
         @endif
     </td>
   </tr>
-  <tr>
-    <td class="tg-0pky" colspan="3">Jenis layanan</td>
-    <td class="tg-0pky">:</td>
-    <td class="tg-0pky" colspan="3">{{ $data->service->name }}</td>
-  </tr>
+
   <tr>
     <td class="tg-0pky" colspan="3">Jangka waktu berlangganan</td>
     <td class="tg-0pky">:</td>
@@ -185,7 +178,7 @@
             @if($detail->detail->name=='Contract Periode'){{ $detail->value }}
             @endif
         @endforeach
-      @endforeach      
+      @endforeach
     </td>
   </tr>
   <tr>
@@ -197,7 +190,7 @@
             @if($detail->detail->name=='Capacity'){{ $detail->value }}
             @endif
         @endforeach
-      @endforeach        
+      @endforeach
     </td>
   </tr>
   <tr>
@@ -250,7 +243,7 @@
             echo date_format($date,"d/m/Y"); ?>
             @endif
         @endforeach
-      @endforeach        
+      @endforeach
     </td>
   </tr>
   <tr>
@@ -263,7 +256,7 @@
     <td class="tg-0pky" colspan="7"></td>
   </tr>
   <tr>
-    <td class="tg-0pky" colspan="7">PIHAK PERTAMA bertanggung jawab sepenuhnya atas isi dari semua informasi yang ada pada Berita Acara Serah Terima ini. Pelanggan menyetujui untuk tunduk dan patuh pada syarat dan ketentuan yang berlaku di {{ $data->owner->name }}.</td>
+    <td class="tg-0pky" colspan="7">PIHAK PERTAMA bertanggung jawab sepenuhnya atas isi dari semua informasi yang ada pada Berita Acara Serah Terima ini. Pelanggan menyetujui untuk tunduk dan patuh pada syarat dan ketentuan yang berlaku di .</td>
   </tr>
   <tr>
     <td class="tg-0pky" colspan="7"></td>
@@ -277,14 +270,6 @@
     <td class="tg-c3ow" colspan="3">Yang menyerahkan,</td>
     <td class="tg-c3ow" colspan="2">Yang menerima,</td>
   </tr>
-  <tr>
-    <td class="tg-c3ow" colspan="3">{{ $data->owner->name }}</td>
-    <td class="tg-c3ow" colspan="2">
-        @if($data->site){{ $data->client->name }}
-        @else {{ $data->removeSite->client->name }}
-        @endif 
-    </td>
-  </tr>
   <tr >
     <td class="tg-9wq8" colspan="3" rowspan="2">
       <img src="{{ public_path('images/ttd.jpg') }}" style="height: 50px">
@@ -292,7 +277,7 @@
     <td class="tg-9wq8" colspan="2" rowspan="2">
       @foreach($data->actions as $act)
         @foreach($act->details as $detail)
-            @if($detail->detail->type=='signature') 
+            @if($detail->detail->type=='signature')
               @if(file_exists(public_path('storage/uploads/' . $detail->value . '.jpeg')))
                   <img src="{{ public_path('storage/uploads/') }}{{ $detail->value }}.jpeg" style="height: 50px">
               @else
@@ -300,7 +285,7 @@
               @endif
             @endif
         @endforeach
-      @endforeach    
+      @endforeach
     </td>
   </tr>
   <tr>
@@ -321,7 +306,7 @@
   </tr>
 </tbody>
 </table>
-<div class="page-break"></div> 
+<div class="page-break"></div>
 @if($data->parts<>'[]')
 <?php echo '<table class="tp" style="undefined;table-layout: fixed; width: 100%">
 <thead>
@@ -348,7 +333,7 @@
     <td>{{ $part->code }}</td>
   </tr>
   @endif
-@endforeach  
+@endforeach
 <?php echo '</tbody>
 </table>'?>
 @endif
