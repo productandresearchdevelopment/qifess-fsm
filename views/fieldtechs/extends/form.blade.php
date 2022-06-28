@@ -50,9 +50,9 @@
                         layout: {type: 'vbox', align: 'stretch'},
                         items: [
                             {
-                                xtype: 'combo', name: 'vendor_id',id: 'vendor',{{ $user->vendor_id ? "readOnly: true," : ''}} fieldLabel: 'Vendor',
+                                xtype: 'combo', name: 'vendor_id',id: 'vendor',{{ $user->vendor_id ? "readOnly: true," : ''}} fieldLabel: 'Area',
                                 forceSelection: true, editable: false, queryMode: 'local', triggerAction: 'all',
-                                displayField: 'alias', valueField: 'id',
+                                displayField: 'name', valueField: 'id',
                                 {{ $user->vendor_id ? "value: $user->vendor_id," : ''}}
                                 store: Ext.create('Ext.data.Store', {
                                     data: vendor,
@@ -73,7 +73,7 @@
                                 xtype: 'panel',name: 'file_id',title: 'Attachment File',
                                 html: '<div id="attachment"></div>',
                                 height: 120,border:true
-                            },                            
+                            },
 
                         ]
                     },
@@ -117,7 +117,7 @@
             maxFile: 4,
             renderTo: '#attachment',
             fileType: '*',
-            });              
+            });
         }
 
         me.edit = function(){
@@ -131,7 +131,7 @@
                 me.setField('phone', rec.phone);
                 me.setField('address', rec.address);
                 me.setField('email', rec.email);
-                me.setField('vendor_id', rec.vendor_id);              
+                me.setField('vendor_id', rec.vendor_id);
                 if(rec.user)me.setField('username', rec.user.username);
                 $image = rec.photo;
                 if(rec.photo)Ext.getCmp('layoutimage').update('<center><img id="user-photo" src="{{ route('upload.file') }}/'+rec.photo+'"'+"></center>'");
@@ -145,14 +145,14 @@
                         renderTo: '#attachment',
                         files: rec.files
                     });
-                } 
-                else   
+                }
+                else
                 me.fileUpload = new Uwa.FileEditor({
                     prefixFile: '{{ route('upload.file') }}',
                     maxFile: 4,
                     renderTo: '#attachment',
                     fileType: '*',
-                });                 
+                });
             }
             else Ext.example.msg('Warning!', 'Please select data!');
         }
