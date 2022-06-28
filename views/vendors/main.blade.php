@@ -2,18 +2,14 @@
 
 @section('script')
     <script src="{{ asset('plugins/gum/uwa/uwa.js') }}"></script>
-    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/gum/uwa/uwa.css') }}"/> 
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/gum/uwa/uwa.css') }}"/>
     @require('details.detail')
     @require('extends.grid')
     @require('extends.form')
-    @require('extends.formDetail')    
-    
+    @require('extends.formDetail')
+
     <script>
         Ext.require(['Ext.ux.form.SearchField']);
-        var activity = @json($activities);
-        var service = @json($services); 
-        var client = @json($clients);  
-        var site = @json($sites); 
         var grids = new Grids();
         var forms = new Forms();
         var formdetail = new FormDetail();

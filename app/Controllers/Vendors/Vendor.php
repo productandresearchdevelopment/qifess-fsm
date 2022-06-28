@@ -23,10 +23,7 @@ class Vendor extends Controller
         $params = [
             'user' => $user,
             'sites' => Site::all(),
-            'activities' => Master\Activity::all(),
-            'services' => Master\Service::all(),             
-            'clients' => Client::all(),
-            'title' => 'Vendor Data'
+            'title' => 'Area'
         ];
         return view('vendors.main', $params);
     }
@@ -68,9 +65,9 @@ class Vendor extends Controller
                         else if($fid = FileUpload::push($file, 'vendor-attachment')){
                             $data->files()->attach($fid);
                         }
-                    }              
+                    }
 
-            }            
+            }
 
             DB::commit();
             return ['success' => true, 'message' => 'Success...'];

@@ -26,10 +26,6 @@ class Fieldtech extends Controller
         $params = [
             'user' => $user,
             'vendors' => Vendor::all(),
-            'sites' => Site::all(),
-            'services' => Master\Service::all(), 
-            'clients' => Client::all(),            
-            'activities' => Master\Activity::all(),            
             'title' => 'Fieldtech Data'
         ];
         return view('fieldtechs.main', $params);
@@ -49,7 +45,7 @@ class Fieldtech extends Controller
         DB::beginTransaction();
         try{
             $photo = FileUpload::upload('photo', 'fieldtech');
-        
+
             $input = [
                 'nik' => $request->input('nik'),
                 'name' => $request->input('name'),
@@ -57,8 +53,6 @@ class Fieldtech extends Controller
                 'address' => $request->input('address'),
                 'email' => $request->input('email'),
                 'vendor_id' => $request->input('vendor_id'),
-
-
             ];
             if($photo)$input['photo']=$photo;
             if($id) {
@@ -96,7 +90,7 @@ class Fieldtech extends Controller
                 }
                 else if(Auth\User::where('username', $input_user['username'])->withTrashed()->first()){
                     return ['success' => false, 'message' => 'Username Duplicate'];
-                }                
+                }
                 $user = Auth\User::create($input_user);
 
             }
@@ -108,13 +102,13 @@ class Fieldtech extends Controller
                         else if($fid = FileUpload::push($file, 'fieldtech-attachment')){
                             $data->files()->attach($fid);
                         }
-                    }              
+                    }
 
             }
 
             if($password){
                 Mail::to($user->email)->send(new ActiveUser($user, $password));
-            }        
+            }
             DB::commit();
             return ['success' => true, 'message' => 'Success...'];
         }

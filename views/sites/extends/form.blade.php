@@ -45,11 +45,10 @@
                                 xtype: 'fieldcontainer', flex: 1,
                                 layout: {type: 'hbox', align: 'stretch'},
                                 items: [
-                                    {xtype: 'textfield',name: 'link_id', fieldLabel: 'Link ID',width: 265, margin:"0 5 5 0", allowBlank:true},
-                                    {xtype:'checkboxfield',boxLabel  : 'Active',name: 'is_active',id:'active',flex:1,
-                                    },                                    
+                                    {xtype: 'textfield',name: 'link_id', fieldLabel: 'Link ID',width: 265, margin:"0 5 5 0", allowBlank:true, hidden: true},
+                                    {xtype:'checkboxfield',boxLabel  : 'Active',name: 'is_active',id:'active',flex:1, hidden: true},
                                 ]
-                            }, 
+                            },
                            {
                                 xtype: 'datefield', name: 'active_date', fieldLabel: 'Active Date',
                                 format: 'd/m/Y', submitFormat: 'Y-m-d',allowBlank:true,
@@ -66,12 +65,12 @@
                         xtype: 'fieldcontainer', flex: 1,margin: '0 20 0 20',
                         layout: {type: 'vbox', align: 'stretch'},
                         items: [
-                            {xtype: 'textfield',name: 'terminal_name', fieldLabel: 'Terminal Name',allowBlank:true},
-                            {xtype: 'textfield',name: 'airmac', fieldLabel: 'Airmac',allowBlank:true},
-                            {xtype: 'textfield',name: 'beam', fieldLabel: 'Beam',allowBlank:true},
-                            {xtype: 'textfield',name: 'serial_number', fieldLabel: 'Serial Number',allowBlank:true},
+                            {xtype: 'textfield',name: 'terminal_name', fieldLabel: 'Terminal Name', allowBlank:true, hidden: true},
+                            {xtype: 'textfield',name: 'airmac', fieldLabel: 'Airmac',allowBlank:true, hidden: true},
+                            {xtype: 'textfield',name: 'beam', fieldLabel: 'Beam',allowBlank:true, hidden: true},
+                            {xtype: 'textfield',name: 'serial_number', fieldLabel: 'Serial Number',allowBlank:true, hidden: true},
                             {
-                                xtype: 'combo', name: 'service_id', fieldLabel: 'Service',allowBlank:true,
+                                xtype: 'combo', name: 'service_id', fieldLabel: 'Service',allowBlank:true, hidden: true,
                                 forceSelection: true, editable: false, queryMode: 'local', triggerAction: 'all',
                                 displayField: 'name', valueField: 'id', value: 4,
                                 store: Ext.create('Ext.data.Store', {
@@ -81,7 +80,7 @@
                                         {name: 'name', type: 'string'},
                                     ]
                                 }),
-                            },                     
+                            },
                             {
                                 xtype: 'container',
                                 margin: '0 0 10 0',
@@ -92,7 +91,7 @@
                             {xtype: 'textfield', name: 'lat', fieldLabel: 'Latitude', allowBlank: true},
                             {xtype: 'textfield', name: 'long', fieldLabel: 'Longitude', allowBlank: true},
                         ]
-                    },                    
+                    },
                 ],
                 buttons: [
                     { text: 'Save', iconCls: 'icon-save-bright', handler: me.save },
@@ -100,7 +99,7 @@
                 ]
             });
 
-            me.createWindowForm('{{ $title }}', me.form, {width: 700});
+            me.createWindowForm('{{ $title }}', me.form, {width: 900});
         };
 
         me.create = function(){

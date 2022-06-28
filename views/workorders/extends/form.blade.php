@@ -57,7 +57,8 @@
                                 xtype: 'textfield',
                                 name: 'no_wo',
                                 fieldLabel: 'WO Number',
-                                allowBlank: false,
+                                allowBlank: true,
+                                hidden: true,
                                 margin: '5 15 5 15'
                             },
 
@@ -100,7 +101,7 @@
                                         }
                                     },
                                     {
-                                        xtype: 'combo', name: 'service_id', fieldLabel: 'Service', flex: 1,
+                                        xtype: 'combo', name: 'service_id', fieldLabel: 'Service', flex: 1, allowBlank: true, hidden: true,
                                         forceSelection: true, editable: false, queryMode: 'local', triggerAction: 'all',
                                         displayField: 'name', valueField: 'id', value: 4,
                                         store: Ext.create('Ext.data.Store', {

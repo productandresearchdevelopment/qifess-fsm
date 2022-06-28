@@ -71,7 +71,6 @@ class Site extends Controller
         try{
             if(!$request->input("name")) return ["success" => false, "message" => "name Is Null"];
             if(!$request->input("client_id")) return ["success" => false, "message" => "client_id Is Null"];
-            if(!$request->input("service_id")) return ["success" => false, "message" => "service_id Is Null"];
 
             $input = [
                 "name" => $request->input("name"),
