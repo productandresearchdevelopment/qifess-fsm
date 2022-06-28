@@ -68,6 +68,7 @@
                     ],
                 }
             });
+
             var listView = ai.create('listview', {
                 store: store,
                 renderItem: {
@@ -153,13 +154,15 @@
                             statusAction.forEach(function (status) {
                                 if(find(status.activities, rec.activity_id)){
                                     if(status.show_on && find(status.show_on, rec.last_action.status_id)){
-                                        actions.push({
-                                            text: status.name,
-                                            value: status,
-                                            handler: function(val){
-                                                forms.createAction(val, rec);
-                                            }
-                                        });
+                                        if(find(status.roles, {{ $user->role_id }})) {
+                                            actions.push({
+                                                text: status.name,
+                                                value: status,
+                                                handler: function (val) {
+                                                    forms.createAction(val, rec);
+                                                }
+                                            });
+                                        }
                                     }
                                 }
                             });
@@ -172,28 +175,28 @@
                                 }
                             });
 
-                            actions.push({
-                                text: 'ADD EQUIPMENT',
-                                handler: function(){
-                                    formPart.create('EQUIPMENT', rec);
-                                }
-                            });
-
-                            actions.push({
-                                text: 'ADD MATERIAL',
-                                handler: function(){
-                                    formPart.create('MATERIAL',rec);
-                                }
-                            });
-
-                            actions.push({
-                                text: 'DOWNLOAD BAST (PDF)',
-                                value: 'OK',
-                                handler: function(){
-                                    console.error("ERROR PAGES INCREMENT");
-                                    //showDetail(rec);
-                                }
-                            });
+                            // actions.push({
+                            //     text: 'ADD EQUIPMENT',
+                            //     handler: function(){
+                            //         formPart.create('EQUIPMENT', rec);
+                            //     }
+                            // });
+                            //
+                            // actions.push({
+                            //     text: 'ADD MATERIAL',
+                            //     handler: function(){
+                            //         formPart.create('MATERIAL',rec);
+                            //     }
+                            // });
+                            //
+                            // actions.push({
+                            //     text: 'DOWNLOAD BAST (PDF)',
+                            //     value: 'OK',
+                            //     handler: function(){
+                            //         console.error("ERROR PAGES INCREMENT");
+                            //         //showDetail(rec);
+                            //     }
+                            // });
 
 
                             let popup = ai.popupModal({items: actions});
