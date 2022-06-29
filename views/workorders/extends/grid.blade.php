@@ -93,13 +93,13 @@
                     @endif
                     @endforeach
 
-                    '-',
-                    {
-                        text: 'Download BAST (PDF)', iconCls: 'icon-pdf',
-                        handler: function(){
-                            console.error("ERROR PAGES INCREMENT");
-                        }
-                    },
+                    // '-',
+                    // {
+                    //     text: 'Download BAST (PDF)', iconCls: 'icon-pdf',
+                    //     handler: function(){
+                    //         console.error("ERROR PAGES INCREMENT");
+                    //     }
+                    // },
 
                     @if($user->hasRoute('wo.export.excel'))
                     {
