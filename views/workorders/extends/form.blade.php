@@ -101,7 +101,7 @@
                                         }
                                     },
                                     {
-                                        xtype: 'combo', name: 'service_id', fieldLabel: 'Service', flex: 1, allowBlank: true, hidden: true,
+                                        xtype: 'combo', name: 'service_id', fieldLabel: 'Service', flex: 1, allowBlank: true, 
                                         forceSelection: true, editable: false, queryMode: 'local', triggerAction: 'all',
                                         displayField: 'name', valueField: 'id', value: 4,
                                         store: Ext.create('Ext.data.Store', {

@@ -167,7 +167,7 @@ class WorkOrder extends Controller
 
     public function dataSite(Request $request){
         $query = Site::query();
-        return Query::open($query, ['id','name'], false);
+        return Query::open($query, ['id','name','link_id'], false);
     }
 
     public function dataFieldtech(Request $request){
