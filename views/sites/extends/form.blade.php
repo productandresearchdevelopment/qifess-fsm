@@ -70,7 +70,7 @@
                             {xtype: 'textfield',name: 'beam', fieldLabel: 'Beam',allowBlank:true, hidden: true},
                             {xtype: 'textfield',name: 'serial_number', fieldLabel: 'Serial Number',allowBlank:true, hidden: true},
                             {
-                                xtype: 'combo', name: 'service_id', fieldLabel: 'Service',allowBlank:true, hidden: true,
+                                xtype: 'combo', name: 'service_id', fieldLabel: 'Service',allowBlank:true, 
                                 forceSelection: true, editable: false, queryMode: 'local', triggerAction: 'all',
                                 displayField: 'name', valueField: 'id', value: 4,
                                 store: Ext.create('Ext.data.Store', {
