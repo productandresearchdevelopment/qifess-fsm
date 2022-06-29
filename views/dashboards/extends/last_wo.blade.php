@@ -10,7 +10,7 @@
                         <th class="text-left" width="200">ID</th>
                         <th>Site</th>
                         <th width="200">Client</th>
-                        <th width="100">Vendor</th>
+                        <th width="100">Area</th>
                         <th width="150">Fieldtech</th>
                         <th class="text-center">Status</th>
 

@@ -25,7 +25,7 @@
             dataFormat: 'json',
             dataSource: {
                 "chart": {
-                    "xAxisname": "Vendor",
+                    "xAxisname": "Area",
                     "yAxisName": "Project Ticket",
                     "divlineColor": "#eee",
                     "toolTipColor": "#ffffff",

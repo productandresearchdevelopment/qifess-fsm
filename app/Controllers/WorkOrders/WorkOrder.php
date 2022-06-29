@@ -541,15 +541,13 @@ class WorkOrder extends Controller
             ["text"=> "ID", "dataIndex"=> "id", "width"=> 115],
             ["text"=> "SERVICE", "dataIndex"=> "service_name", "width"=> 100, "align"=> "center"],
             ["text"=> "ACTIVITY", "dataIndex"=> "activity_name", "width"=> 150, "align"=> "center"],
-            ["text"=> "OWNER", "dataIndex"=> "owner_name", "width"=> 180],
             ["text"=> "CLIENT", "dataIndex"=> "client_name", "width"=> 150],
             ["text"=> "SITE", "dataIndex"=> "site_name", "width"=> 200],
-            ["text"=> "DISMANTLE SITE", "dataIndex"=> "remove_site_name", "width"=> 200],
-            ["text"=> "VENDOR", "dataIndex"=> "vendor_name", "width"=> 200],
+            ["text"=> "AREA", "dataIndex"=> "vendor_name", "width"=> 200],
             ["text"=> "FIELDTECH", "dataIndex"=> "fieldtech_name", "width"=> 250],
             ["text"=> "SLA", "dataIndex"=> "sla", "align"=> "center", "width"=> 100, 'type' => 'int'],
             [
-                "text"=> "CONTRACT",
+                "text"=> "TARGET",
                 "columns"=> [
                     ["text"=> "START", "dataIndex"=> "start_date", "type"=> "date", "align"=> "center", "width"=> 100],
                     ["text"=> "TARGET", "dataIndex"=> "expire_date", "type"=> "date", "align"=> "center", "width"=> 100]

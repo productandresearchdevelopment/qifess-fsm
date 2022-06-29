@@ -256,7 +256,7 @@
                         }
                     },
                     {
-                        text: "CONTRACT",
+                        text: "TARGET",
                         columns: [
                             {text: "START", dataIndex: 'start_date', align: 'center', width: 100, renderer: Ext.util.Format.dateRenderer('d/m/Y')},
                             {text: "TARGET", dataIndex: 'expire_date', align: 'center', width: 100, renderer: Ext.util.Format.dateRenderer('d/m/Y')},
