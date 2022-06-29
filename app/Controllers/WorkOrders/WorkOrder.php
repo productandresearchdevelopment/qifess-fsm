@@ -526,11 +526,11 @@ class WorkOrder extends Controller
                      LEFT JOIN po_wo_action B ON A.last_action = B.id
                          LEFT JOIN po_wo_m_status B1 ON B.status_id = B1.id
                          LEFT JOIN po_wo_m_activity C ON A.activity_id = C.id
-                         LEFT JOIN po_wo_m_service D ON A.service_id = D.id
                          LEFT JOIN po_m_owner E ON A.owner_id = E.id
                          LEFT JOIN po_m_client F ON A.client_id = F.id
                          LEFT JOIN po_m_site G1 ON A.site_id = G1.id
                          LEFT JOIN po_m_site G2 ON A.remove_site_id = G2.id
+                         LEFT JOIN po_wo_m_service D ON G1.service_id = D.id
                          LEFT JOIN po_m_vendor H ON A.vendor_id = H.id
                          LEFT JOIN po_m_fieldtech I ON A.fieldtech_id = I.id
                          LEFT JOIN auth_user J ON A.created_by = J.id
@@ -538,7 +538,7 @@ class WorkOrder extends Controller
 
         $data = DB::select(DB::raw($sql));
         $columns = [
-            ["text"=> "ID", "dataIndex"=> "no_wo", "width"=> 115],
+            ["text"=> "ID", "dataIndex"=> "id", "width"=> 115],
             ["text"=> "SERVICE", "dataIndex"=> "service_name", "width"=> 100, "align"=> "center"],
             ["text"=> "ACTIVITY", "dataIndex"=> "activity_name", "width"=> 150, "align"=> "center"],
             ["text"=> "OWNER", "dataIndex"=> "owner_name", "width"=> 180],
