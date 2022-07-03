@@ -7,6 +7,7 @@
     <script>
         Ext.require(['Ext.ux.form.SearchField','Ext.ux.form.field.MonthField']);
         var grids = new Grids();
+        var vendors = @json($vendors)
 
         Ext.onReady(function(){
             Ext.tip.QuickTipManager.init();

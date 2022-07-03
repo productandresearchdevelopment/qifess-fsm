@@ -2,13 +2,21 @@
     var Grids = function(){
         let me = Ext.utils.grids(this);
         me.init = function(){
-            me.store = me.httpStore('{{ route('workschedule.data') }}?date1={{ $date1 }}&date2={{ $date2 }}', [
-                {name: 'id', type: 'int'},
-                {name: 'name', type: 'string'},
-                {name: 'vendor_id', type: 'int'},
-                {name: 'vendor_name', type: 'string'},
-                {name: 'data', type: 'auto'},
-            ]);
+            me.store = Ext.create('Ext.data.Store', {
+                fields:  [
+                    {name: 'id', type: 'int'},
+                    {name: 'name', type: 'string'},
+                    {name: 'vendor_id', type: 'int'},
+                    {name: 'vendor_name', type: 'string'},
+                    {name: 'data', type: 'auto'},
+                ],
+                remoteSort: true,
+                proxy: {
+                    type: 'ajax',
+                    url: '{{ route('workschedule.data') }}?date1={{ $date1 }}&date2={{ $date2 }}',
+                    simpleSortMode: true
+                },
+            });
 
             me.menus = Ext.create('Ext.menu.Menu', {
                 items:[]
@@ -64,7 +72,9 @@
                         ]
                     },
                 ],
-                bbar: me.bbar([]),
+                bbar: me.bbar([
+                    @if(!$user->vendor_id) {id: 'vendor',  name: 'Area', items: vendors } @endif
+                ]),
                 viewConfig: {
                     stripeRows  : false,
                     listeners: {

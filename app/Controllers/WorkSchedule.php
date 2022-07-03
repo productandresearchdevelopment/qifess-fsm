@@ -22,18 +22,25 @@ class WorkSchedule extends Controller
             'date1' => $date1,
             'date2' => $date2,
             'user' => $user,
-            'vendors' => Vendor::all(),
+            'vendors' => ($user->vendor_id) ? [] : Vendor::all(),
         ];
         return view('work_schedule.main', $params);
     }
 
     public function data(Request $request){
+        $user = $request->user();
+
         $result = [];
         $date1 = $request->input('date1');
         $date2 = $request->input('date2');
 
-        $data = Mod::orderBy('name')->get();
-        foreach ($data as $row) {
+        $data = Mod::orderBy('name');
+
+        if($filter = $request->input('filter-vendor')) $data->where('vendor_id', $filter);
+        if($user->vendor_id) $data->where('vendor_id', $user->vendor_id);
+
+
+        foreach ($data->get() as $row) {
             $wo = WorkOrder::select('start_date', DB::raw('count(*) as count'))
                 ->where('fieldtech_id', $row->id)
                 ->whereBetween('start_date', [$date1, $date2])
