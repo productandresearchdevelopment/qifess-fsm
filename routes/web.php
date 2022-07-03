@@ -55,7 +55,12 @@ Route::group(['middleware' => ['auth','roles'] ], function(){
         Route::get('/data', 'Fieldtechs\Fieldtech@data')->name('fieldtech.data');
         Route::post('/push/{id?}', 'Fieldtechs\Fieldtech@push')->name('fieldtech.push');
         Route::delete('/delete', 'Fieldtechs\Fieldtech@delete')->name('fieldtech.delete');
+    });
 
+    // WORK SCHEDULE ----------------------------------------------------------------------------------
+    Route::group(['prefix' => 'work/schedule'], function (){
+        Route::get('/', 'WorkSchedule@index')->name('workschedule');
+        Route::get('/data', 'WorkSchedule@data')->name('workschedule.data');
     });
 
     // SPAREPART ROUTE ----------------------------------------------------------------------------------
