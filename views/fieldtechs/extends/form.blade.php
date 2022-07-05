@@ -62,15 +62,16 @@
                                     ]
                                 }),
                             },
-                            {name: 'nik', fieldLabel: 'NIK',},
-                            {name: 'name', fieldLabel: 'Name',},
+                            {name: 'nik', fieldLabel: 'NIK', allowBlank: true, hidden: true,},
+                            {name: 'name', fieldLabel: 'Team Name',},
                             {xtype:'hiddenfield',name: 'attach', fieldLabel: 'Name',},
-
+                            {name: 'fieldtech1', fieldLabel: 'Fieldtech 1', allowBlank: true},
+                            {name: 'fieldtech2', fieldLabel: 'Fieldtech 2', allowBlank: true},
                             {name: 'phone', fieldLabel: 'Phone', allowBlank: true},
                             {name: 'email', fieldLabel: 'Email', allowBlank: true},
                             {xtype: 'textareafield', name: 'address', fieldLabel: 'Address',allowBlank:true, flex: 1, height: 30,},
                             {
-                                xtype: 'panel',name: 'file_id',title: 'Attachment File',
+                                xtype: 'panel',name: 'file_id',title: 'Attachment File', hidden: true,
                                 html: '<div id="attachment"></div>',
                                 height: 120,border:true
                             },
@@ -127,6 +128,8 @@
                 me.reset();
                 me.form.url = '{{ route('fieldtech.push') }}/' + rec.id;
                 me.setField('nik', rec.nik);
+                me.setField('fieldtech1', rec.fieldtech1);
+                me.setField('fieldtech2', rec.fieldtech2);
                 me.setField('name', rec.name);
                 me.setField('phone', rec.phone);
                 me.setField('address', rec.address);

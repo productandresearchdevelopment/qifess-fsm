@@ -5,6 +5,8 @@
             me.store = me.httpStore('{{ route('fieldtech.data') }}', [
                 {name: 'id', type: 'int'},
                 {name: 'nik', type: 'string'},
+                {name: 'fieldtech1', type: 'string'},
+                {name: 'fieldtech2', type: 'string'},
                 {name: 'name', type: 'string'},
                 {name: 'phone', type: 'string'},
                 {name: 'address', type: 'string'},

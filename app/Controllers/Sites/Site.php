@@ -75,6 +75,7 @@ class Site extends Controller
             $input = [
                 "name" => $request->input("name"),
                 "client_id" => $request->input("client_id"),
+                "vendor_id" => $request->input("vendor_id"),
                 "link_id" => $request->input("link_id"),
                 "pic" => $request->input("pic"),
                 "pic_phone" => $request->input("pic_phone"),

@@ -5,6 +5,11 @@
         <div class="container info-container">
             <span>Client Name</span> ({client.alias}) {client.name}
         </div>
+
+        <div class="container info-container">
+            <span>Area</span> {vendor}
+        </div>
+
         <div class="container info-container">
             <span>Site Name</span> {name}
         </div>

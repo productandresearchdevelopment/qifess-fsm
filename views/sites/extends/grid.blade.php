@@ -7,6 +7,7 @@
                 {name: 'id', type: 'int'},
                 {name: 'link_id', type: 'string'},
                 {name: 'client_id', type: 'int'},
+                {name: 'vendor_id', type: 'int'},
                 {name: 'name', type: 'string'},
                 {name: 'terminal_name', type: 'string'},
                 {name: 'beam', type: 'string'},
@@ -58,8 +59,8 @@
             });
 
             let bbar = [{
-                        text: 'Export',   iconCls: 'icon-excel', 
-                        handler: function(){ 
+                        text: 'Export',   iconCls: 'icon-excel',
+                        handler: function(){
                             let filters = me.store.proxy.extraParams;
                             let query = '';
                             if(me.store.filters.items.length) query = me.store.filters.items[0].value;
@@ -72,7 +73,7 @@
 
                             window.location = '{{ route('site.export.excel') }}?'+params.join('&');
 
-                        } 
+                        }
                     },'-'];
              bbar = bbar.concat(me.bbar([
                     {id: 'client', name: 'Client', items: @json($clients)},
@@ -90,23 +91,41 @@
                 columns: [
                     {text: "#", dataIndex: 'id', width: 80, hidden:true},
                     {
-                        text: "<img src='{{ asset('images/icons/show.png') }}'>", dataIndex: 'is_active', width: 35,
-                        renderer: function(val, meta, rec){                          
+                        text: "#", dataIndex: 'is_active', width: 35,
+                        renderer: function(val, meta, rec){
                             if(val) {
                                 meta.tdAttr = 'data-qtip="ACTIVE ('+Ext.Date.format(rec.get('active_date'), 'd M Y')+')"';
                                 return "<img src='{{ asset('images/icons/online.png') }}'>";
                             }
                             else {
                                 meta.tdAttr = 'data-qtip="INACTIVE ('+Ext.Date.format(rec.get('inactive_date'), 'd M Y')+')"';
-                                return "<img src='{{ asset ('images/icons/offline.png') }}'>"; 
-                            }   
+                                return "<img src='{{ asset ('images/icons/offline.png') }}'>";
+                            }
                         }
-                    },                    
+                    },
                     {
-                        text: "CLIENT", dataIndex: 'client_id', width: 80,
+                        text: "SERV", dataIndex: 'service_id', width: 80,
+                        renderer: function(val, meta){
+                            let data = find(service, val);
+                            if(data) {
+                                return me.renderBox(data.alias, data.color, data.name, meta);
+                            }
+                            return '';
+
+                        }
+                    },
+                    {
+                        text: "CLIENT", dataIndex: 'client_id', width: 200,
                         renderer: function(val, meta){
                             let data = find(clients, val);
-                            return data ? me.renderText(data.name, data.name, meta) : '';
+                            return data ? data.name : '';
+                        }
+                    },
+                    {
+                        text: "AREA", dataIndex: 'vendor_id', width: 200,
+                        renderer: function(val, meta){
+                            let data = find(vendors, val);
+                            return data ? data.name : '';
                         }
                     },
                     {text: "LINK ID", dataIndex: 'link_id', minWidth: 100},
@@ -115,16 +134,6 @@
                     {text: "BEAM", dataIndex: 'beam', minWidth: 100,hidden: true},
                     {text: "AIRMAC", dataIndex: 'airmac', minWidth: 100,hidden: true},
                     {text: "SERIAL NUMBER", dataIndex: 'serial_number', minWidth: 100,hidden: true},
-                    {text: "SERVICES", dataIndex: 'service_id', minWidth: 100,
-                        renderer: function(val, meta){
-                        let data = find(service, val);
-                            if(data) {
-                                return me.renderBox(data.alias, data.color, data.name, meta);
-                            }
-                            return '';                        
-
-                        }
-                    },
                     {text: "ADDRESS", dataIndex: 'address', width: 200,hidden: true},
                     {text: "ACTIVE DATE", dataIndex: 'active_date', width: 100,hidden: true},
                     {text: "PIC", dataIndex: 'pic', width: 250},
@@ -146,7 +155,7 @@
                             data = rec.data;
                             if(data){
                                 detailSite(data, '#view-detail');
-                                Ext.getCmp('panel-detail').setTitle('View ('+data.name+')');                               
+                                Ext.getCmp('panel-detail').setTitle('View ('+data.name+')');
                             }else {
 
                                 Ext.getCmp('panel-detail').update(`<div id="view-detail" style="position: absolute; top: 0; left:0; right:0; background: #FAFAFA">
@@ -159,11 +168,11 @@
                             if(data.workorders_count<=0)
                                 setTimeout(function () {
                                 $('#list-wo').hide();
-                                },10); 
-                            else 
+                                },10);
+                            else
                                 setTimeout(function () {
                                 $('#list-wo').show();
-                                },10); 
+                                },10);
                             if ($('#maploc').length > 0) {
                                map.remove();
                                setTimeout(function () {
@@ -179,14 +188,14 @@
                                     L.marker([data.lat, data.long]).addTo(map)
                                     .bindPopup(data.name)
                                     .openPopup();
-                                },100);  
- 
+                                },100);
+
                             }
-                             
+
                         },
                         itemdblclick : function(obj, rec){
                             data = rec.data;
-                            Ext.getCmp('panel-detail').expand(); 
+                            Ext.getCmp('panel-detail').expand();
                                 setTimeout(function () {
                                     map = L.map('maploc').setView([data.lat, data.long], 8);
                                     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -200,12 +209,12 @@
                                         L.marker([data.lat, data.long]).addTo(map)
                                         .bindPopup(data.name)
                                         .openPopup();
-                                },100);                           
-
-                    }                            
+                                },100);
 
                     }
-                },               
+
+                    }
+                },
             });
         }
     }

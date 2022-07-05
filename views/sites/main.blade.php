@@ -16,8 +16,8 @@
         Ext.require(['Ext.ux.form.SearchField','Ext.ux.GMapPanel']);
         var activity = @json($activities);
         var service = @json($services);
-        var vendor = @json($vendors);
-        var statusAction = @json($status);        
+        var vendors = @json($vendors);
+        var statusAction = @json($status);
         var clients = @json($clients);
         var grids = new Grids();
         var forms = new Forms();

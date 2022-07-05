@@ -42,6 +42,18 @@
                                 }),
                             },
                             {
+                                xtype: 'combo', name: 'vendor_id', fieldLabel: 'Area',
+                                forceSelection: true, editable: false, queryMode: 'local', triggerAction: 'all',
+                                displayField: 'name', valueField: 'id',
+                                store: Ext.create('Ext.data.Store', {
+                                    data: vendors,
+                                    fields : [
+                                        {name: 'id', type: 'int'},
+                                        {name: 'name', type: 'string'}
+                                    ]
+                                }),
+                            },
+                            {
                                 xtype: 'fieldcontainer', flex: 1,
                                 layout: {type: 'hbox', align: 'stretch'},
                                 items: [
@@ -135,6 +147,7 @@
                 me.form.url = '{{ route('site.push') }}/' + rec.id;
                 me.setField('name', rec.name);
                 me.setField('client_id', rec.client_id);
+                me.setField('vendor_id', rec.vendor_id);
                 me.setField('link_id', rec.link_id);
                 Ext.getCmp('active').setValue(rec.is_active);
                 me.setField('pic', rec.pic);

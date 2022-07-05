@@ -18,14 +18,14 @@
                     {name: 'name', fieldLabel: 'Name'},
                     {name: 'alias', fieldLabel: 'Alias'},
                     {name: 'phone', fieldLabel: 'Phone', allowBlank: true},
-                    {name: 'email', fieldLabel: 'Email', allowBlank: true},
+                    {name: 'email', fieldLabel: 'Email', allowBlank: true, hidden: true},
                     {xtype: 'textarea', name: 'address', fieldLabel: 'Address', allowBlank:true, height: 80},
                     {xtype: 'textarea', name: 'description', fieldLabel: 'Description', allowBlank:true, flex: 1, minHeight: 80,},
                     {
-                        xtype: 'panel',name: 'file_id',title: 'Attachment File',
+                        xtype: 'panel',name: 'file_id',title: 'Attachment File', hidden: true,
                         html: '<div id="attachment"></div>',
                         height: 120,border:true
-                    },                      
+                    },
                 ],
                 buttons: [
                     { text: 'Save', iconCls: 'icon-save-bright', handler: me.save },
@@ -45,7 +45,7 @@
             maxFile: 4,
             renderTo: '#attachment',
             fileType: '*',
-            });               
+            });
         }
 
         me.edit = function(){
@@ -67,14 +67,14 @@
                         renderTo: '#attachment',
                         files: rec.files
                     });
-                } 
-                else   
+                }
+                else
                 me.fileUpload = new Uwa.FileEditor({
                     prefixFile: '{{ route('upload.file') }}',
                     maxFile: 4,
                     renderTo: '#attachment',
                     fileType: '*',
-                });                 
+                });
             }
             else Ext.example.msg('Warning!', 'Please select data!');
         }

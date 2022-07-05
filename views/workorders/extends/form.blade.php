@@ -147,6 +147,7 @@
                                                     fields: [
                                                         {name: 'id', type: 'int'},
                                                         {name: 'client_id', type: 'int'},
+                                                        {name: 'vendor_id', type: 'int'},
                                                         {name: 'link_id', type: 'string'},
                                                         {name: 'service_id', type: 'int'},
                                                         {name: 'name', type: 'string'},
@@ -165,12 +166,16 @@
                                                             rec = rec[0];
                                                             let client = find(clients, rec.client_id);
                                                             let service = find(services, rec.service_id);
+                                                            let area = find(vendors, rec.vendor_id);
                                                             me.setField('client_id', rec.client_id);
                                                             me.setField('form-site-client', client ? client.name : '-');
+                                                            me.setField('form-site-area', area ? area.name : '-');
                                                             me.setField('form-site-service', service ? service.name : '-');
                                                             me.setField('form-site-linkid', rec.link_id ? rec.link_id : '-');
                                                             me.setField('form-site-address', rec.address);
                                                             me.setField('form-site-pic', rec.pic + ' (' + rec.pic_phone + ')');
+                                                            me.setField('vendor_id', rec.vendor_id);
+
                                                         }
                                                     }
                                                 }
@@ -185,6 +190,7 @@
                                                 fieldDefaults: {labelAlign: 'left'},
                                                 items: [
                                                     { xtype: 'displayfield', name: 'form-site-client', fieldLabel: 'Client' },
+                                                    { xtype: 'displayfield', name: 'form-site-area', fieldLabel: 'Area' },
                                                     { xtype: 'displayfield', name: 'form-site-linkid', fieldLabel: 'Link ID' },
                                                     { xtype: 'displayfield', name: 'form-site-service', fieldLabel: 'Service ID' },
                                                     { xtype: 'displayfield', name: 'form-site-pic', fieldLabel: 'PIC' },
@@ -330,7 +336,7 @@
                             {
                                 xtype: 'combo', name: 'vendor_id', fieldLabel: 'Area', margin: '5 0 0 0',
                                 forceSelection: true, editable: false, queryMode: 'local', triggerAction: 'all',
-                                displayField: 'name', valueField: 'id', allowBlank: true,
+                                displayField: 'name', valueField: 'id', allowBlank: true, hidden: true,
                                 store: Ext.create('Ext.data.Store', {
                                     data: vendors,
                                     fields : [
@@ -365,16 +371,27 @@
                                     fields : [
                                         {name: 'id', type: 'int'},
                                         {name: 'name', type: 'name'},
+                                        {name: 'workorders_count', type: 'int'}
                                     ],
                                     proxy: {type: 'ajax', url: '{{ route('wo.data.fieldtech') }}'},
                                     listeners:{
                                         beforeload: function(obj){
-                                            let client = me.getField('vendor_id').displayTplData;
-                                            let clientId = (client && client.length) ? client[0].id : null;
-                                            Ext.apply(obj.getProxy().extraParams, {'vendor': clientId});
+                                            let startAt = me.getValue('start_date');
+                                                startAt = startAt ? Ext.Date.format(startAt, "Y-m-d") : null;
+                                            let area = me.getField('vendor_id').displayTplData;
+                                            let areaId = (area && area.length) ? area[0].id : null;
+                                            Ext.apply(obj.getProxy().extraParams, {
+                                                'vendor': areaId,
+                                                'start_date': startAt
+                                            });
                                         }
                                     }
                                 }),
+                                listConfig: {
+                                    getInnerTpl: function() {
+                                        return '<b>{name}</b> ({workorders_count})';
+                                    }
+                                },
                             },
 
                             // PROPERTIES GRID ---------------------------------------------------------

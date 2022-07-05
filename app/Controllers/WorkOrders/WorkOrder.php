@@ -171,7 +171,11 @@ class WorkOrder extends Controller
     }
 
     public function dataFieldtech(Request $request){
+        $startDate = $request->input('start_date');
         $query = Fieldtech::where('vendor_id', $request->vendor);
+        $query->withCount(['workorders' => function ($query) use ($startDate) {
+            $query->where('start_date', $startDate);
+        }]);
         return Query::open($query, ['id','name'], false);
     }
 

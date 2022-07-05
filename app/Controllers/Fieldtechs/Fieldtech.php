@@ -50,6 +50,8 @@ class Fieldtech extends Controller
                 'nik' => $request->input('nik'),
                 'name' => $request->input('name'),
                 'phone' => $request->input('phone'),
+                'fieldtech1' => $request->input('fieldtech1'),
+                'fieldtech2' => $request->input('fieldtech2'),
                 'address' => $request->input('address'),
                 'email' => $request->input('email'),
                 'vendor_id' => $request->input('vendor_id'),
