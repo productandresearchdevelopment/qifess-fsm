@@ -387,22 +387,14 @@ class WorkOrder extends Controller
                                 case 'wo.fieldtech':
                                     $wo->update(['fieldtech_id' => $value]);
                                     break;
-                                case 'site.link_active':
-                                    $site = Site::find($wo->site_id);
-                                    $site->update([
-                                        'link_id' => $value,
-                                        'active_date' => $action->created_at,
-                                        'owner_id' => $wo->owner_id,
-                                        'service_id' => $wo->service_id,
-                                    ]);
+                                case 'wo.startdate':
+                                    $wo->update(['start_date' => $value]);
                                     break;
-                                case 'site.inactive':
-                                    if($site = Site::find($wo->remove_site_id)) {
-                                        $site->update([
-                                            'inactive_date' => $action->created_at,
-                                            'is_active' => 0
-                                        ]);
-                                    }
+                                case 'wo.slot':
+                                    $wo->update(['slot' => $value]);
+                                    break;
+                                case 'wo.unbook':
+                                    $wo->update(['fieldtech_id' => null]);
                                     break;
                             }
                         }

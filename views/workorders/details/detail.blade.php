@@ -136,10 +136,18 @@
             dataTpl.created_at = dates.format(dataTpl.created_at);
 
             let startDate = dataTpl.start_date;
-            dataTpl.start_date = dates.format(startDate);
-            let expireDate = dataTpl.expire_date;
-            dataTpl.expire_date = dates.format(expireDate);
-            let durationTarget = dates.diff(startDate, expireDate);
+            let durationTarget = '0';
+            if(startDate) {
+                dataTpl.start_date = dates.format(startDate);
+                let durationTarget = dates.diffServer(startDate);
+            }
+            else dataTpl.start_date = '-';
+
+            dataTpl.slot_name = '-';
+            switch (dataTpl.slot){
+                case 1: dataTpl.slot_name = '08:00 - 12:00'; break;
+                case 2: dataTpl.slot_name = '12:00 - 16:00'; break;
+            }
 
             dataTpl.duration_target = durationTarget.day;
 

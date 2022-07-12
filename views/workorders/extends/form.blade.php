@@ -301,13 +301,13 @@
                                         layout: {type: 'hbox', align: 'stretch'},
                                         items: [
                                             {
-                                                xtype: 'datefield', name: 'start_date', fieldLabel: 'Start Date',
-                                                format: 'd/m/Y', submitFormat: 'Y-m-d',
+                                                xtype: 'datefield', name: 'start_date', fieldLabel: 'Start Date', hidden: true,
+                                                format: 'd/m/Y', submitFormat: 'Y-m-d', allowBlank: true,
                                                 flex: 1, margin: '0 0 0 0',
                                             },
                                             {
-                                                xtype: 'datefield', name: 'expire_date', fieldLabel: 'End Date',
-                                                format: 'd/m/Y', submitFormat: 'Y-m-d',
+                                                xtype: 'datefield', name: 'expire_date', fieldLabel: 'End Date', hidden: true,
+                                                format: 'd/m/Y', submitFormat: 'Y-m-d', allowBlank: true,
                                                 flex: 1, margin: '0 0 0 5',
                                             },
                                         ]
@@ -319,7 +319,7 @@
                             {
                                 xtype: 'textarea',
                                 name: 'description',
-                                fieldLabel: 'Project Name / Description',
+                                fieldLabel: 'Description',
                                 allowBlank: true,
                                 flex: 1,
                                 margin: '5 15 20 15',

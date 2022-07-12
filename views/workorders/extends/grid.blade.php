@@ -17,6 +17,7 @@
                 {name: 'description', type: 'string'},
                 {name: 'start_date', type: 'date'},
                 {name: 'expire_date', type: 'date'},
+                {name: 'slot', type: 'int'},
                 {name: 'close_date', type: 'date'},
                 {name: 'last_action', type: 'int'},
                 {name: 'created_at', type: 'date'},
@@ -246,20 +247,29 @@
                             return data ? data.name : '-';
                         }
                     },
+                    // {
+                    //     text: "SLA", dataIndex: 'close_date', align: 'center', width: 80,
+                    //     renderer: function (val, meta, rec) {
+                    //         let target = dates.diff(rec.get('start_date'), rec.get('expire_date'));
+                    //         let sla = dates.diffServer(rec.get('start_date')); if(val) sla = dates.diff(rec.get('start_date'), val);
+                    //         let color = target.day < sla.day ? 'dd0000' : '3366FF';
+                    //         return me.renderBox(sla.day + ' DAY', color, sla.day+" Day's", meta);
+                    //     }
+                    // },
                     {
-                        text: "SLA", dataIndex: 'close_date', align: 'center', width: 80,
-                        renderer: function (val, meta, rec) {
-                            let target = dates.diff(rec.get('start_date'), rec.get('expire_date'));
-                            let sla = dates.diffServer(rec.get('start_date')); if(val) sla = dates.diff(rec.get('start_date'), val);
-                            let color = target.day < sla.day ? 'dd0000' : '3366FF';
-                            return me.renderBox(sla.day + ' DAY', color, sla.day+" Day's", meta);
-                        }
-                    },
-                    {
-                        text: "TARGET",
+                        text: "BOOKING",
                         columns: [
-                            {text: "START", dataIndex: 'start_date', align: 'center', width: 100, renderer: Ext.util.Format.dateRenderer('d/m/Y')},
-                            {text: "TARGET", dataIndex: 'expire_date', align: 'center', width: 100, renderer: Ext.util.Format.dateRenderer('d/m/Y')},
+                            {text: "DATE", dataIndex: 'start_date', align: 'center', width: 100, renderer: Ext.util.Format.dateRenderer('d/m/Y')},
+                            {
+                                text: "SLOT", dataIndex: 'slot', align: 'center', width: 100,
+                                renderer: function (val){
+                                    switch (val){
+                                        case 1: return 'SLOT-1';
+                                        case 2: return 'SLOT-2';
+                                    }
+                                    return '-';
+                                }
+                            },
                         ]
                     },
                     {text: "CLOSED", dataIndex: 'close_date', align: 'center', width: 110, renderer: Ext.util.Format.dateRenderer('d/m/Y')},

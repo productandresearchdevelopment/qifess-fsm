@@ -15,16 +15,12 @@
 
         <div class="container info-container" style="display: flex; padding: 0px">
             <div style="flex: 1; padding: 15px;">
-                <span>Start</span>
+                <span>Booking Date</span>
                 {start_date} <br>
             </div>
             <div style="flex: 1; padding: 15px; border-right: 1px solid #eee; border-left: 1px solid #eee;">
-                <span>Target</span>
-                {expire_date} <br>
-            </div>
-            <div style="flex: 1; padding: 15px;">
-                <span>Duration</span>
-                {duration_target} Day<br>
+                <span>Booking Slot</span>
+                {slot_name} <br>
             </div>
         </div>
 
