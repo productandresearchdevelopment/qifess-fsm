@@ -79,7 +79,7 @@
                 ],
                 @if(!$user->vendor_id)
                 bbar: me.bbar([
-                    {id: 'vendor', name: 'Vendor', items: vendor}
+                    {id: 'vendor', name: 'Area', items: vendor}
                 ]),
                 @endif
 
