@@ -394,7 +394,7 @@ class WorkOrder extends Controller
                                     $wo->update(['slot' => $value]);
                                     break;
                                 case 'wo.unbook':
-                                    $wo->update(['fieldtech_id' => null]);
+                                    $wo->update(['fieldtech_id' => null, 'start_date' => null]);
                                     break;
                             }
                         }
