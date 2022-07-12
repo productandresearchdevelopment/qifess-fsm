@@ -66,8 +66,8 @@
                             return data ? me.renderText(data.name, data.name, meta) : '';
                         }
                     },
-                    {text: "NIK", dataIndex: 'nik', width: 100},
-                    {text: "NAME", dataIndex: 'name', minWidth: 200},
+                    //{text: "NIK", dataIndex: 'nik', width: 100},
+                    {text: "TEAM", dataIndex: 'name', minWidth: 200},
                     {text: "USER NAME", dataIndex: 'user', width: 150,hidden:true,
                         renderer: function (val) {
                             return val ? val.username : '';
