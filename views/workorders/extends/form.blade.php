@@ -451,7 +451,7 @@
             me.getField('note').hide();
 
             let cmp = me.getField('fieldtech_id');
-                cmp.setReadOnly(false);
+                cmp.setReadOnly(true);
                 cmp.addCls('readonly');
                 cmp.hide();
 
