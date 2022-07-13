@@ -5,9 +5,9 @@ namespace App\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Fieldteches\Fieldtech as Mod;
 use App\Models\Vendors\Vendor;
-use App\Models\WorkOrders\WorkOrder;
+use App\Models\WorkOrders\Masters\Activity;
+use App\Models\WorkOrders\Masters\Slot;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 
 class WorkSchedule extends Controller
@@ -23,6 +23,8 @@ class WorkSchedule extends Controller
             'date2' => $date2,
             'user' => $user,
             'vendors' => ($user->vendor_id) ? [] : Vendor::all(),
+            'activities' => Activity::all(),
+            'slots' => Slot::all(),
         ];
         return view('work_schedule.main', $params);
     }
@@ -30,32 +32,19 @@ class WorkSchedule extends Controller
     public function data(Request $request){
         $user = $request->user();
 
-        $result = [];
         $date1 = $request->input('date1');
         $date2 = $request->input('date2');
 
-        $data = Mod::orderBy('name');
+        $data = Mod::with([
+            'workorders' => function($query) use ($date1, $date2){
+                $query->whereBetween('start_date', [$date1, $date2]);
+            }
+        ])->orderBy('name');
 
         if($filter = $request->input('filter-vendor')) $data->where('vendor_id', $filter);
         if($user->vendor_id) $data->where('vendor_id', $user->vendor_id);
 
-
-        foreach ($data->get() as $row) {
-            $wo = WorkOrder::select('start_date', DB::raw('count(*) as count'))
-                ->where('fieldtech_id', $row->id)
-                ->whereBetween('start_date', [$date1, $date2])
-                ->groupBy('start_date')
-                ->get();
-
-            $result[] = [
-                'id' => $row->id,
-                'name' => $row->name,
-                'vendor_id' => $row->vendor_id,
-                'vendor_name' => $row->vendor ? $row->vendor->name : null,
-                'data' => $wo
-            ];
-        }
-        return $result;
+        return $data->get();
     }
 
 }

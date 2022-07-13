@@ -17,10 +17,7 @@
             <div style="flex: 1; padding: 15px;">
                 <span>Booking Date</span>
                 {start_date} <br>
-            </div>
-            <div style="flex: 1; padding: 15px; border-right: 1px solid #eee; border-left: 1px solid #eee;">
-                <span>Booking Slot</span>
-                {slot_name} <br>
+                {slot_name}
             </div>
         </div>
 

@@ -13,6 +13,7 @@
         var vendors = @json($vendors);
         var statusAction = @json($status);
         var owners = @json($owners);
+        var slots = @json($slots);
 
         var forms = new Forms();
 

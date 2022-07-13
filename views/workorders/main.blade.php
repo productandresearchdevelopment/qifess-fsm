@@ -21,6 +21,7 @@
         var owners = @json($owners);
         var clients = @json($clients);
         var vendors = @json($vendors);
+        var slots = @json($slots);
         var statusAction = @json($status);
 
         var grids = new Grids();

@@ -17,7 +17,7 @@
                 {name: 'description', type: 'string'},
                 {name: 'start_date', type: 'date'},
                 {name: 'expire_date', type: 'date'},
-                {name: 'slot', type: 'int'},
+                {name: 'slot_id', type: 'int'},
                 {name: 'close_date', type: 'date'},
                 {name: 'last_action', type: 'int'},
                 {name: 'created_at', type: 'date'},
@@ -189,7 +189,7 @@
                 tbar: me.tbar(me.menus),
                 columns: [
                     {
-                        text: "STS", dataIndex: 'last_action', width: 70, align: 'center',
+                        text: "STS", dataIndex: 'last_action', width: 80, align: 'center',
                         renderer: function(data, meta){
                             let status = find(statusAction, data.status_id);
                             if(data) {
@@ -199,7 +199,7 @@
                         }
                     },
                     {
-                        text: "ACT", dataIndex: 'activity_id', width: 60, align: 'center',
+                        text: "ACT", dataIndex: 'activity_id', width: 80, align: 'center',
                         renderer: function(val, meta){
                             let data = find(activities, val);
                             return data ? me.renderBox(data.alias, data.color, data.name, meta) : '';
@@ -261,11 +261,11 @@
                         columns: [
                             {text: "DATE", dataIndex: 'start_date', align: 'center', width: 100, renderer: Ext.util.Format.dateRenderer('d/m/Y')},
                             {
-                                text: "SLOT", dataIndex: 'slot', align: 'center', width: 100,
+                                text: "SLOT", dataIndex: 'slot_id', align: 'center', width: 100,
                                 renderer: function (val){
-                                    switch (val){
-                                        case 1: return 'SLOT-1';
-                                        case 2: return 'SLOT-2';
+                                    let slot = find(slots, val);
+                                    if(slot){
+                                        return slot.alias;
                                     }
                                     return '-';
                                 }

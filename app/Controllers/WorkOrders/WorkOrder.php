@@ -54,6 +54,7 @@ class WorkOrder extends Controller
             'owners' => ($ftr = $user->owners) ? Owner::whereIn('id',$ftr)->get() : Owner::all(),
             'vendors' => Vendor::all(),
             'services' => Master\Service::all(),
+            'slots' => Master\Slot::all(),
             'status' => Master\Status::with('details.options')->get(),
         ];
         if($params) $result = array_merge($result, $params);
@@ -172,11 +173,14 @@ class WorkOrder extends Controller
 
     public function dataFieldtech(Request $request){
         $startDate = $request->input('start_date');
-        $query = Fieldtech::where('vendor_id', $request->vendor);
-        $query->withCount(['workorders' => function ($query) use ($startDate) {
-            $query->where('start_date', $startDate);
-        }]);
-        return Query::open($query, ['id','name'], false);
+        $slot = $request->input('slot');
+
+        $query = Fieldtech::where('vendor_id', $request->vendor)
+            ->whereDoesntHave('workorders', function ($query) use ($startDate, $slot){
+                $query->where('start_date', $startDate);
+                $query->where('slot_id', $slot);
+            });
+        return Query::open($query, null, false);
     }
 
     public function push(Request $request, $id = null){
@@ -197,6 +201,7 @@ class WorkOrder extends Controller
                 'vendor_id' => $request->input('vendor_id'),
                 'client_id' => $request->input('client_id'),
                 'service_id' => $request->input('service_id'),
+                'slot_id' => $request->input('slot_id'),
                 'owner_id' => $request->input('owner_id'),
                 'description' => $request->input('description'),
                 'no_wo' => $request->input('no_wo'),
@@ -391,10 +396,10 @@ class WorkOrder extends Controller
                                     $wo->update(['start_date' => $value]);
                                     break;
                                 case 'wo.slot':
-                                    $wo->update(['slot' => $value]);
+                                    $wo->update(['slot_id' => $value]);
                                     break;
                                 case 'wo.unbook':
-                                    $wo->update(['fieldtech_id' => null, 'start_date' => null]);
+                                    $wo->update(['fieldtech_id' => null, 'start_date' => null, 'slot_id' => null]);
                                     break;
                             }
                         }

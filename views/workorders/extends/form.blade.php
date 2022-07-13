@@ -300,11 +300,7 @@
                                         xtype: 'fieldcontainer', flex: 1,
                                         layout: {type: 'hbox', align: 'stretch'},
                                         items: [
-                                            {
-                                                xtype: 'datefield', name: 'start_date', fieldLabel: 'Start Date', hidden: true,
-                                                format: 'd/m/Y', submitFormat: 'Y-m-d', allowBlank: true,
-                                                flex: 1, margin: '0 0 0 0',
-                                            },
+
                                             {
                                                 xtype: 'datefield', name: 'expire_date', fieldLabel: 'End Date', hidden: true,
                                                 format: 'd/m/Y', submitFormat: 'Y-m-d', allowBlank: true,
@@ -356,14 +352,40 @@
 
                             // FIELDTECH ---------------------------------------------------------------
                             {
+                                xtype: 'datefield', name: 'start_date', fieldLabel: 'Start Date',
+                                format: 'd/m/Y', submitFormat: 'Y-m-d', allowBlank: true, margin: '5 0 5 0',
+                                listeners: {
+                                    change: function(){
+                                        me.getField('fieldtech_id').store.load();
+                                    }
+                                }
+                            },
+                            {
+                                xtype: 'combo', name: 'slot_id', fieldLabel: 'Slot', allowBlank: true,
+                                forceSelection: true, editable: false, queryMode: 'local', triggerAction: 'all',
+                                displayField: 'name', valueField: 'id', margin: '2 0 5 0',
+                                store: Ext.create('Ext.data.Store', {
+                                    data: slots,
+                                    fields : [
+                                        {name: 'id', type: 'int'},
+                                        {name: 'name', type: 'string'},
+                                    ]
+                                }),
+                                listeners: {
+                                    change: function(){
+                                        me.getField('fieldtech_id').store.load();
+                                    }
+                                }
+                            },
+                            {
                                 xtype: 'combo',
                                 name: 'fieldtech_id',
                                 fieldLabel: 'Team',
                                 emptyText: 'Select Team',
-                                margin: '5 0 5 0',
+                                margin: '0 0 0 0',
                                 allowBlank: true,
-                                forceSelection: true, typeAhead: true, hideTrigger:true,
-                                queryMode: 'remote', minChars: 1, triggerAction: 'query',
+                                forceSelection: true, typeAhead: true, hideTrigger:false,
+                                queryMode: 'local', triggerAction: 'all',
                                 displayField: 'name', valueField: 'id',
                                 store: Ext.create('Ext.data.Store', {
                                     extend: 'Ext.data.Model',
@@ -378,20 +400,21 @@
                                         beforeload: function(obj){
                                             let startAt = me.getValue('start_date');
                                                 startAt = startAt ? Ext.Date.format(startAt, "Y-m-d") : null;
+
                                             let area = me.getField('vendor_id').displayTplData;
                                             let areaId = (area && area.length) ? area[0].id : null;
+
+                                            let slot = me.getField('slot_id').displayTplData;
+                                            let slotId = (slot && slot.length) ? slot[0].id : null;
+
                                             Ext.apply(obj.getProxy().extraParams, {
                                                 'vendor': areaId,
+                                                'slot': slotId,
                                                 'start_date': startAt
                                             });
                                         }
                                     }
                                 }),
-                                listConfig: {
-                                    getInnerTpl: function() {
-                                        return '<b>{name}</b> ({workorders_count})';
-                                    }
-                                },
                             },
 
                             // PROPERTIES GRID ---------------------------------------------------------
@@ -399,7 +422,7 @@
                                 xtype: 'container', flex: 2,
                                 layout: {type: 'vbox', align: 'stretch'},
                                 items:[
-                                    {xtype: 'tbtext', text: '<b>Property Detail</b>', margin: '5 0 5 0'},
+                                    {xtype: 'tbtext', text: '<b>Property Detail</b>', margin: '10 0 5 0'},
                                     {
                                         xtype: 'propertygrid',
                                         id: 'form-detail-property',
@@ -450,10 +473,18 @@
             me.setReadOnly(false);
             me.getField('note').hide();
 
-            let cmp = me.getField('fieldtech_id');
-                cmp.setReadOnly(true);
-                cmp.addCls('readonly');
-                cmp.hide();
+            let fieldtech = me.getField('fieldtech_id');
+            fieldtech.setReadOnly(true);
+            fieldtech.addCls('readonly');
+            fieldtech.hide();
+
+            let startdate = me.getField('start_date');
+            startdate.setReadOnly(true);
+            startdate.addCls('readonly');
+
+            let slot = me.getField('slot_id');
+            slot.setReadOnly(true);
+            slot.addCls('readonly');
 
             Ext.getCmp('remove_site_container').hide();
         }
@@ -492,6 +523,20 @@
                         cmp.removeCls('readonly');
                         cmp.allowBlank = false;
                     }
+
+                    else if(detail.property == 'startdate'){
+                        let cmp = me.getField('start_date');
+                        cmp.setReadOnly(false);
+                        cmp.removeCls('readonly');
+                        cmp.allowBlank = false;
+                    }
+
+                    else if(detail.property == 'slot'){
+                        let cmp = me.getField('slot_id');
+                        cmp.setReadOnly(false);
+                        cmp.removeCls('readonly');
+                        cmp.allowBlank = false;
+                    }
                 });
             }
         }
@@ -506,6 +551,7 @@
                 me.setField('no_wo', rec.no_wo);
                 me.setField('description', rec.description);
                 me.setField('start_date', rec.start_date);
+                me.setField('slot_id', rec.slot_id);
                 me.setField('expire_date', rec.expire_date);
 
                 me.getField('site_id').store.getProxy().extraParams = {query: rec.site_id};
@@ -577,7 +623,6 @@
             me.getField('owner_id').setReadOnly(readonly);
             me.getField('no_wo').setReadOnly(readonly);
             me.getField('description').setReadOnly(readonly);
-            me.getField('start_date').setReadOnly(readonly);
             me.getField('expire_date').setReadOnly(readonly);
             me.getField('site_id').setReadOnly(readonly);
             me.getField('remove_site_id').setReadOnly(readonly);
@@ -589,7 +634,6 @@
             cmp = me.getField('owner_id'); cmp.removeCls('readonly'); if(readonly) cmp.addCls('readonly');
             cmp = me.getField('no_wo'); cmp.removeCls('readonly'); if(readonly) cmp.addCls('readonly');
             cmp = me.getField('description'); cmp.removeCls('readonly'); if(readonly) cmp.addCls('readonly');
-            cmp = me.getField('start_date'); cmp.removeCls('readonly'); if(readonly) cmp.addCls('readonly');
             cmp = me.getField('expire_date'); cmp.removeCls('readonly'); if(readonly) cmp.addCls('readonly');
             cmp = me.getField('site_id'); cmp.removeCls('readonly'); if(readonly) cmp.addCls('readonly');
             cmp = me.getField('remove_site_id'); cmp.removeCls('readonly'); if(readonly) cmp.addCls('readonly');
@@ -637,6 +681,25 @@
                         errorMessage = rec.name + ' Is Required';
                     }
                     else details.push({id: rec.id, value: val});
+                }
+                else if(rec.property == 'startdate') {
+                    let val = me.getValue('start_date');
+                    if(rec.required && !val) {
+                        console.log(val);
+                        errorMessage = rec.name + ' Is Required';
+                    }
+                    else details.push({id: rec.id, value: Ext.Date.format(val, "Y-m-d")});
+                }
+                else if(rec.property == 'slot') {
+                    let val = me.getValue('slot_id');
+                    if(rec.required && !val) {
+                        console.log(val);
+                        errorMessage = rec.name + ' Is Required';
+                    }
+                    else details.push({id: rec.id, value: val});
+                }
+                else if(rec.property == 'unbook') {
+                    details.push({id: rec.id, value: 1});
                 }
             });
 

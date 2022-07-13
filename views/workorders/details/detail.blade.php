@@ -144,10 +144,13 @@
             else dataTpl.start_date = '-';
 
             dataTpl.slot_name = '-';
-            switch (dataTpl.slot){
-                case 1: dataTpl.slot_name = '08:00 - 12:00'; break;
-                case 2: dataTpl.slot_name = '12:00 - 16:00'; break;
+            if(dataTpl.slot_id){
+                let slot = find(slots, dataTpl.slot_id);
+                if(slot){
+                    dataTpl.slot_name = slot.name;
+                }
             }
+
 
             dataTpl.duration_target = durationTarget.day;
 
