@@ -193,7 +193,7 @@ class WorkOrder extends Controller
             $query->where('start_date', $startDate);
             $query->where('slot_id', $slot);
         }]);
-        return Query::open($query, ['id','name'], false);
+        return Query::open($query, null, false);
     }
 
     public function push(Request $request, $id = null){
