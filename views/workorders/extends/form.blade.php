@@ -415,6 +415,11 @@
                                         }
                                     }
                                 }),
+                                listConfig: {
+                                    getInnerTpl: function() {
+                                        return '<b>{name}</b> ({workorders_count})';
+                                    }
+                                },
                             },
 
                             // PROPERTIES GRID ---------------------------------------------------------
