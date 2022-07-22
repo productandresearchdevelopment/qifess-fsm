@@ -1,11 +1,28 @@
 <?php
 
 use App\Http\Controllers\Main;
-use Illuminate\Support\Facades\Route;
+use App\SystemModels\Auth\User;
+use Illuminate\Http\Request;
 
 Main::routes();
 
 Route::view('/privacy-policies', 'public/privacy-policies');
+
+Route::get('/mobile/redirect/login', function (Request $request){
+    $username = $request->input('username');
+    $password = $request->input('password');
+    $user = User::where(['username' => $username])->first();
+    if($user){
+        if(Hash::check($password, $user->password)){
+            Auth::guard()->login($user);
+            $wo = route('wo');
+            return redirect($wo);
+        }
+        return 'Your Password Is Wrong';
+    }
+    return 'User Notfound';
+});
+
 Route::group(['middleware' => ['auth','roles'] ], function(){
     // EXTENDS USER ROUTE ----------------------------------------------------------------------------
     Route::group(['prefix' => 'sys'], function (){

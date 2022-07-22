@@ -12,7 +12,6 @@ use App\Models\Fieldteches\Fieldtech as Mod;
 use App\Models\Vendors\Vendor;
 use Illuminate\Http\Request;
 
-
 class Fieldtech extends Controller
 {
     public function index(Request $request){
