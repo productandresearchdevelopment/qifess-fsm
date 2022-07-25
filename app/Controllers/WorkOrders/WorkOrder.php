@@ -2,6 +2,7 @@
 
 namespace App\Controllers\WorkOrders;
 
+use App\Jobs\NotifJob;
 use App\Libraries\ExportExcel;
 use App\Libraries\FileUpload;
 use App\Mail\UpdateWoMail;
@@ -316,37 +317,7 @@ class WorkOrder extends Controller
                 DB::commit();
 
                 // SEND EMAIL ----------------------------------------------------------------
-                if($action->status) {
-                    $sendEmailRoles = $action->status->send_email_roles;
-                    $sendTo = User::where(function ($query) use ($wo, $sendEmailRoles) {
-                        $query->whereIn('role_id', $sendEmailRoles);
-                        $query->where(function ($query) use ($wo, $sendEmailRoles) {
-                            $query->where(function ($query) use ($wo, $sendEmailRoles) {
-                                $query->where('role_id', '<', 1000);
-                                $query->whereNull('vendor_id');
-                                $query->whereNull('client_id');
-                                $query->whereNull('fieldtech_id');
-                                $query->whereNull('activities');
-                                $query->whereNull('owners');
-                            });
-                            $query->orwhere(function ($query) use ($wo) {
-                                $query->where(function ($query) use ($wo) {
-                                    $query->where('vendor_id', $wo->vendor_id);
-                                    $query->whereNull('fieldtech_id');
-                                });
-                                $query->orwhere(function ($query) use ($wo) {
-                                    $query->where('vendor_id', $wo->vendor_id);
-                                    $query->where('fieldtech_id', $wo->fieldtech_id);
-                                });
-                            });
-                            $query->orwhere('client_id', $wo->client_id);
-                            $query->orwhere('activities', 'LIKE', '%' . $wo->activity_id . '%');
-                            $query->orwhere('owners', 'LIKE', '%' . $wo->activity_id . '%');
-                        });
-
-                    })->whereNotNull('email')->where('email', '<>', '')->pluck('email');
-                    //Mail::to($sendTo)->send(new UpdateWoMail($wo, $action));
-                }
+                dispatch(new NotifJob($wo->id));
 
                 return $action;
             }

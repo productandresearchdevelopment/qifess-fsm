@@ -18,6 +18,8 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    'mail_host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
