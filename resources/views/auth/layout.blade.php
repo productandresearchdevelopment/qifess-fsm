@@ -34,6 +34,12 @@
 
                     @yield('content')
 
+                    @if(isMobile())
+                        <a href="{{ asset('app.apk') }}">
+                            <img src="{{ asset('images/googleplay.png') }}" width="120">
+                        </a>
+                    @endif
+
                     <p style="font-size: 9px; color: #FFF; margin-top: 10px">
                         Development by Qifess
                         <br>
