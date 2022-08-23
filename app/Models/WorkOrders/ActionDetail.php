@@ -3,6 +3,7 @@
 namespace App\Models\WorkOrders;
 
 use App\Models\Fieldteches\Fieldtech;
+use App\Models\WorkOrders\Masters\Slot;
 use App\Models\WorkOrders\Masters\StatusDetail;
 use App\Models\WorkOrders\Masters\StatusDetailOption;
 use App\SystemModels\Globals\Upload;
@@ -35,6 +36,10 @@ class ActionDetail extends Model
 
     public function fieldtech(){
         return $this->hasOne(Fieldtech::class, 'id', 'value')->withTrashed();
+    }
+
+    public function slot(){
+        return $this->hasOne(Slot::class, 'id', 'value');
     }
 
     public function files(){

@@ -97,7 +97,6 @@ Route::group(['middleware' => ['auth','roles'] ], function(){
         Route::get('/get/{id?}', 'WorkOrders\WorkOrder@get')->name('wo.get');
         Route::get('/detail/{id?}', 'WorkOrders\WorkOrder@detail')->name('wo.detail');
         Route::get('/data', 'WorkOrders\WorkOrder@data')->name('wo.data');
-        Route::get('/export/excel', 'WorkOrders\WorkOrder@exportExcel')->name('wo.export.excel');
         Route::get('/data/archive', 'WorkOrders\WorkOrder@dataArchive')->name('wo.data.archive');
         Route::get('/data/site', 'WorkOrders\WorkOrder@dataSite')->name('wo.data.site');
         Route::get('/data/fieldtech', 'WorkOrders\WorkOrder@dataFieldtech')->name('wo.data.fieldtech');
@@ -108,6 +107,9 @@ Route::group(['middleware' => ['auth','roles'] ], function(){
         Route::post('/push/part/{id?}', 'WorkOrders\WorkOrder@pushPart')->name('wo.push.part');
         Route::delete('/delete', 'WorkOrders\WorkOrder@delete')->name('wo.delete');
         Route::delete('/delete/part', 'WorkOrders\WorkOrder@deletePart')->name('wo.delete.part');
+
+        Route::get('/export/excel', 'WorkOrders\WorkOrder@exportExcel')->name('wo.export.excel');
+        Route::get('/export/pdf/{id?}', 'WorkOrders\WorkOrder@exportPdf')->name('wo.export.pdf');
     });
 
     // REPORTING ----------------------------------------------------------------------------------

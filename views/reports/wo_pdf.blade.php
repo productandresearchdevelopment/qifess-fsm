@@ -1,413 +1,175 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <style>
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .subtitle{font-family: "Times New Roman", Times, serif;font-size: 14;font-weight: bold; text-transform: uppercase;border: none;text-align:center;vertical-align:top;padding:3px 5px;}
-.tg .subtitle2{font-weight: bold; border: none;text-align:left;vertical-align:top;padding: 3px}
-.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top;padding: 2px}
-.page-break {
-        page-break-after: always;
+    @font-face {
+        font-family: 'Quicksand';
+        src: url('file://{{ storage_path('fonts/quicksand/Quicksand-VariableFont_wght.ttf') }}') format('truetype');
     }
-.title{font-family: "Times New Roman", Times, serif;font-size: 30;text-transform: uppercase;border: none;text-align:center;vertical-align:top;padding:3px 5px;}
-    header { position: fixed; top: -10px; left: 80%; right: 0px;height: 30px; }
-    footer { position: fixed; bottom: -60px; left: 70%; right: 0px; height: 50px; }
+
+    body, table, td, div {font-family: Quicksand;}
+    table{width: 100%}
+
+    .page-break {page-break-after: always;}
+    header {position: fixed; top: -10px; left: 80%; right: 0px;height: 30px; }
+    footer {position: fixed; bottom: -60px; left: 70%; right: 0px; height: 50px; }
 </style>
 
-
-<?php $pic = "";$pic_phone = ""; ?>
-@if($data->site)<?php $pic= $data->site->pic?>
-@else <?php $pic= $data->removeSite->pic?>
-@endif
-@foreach($data->actions as $act)
-  @foreach($act->details as $detail)
-      @if($detail->detail->name=='Name' && $detail->value<>'')<?php $pic= $detail->value?>
-      @elseif($detail->detail->name=='Phone' && $detail->value<>'')<?php $pic_phone= $detail->value?>
-      @endif
-  @endforeach
-@endforeach
 <body>
-    <header>
-        <img src="{{ public_path('images/logo.jpeg') }}" style="height: 50">
-    </header>
+    <img src="{{ public_path('images/logo.jpg') }}" style="height: 40">
+    <table style="border-bottom: 2px solid #ccc;">
+        <tr>
+            <td style="padding-bottom: 10px" valign="top">
+                <div style="font-size: 28px; color: #333333;">Workorder</div>
+                <div style="font-size: 18px; color: #333333; font-weight: 600; line-height: 16px;">
+                    {{ $data->activity->name }}, #{{ $data->id }}
+                    <br>
+                    <span style="font-size: 11px; line-height: 11px;">
+                        Created At: {!! $data->created_at ? date('d F Y H:i', strtotime($data->created_at)) : '' !!}
+                        <br>Open By: {!! $data->createdBy ? $data->createdBy->name : '-' !!}
+                    </span>
 
-    <h2 class="title" style="padding-top: 200px">{{ $data->activity->name }} REPORT</h2>
-    <div style="height:20px"></div>
-    <h2 class="title">Nama Site</h2>
-    <h2 class="title">
-        @if($data->site){{ $data->site->name }}
-        @else {{ $data->removeSite->name }}
-        @endif
-    </h2>
-        <div style="height:20px"></div>
-    <h2 class="title">LINK ID SITE</h2>
-    <h2 class="title">
-        @if($data->site){{ $data->site->link_id }}
-        @else {{ $data->removeSite->link_id }}
-        @endif
-    </h2>
-        <div class="page-break"></div>
 
-    <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 80px">
-        <tr>
-          <td class="tg-0pky" style="padding: 55px; padding-right: 220px" colspan="12">
-              <img src="{{ public_path('images/logo.jpeg') }}" style="height: 150">
-
-          </td>
-        </tr>
-        <tr>
-          <td class="tg-0pky" style="height:10px;border: none"colspan="12"></td>
-        </tr>
-        <tr>
-          <td class="tg-0pky" colspan="12">No Kontrak :
-          @foreach($data->actions as $act)
-            @foreach($act->details as $detail)
-                @if($detail->detail->name=='COF ID' && $detail->value<>''){{ $detail->value }}
-                @elseif($detail->detail->name=='PO ID' && $detail->value<>'') {{ $detail->value }}
-                @endif
-            @endforeach
-          @endforeach
-          </td>
-        </tr>
-        <tr>
-          <td class="tg-0pky" colspan="6">{{ $data->activity->name }} REPORT</td>
-          <td class="tg-0pky" colspan="6"></td>
-        </tr>
-        <tr>
-          <td class="tg-0pky" colspan="2"></td>
-          <td class="tg-0pky" colspan="2">Pelaksana</td>
-          <td class="tg-0pky" colspan="2">Nama</td>
-          <td class="tg-0pky" colspan="2">Jabatan</td>
-          <td class="tg-0pky" colspan="2">Tanda Tangan</td>
-          <td class="tg-0pky" colspan="2">Tanggal</td>
-        </tr>
-        <tr>
-          <td class="tg-0pky" colspan="2">Dipersiapkan Oleh</td>
-          <td class="tg-0pky" colspan="2">{{ $data->vendor->alias}}</td>
-          <td class="tg-0pky" colspan="2">@if($data->fieldtech){{ $data->fieldtech->name}}@endif</td>
-          <td class="tg-0pky" colspan="2">
-            @foreach($data->actions as $act)
-              @if($act->status_id==1450){{ $act->createdBy->role->name}}
-              @endif
-            @endforeach  </td>
-          <td class="tg-0pky" colspan="2"></td>
-          <td class="tg-0pky" colspan="2"></td>
-        </tr>
-        <tr>
-          <td class="tg-0pky" colspan="2">Diperiksa Oleh</td>
-          <td class="tg-0pky" colspan="2">NOC</td>
-          <td class="tg-0pky" colspan="2">
-            @foreach($data->actions as $act)
-              @if($act->status_id==1510){{ $act->createdBy->name}}
-              @endif
-            @endforeach  </td>
-          <td class="tg-0pky" colspan="2">
-            @foreach($data->actions as $act)
-              @if($act->status_id==1510){{ $act->createdBy->role->name}}
-              @endif
-            @endforeach  </td>
-          <td class="tg-0pky" colspan="2"></td>
-          <td class="tg-0pky" colspan="2"></td>
-        </tr>
-        <tr>
-          <td class="tg-0pky" colspan="2">Diketahui Oleh</td>
-          <td class="tg-0pky" colspan="2">Project</td>
-          <td class="tg-0pky" colspan="2">{{ $data->createdBy->name }}</td>
-          <td class="tg-0pky" colspan="2">{{ $data->createdBy->role->name }}</td>
-          <td class="tg-0pky" colspan="2"></td>
-          <td class="tg-0pky" colspan="2"></td>
+                </div>
+            </td>
+            <td width="250" style="padding-bottom: 10px">
+                <div style="padding: 5px 20px 20px 20px; border: 1px solid #eeeeee;">
+                    <span style="font-size: 11px; font-weight: 600; line-height: 10px;">CLIENT</span>
+                    <br>
+                    <span style="font-size: 13px; line-height: 10px; font-weight: 600">{{ $data->client->name }}</span>
+                    <br>
+                    <span style="font-size: 12px; line-height: 10px;">
+                        {{ $data->client->address }}
+                        <br>Email: {{ $data->client->email }}
+                        <br>Phone: {{ $data->client->phone }}
+                    </span>
+                </div>
+            </td>
         </tr>
     </table>
 
-    <div class="page-break"></div>
-
-    <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 80px">
-      <tr>
-        <td class="subtitle" colspan="12">GENERAL SITE INFORMATION</td>
-      </tr>
-      <tr>
-        <td class="subtitle2" colspan="12">Data Site/ Location</td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" style="font-weight: bold;text-align: center;" colspan="4">Items</td>
-        <td class="tg-0pky" style="font-weight: bold;text-align: center;" colspan="8">Value</td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" colspan="4">Nama Lokasi</td>
-        <td class="tg-0pky" colspan="8">
-          @if($data->site){{ $data->site->name }}
-          @else {{ $data->removeSite->name }}
-          @endif</td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" colspan="4">Alamat</td>
-        <td class="tg-0pky" colspan="8">
-          @if($data->site){{ $data->site->address }}
-          @else {{ $data->removeSite->address }}
-          @endif
-        </td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" colspan="4">Latitude</td>
-        <td class="tg-0pky" colspan="8">
-          @if($data->site){{ $data->site->lat }}
-          @else {{ $data->removeSite->lat }}
-          @endif</td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" colspan="4">Longitude</td>
-        <td class="tg-0pky" colspan="8">
-          @if($data->site){{ $data->site->long }}
-          @else {{ $data->removeSite->long }}
-          @endif
-        </td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" colspan="4">PIC di lokasi</td>
-        <td class="tg-0pky" colspan="8">{{ $pic }}</td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" colspan="4">Nomor Telepon</td>
-        <td class="tg-0pky" colspan="8">{{ $pic_phone }}</td>
-      </tr>
-    </table>
-
-    <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 20px">
-      <tr>
-        <td class="subtitle2" colspan="12">Data Client/ Customer</td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" style="font-weight: bold;text-align: center;" colspan="4">Title</td>
-        <td class="tg-0pky" style="font-weight: bold;text-align: center;" colspan="8">Value</td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" colspan="4">Client/ Customer Name</td>
-        <td class="tg-0pky" colspan="8">
-          @if($data->site){{ $data->client->name }}
-          @else {{ $data->removeSite->client->name }}
-          @endif
-        </td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" colspan="4">Address</td>
-        <td class="tg-0pky" colspan="8">
-          @if($data->site){{ $data->client->address }}
-          @else {{ $data->removeSite->client->address }}
-          @endif
-        </td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" colspan="4">Phone</td>
-        <td class="tg-0pky" colspan="8">
-          @if($data->site){{ $data->client->phone }}
-          @else {{ $data->removeSite->client->phone }}
-          @endif
-        </td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" colspan="4">Email</td>
-        <td class="tg-0pky" colspan="8">
-          @if($data->site){{ $data->client->email }}
-          @else {{ $data->removeSite->client->email }}
-          @endif
-        </td>
-      </tr>
-    </table>
-
-    <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 20px">
-      <tr>
-        <td class="subtitle2" colspan="12">Data Vendor</td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" style="font-weight: bold;text-align: center;" colspan="4">Title</td>
-        <td class="tg-0pky" style="font-weight: bold;text-align: center;" colspan="8">Value</td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" colspan="4">Vendor Name</td>
-        <td class="tg-0pky" colspan="8">{{ $data->vendor->name }}</td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" colspan="4">Address</td>
-        <td class="tg-0pky" colspan="8">{{ $data->vendor->address }}</td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" colspan="4">Phone</td>
-        <td class="tg-0pky" colspan="8">{{ $data->vendor->phone }}</td>
-      </tr>
-      <tr>
-        <td class="tg-0pky" colspan="4">Email</td>
-        <td class="tg-0pky" colspan="8">{{ $data->vendor->email }}</td>
-      </tr>
-    </table>
-    <div class="page-break"></div>
-
-    <h2 class="subtitle" style="text-align: center;padding-top: 80px">HISTORY PROGRESS STATUS</h2>
-
-    @foreach($data->actions as $act)
-      <?php $count = 0; $count_image = 0; $last_group =""; $value=""; $act_id = $act->id; $note = str_replace("\n", '<br>', $act->note)?>
-      <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 80px">
-        <tr style="padding-top: 20px">
-          <td class="subtitle2" colspan="8">STATUS: {{ $act->status->name }}</td>
-        </tr>
-        <tr>
-          <td class="subtitle2" style="font-style: italic;font-size: 10px;"colspan="4">Created at: {{ date('d M Y H:i', strtotime($act->created_at)) }}</td>
-        </tr>
-        <tr>
-          <td class="subtitle2" style="font-style: italic;font-size: 10px;"colspan="12">Created by: {{ $act->createdBy->name }} ({{ $act->createdBy->role->name }})</td>
-        </tr>
-        <tr>
-          <td class="subtitle2" style="font-style: italic;font-size: 10px" colspan="12">Note / Description: {{ $note }}</td>
-        </tr>
-      @foreach($act->status->details as $sts)
-        @foreach($sts->actionDetails as $act_dtl)
-          @if($act_id == $act_dtl->action_id )
-            @if($act_dtl->value!="")
-              @if($sts->type=='text')
-                <?php $value = $act_dtl->value; ?>
-              @elseif($sts->type=='textarea')
-                <?php $value = str_replace("\n", '<br>', $act_dtl->value); ?>
-              @elseif($sts->type=='datetime')
-                <?php $value = date('d M Y H:i', strtotime($act_dtl->value)); ?>
-              @elseif($sts->type=='date')
-                <?php $value = date('d M Y', strtotime($act_dtl->value)); ?>
-              @elseif($sts->type=='time')
-                <?php $value = date('H:i', strtotime($act_dtl->value)); ?>
-              @elseif($sts->type=='signature')
-                <?php $value = date('H:i', strtotime($act_dtl->value)); ?>
-              @endif
-            @endif
-
-            @if($sts->type!='file' && $sts->type!='hide' && $value!="")
-             <?php $count ++; ?>
-              @if($count<=1)
-                <tr>
-                  <td class="tg-0pky" style="font-weight: bold; text-align: center;" colspan="4">Data</td>
-                  <td class="tg-0pky" style="font-weight: bold; text-align: center;" colspan="8">Value</td>
-                </tr>
-              @endif
-              @if($value!=="")
-                @if($last_group!=$sts->group)
-                  <?php $last_group = $sts->group; ?>
-                  <tr>
-                    <td class="tg-0pky" style="font-weight: bold;font-style: italic;"colspan="12">{{ $sts->group }}</td>
-                  </tr>
-                @endif
-                  <tr>
-                      <td class="tg-0pky" colspan="4">{{ $sts->name }}</td>
-                        @if($sts->type=='signature')
-                          <td class="tg-0pky" colspan="8">
-                          @if(file_exists(public_path('storage/uploads/' . $detail->value . '.jpeg')))
-                              <img src="{{ public_path('storage/uploads/') }}{{ $act_dtl->value }}.jpeg" style="height: 50px">
-                          @else
-                              <img src="{{ public_path('storage/uploads/') }}{{ $act_dtl->value }}.png" style="height: 50px">
-                          @endif
-                          </td>
-                        @else
-                          <td class="tg-0pky" colspan="8">{{ $value }}</td>
-                        @endif
-                  </tr>
-              @endif
-            @elseif($sts->type=='file')
-             <?php $count_image ++; ?>
-              <tr>
-                <td class="subtitle2" colspan="12">
-                  @if($count_image<=1)
-                  <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 20px">
-                  @else <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 80px">
-                  @endif
-                    @foreach($act_dtl->files as $files)
-                            <tr>
-                              <td class="tg-0pky"colspan="12"> <img src="{{ public_path('storage/uploads/') }}{{ $files->filename }}" style="height: 500px;display: block;text-align:center;vertical-align:middle;max-width:100%;max-height:100%;">
-                              </td>
-                            </tr>
-                            <tr>
-                              <td class="subtitle2" style="text-align: center;" colspan="12"> {{ $act_dtl->detail->name }}</td>
-                            </tr>
-                    @endforeach
+    <div style="background: #FAFAFA; margin-top: 20px">
+        <table style="border: 1px solid #eee; padding: 20px; vertical-align: top">
+            <tr>
+                <td width="50%" valign="top">
+                    <table style="font-size: 12px">
+                        <tr>
+                            <td valign="top">AREA</td>
+                            <td valign="top">:</td>
+                            <td valign="top" style="font-weight: 600">
+                                {{ $data->vendor->name }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">SERVICE</td>
+                            <td valign="top">:</td>
+                            <td valign="top" style="font-weight: 600">{{ $data->service->name }}</td>
+                        </tr>
+                        <tr>
+                            <td width="80px" valign="top">SITE</td>
+                            <td width="20px"  valign="top">:</td>
+                            <td valign="top">
+                                <span style="font-size: 13px; line-height: 10px; font-weight: 600">{{ $data->site->name }}</span>
+                                <br>
+                                <span style="font-size: 12px; line-height: 10px;">
+                                    {{ $data->site->address }}
+                                    <br>Email: {{ $data->site->pic_email }}
+                                    <br>Phone: {{ $data->site->pic_phone }}
+                                </span>
+                            </td>
+                        </tr>
                     </table>
                 </td>
-              </tr>
-            @elseif($sts->type=='hide' && $sts->property=='fieldtech')
-                <tr>
-                  <td class="subtitle2" style="font-weight: bold; text-align: center;" colspan="12">
-                    <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 20px">
-                      <tr>
-                        <td class="subtitle2" colspan="2" rowspan="4">
-                          @if(file_exists(public_path('storage/uploads/' . $act_dtl->fieldtech->photo . '.jpeg')))
-                            <img src="{{ public_path('storage/uploads/') }}{{ $act_dtl->fieldtech->photo }}.jpeg" style="height: 100px">
-                          @elseif(file_exists(public_path('storage/uploads/' . $act_dtl->fieldtech->photo . '.png')))
-                            <img src="{{ public_path('storage/uploads/') }}{{ $act_dtl->fieldtech->photo }}.png" style="height: 100px">
-                          @else
-                          <img src="{{ public_path('images/nouser.png') }}" style="height: 100px">
-                          @endif
-                        </td>
-                        <td class="subtitle2" style="font-size: 10px;" colspan="10">Vendor : {{ $data->vendor->name }}</td>
-                      </tr>
-                      <tr>
-                        <td class="subtitle2" style="font-size: 10px;" colspan="10">Name : {{ $act_dtl->fieldtech->name }}</td>
-                      </tr>
-                      <tr>
-                        <td class="subtitle2" style="font-size: 10px;" colspan="10">Phone : {{ $act_dtl->fieldtech->phone }}</td>
-                      </tr>
-                      <tr>
-                        <td class="subtitle2" style="font-size: 10px;" colspan="10">Email : {{ $act_dtl->fieldtech->email }}</td>
-                      </tr>
-                      <tr style="border: none;">
-                        <td class="subtitle2" style="font-style: italic;font-size: 10px;"colspan="12">Assigned Fieldtech</td>
-                      </tr>
+                <td width="50%" valign="top">
+                    <table style="font-size: 12px">
+                        <tr>
+                            <td width="100px" valign="top">BOOKING DATE</td>
+                            <td width="20px" valign="top">:</td>
+                            <td valign="top" style="font-weight: 600">{!! $data->start_date ? date('d F Y', strtotime($data->start_date)) : '' !!}</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">SLOT</td>
+                            <td valign="top">:</td>
+                            <td valign="top" style="font-weight: 600">{!! $data->slot ? $data->slot->name : '' !!}</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">TEAM</td>
+                            <td valign="top">:</td>
+                            <td valign="top">
+                                @if($data->fieldtech)
+                                    <span style="font-weight: 600">{{ $data->fieldtech->name }}</span>
+                                    @foreach($data->fieldtech->users AS $row)
+                                        <br> - {{ $row->name }} ({{ $row->phone }})
+                                    @endforeach
+                                @endif
+                            </td>
+                        </tr>
                     </table>
-                  </td>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="padding: 5px 20px 20px 20px; border: 1px solid #eeeeee; margin-top: 20px;">
+        <span style="font-size: 10px; font-weight: 600; line-height: 10px; margin-bottom: 5px;">DESCRIPTION</span>
+        <br>
+        <span style="font-size: 13px; line-height: 13px;">{{ $data->description }}</span>
+    </div>
+
+    <div style="padding: 5px 20px 20px 20px; border: 1px solid #eeeeee; margin-top: 20px;">
+        <div style="font-size: 25px; color: #333; margin-bottom: 5px; border-bottom: 1px solid #666; padding-bottom: 5px;">
+            History Status
+        </div>
+        <br>
+        @foreach($data->actions AS $action)
+        <div>
+            <table border="0" width="100%">
+                <tr>
+                    <td style="font-size: 30px; width: 20px; line-height: 20px;" valign="top">&raquo;</td>
+                    <td valign="top">
+                        <div style="font-size: 16px; font-weight: 600;">{{ $action->status->name }}</div>
+                        <div style="font-size: 10px; line-height: 10px;">
+                            Updated At: {{ date('d/m/Y, H:i', strtotime($action->created_at)) }},&nbsp;
+                            [ By: {{ $action->createdBy->name }} ]
+                        </div>
+                        <div style="font-size: 10px; line-height: 12px; margin-top: 5px; margin-bottom: 10px;">
+                            <div style="font-weight: 600;">Notes:</div> {{ $action->note ?: '-' }}
+                        </div>
+                        @if(count($action->details))
+                        <div>
+{{--                            <div style="font-weight: 600; font-size: 12px; margin-bottom: 20px">INFORMATION DETAIL</div>--}}
+                            @foreach($action->details AS $detail)
+                                <div style="margin-bottom: 10px;">
+                                    <div style="font-weight: 600; font-size: 10px; line-height: 7px;">{{$detail->detail->name}} : </div>
+                                    @if($detail->detail->triger == 'wo.fieldtech')
+                                        <div style="font-size: 12px; line-height: 10px;">{{$detail->fieldtech->name}}</div>
+                                    @elseif($detail->detail->triger == 'wo.startdate')
+                                        <div style="font-size: 12px; line-height: 10px;">{{ date('d/m/Y', strtotime($detail->value)) }}</div>
+                                    @elseif($detail->detail->triger == 'wo.slot')
+                                        <div style="font-size: 12px; line-height: 10px;">{{ $detail->slot->name }}</div>
+                                    @elseif($detail->detail->type == 'file')
+                                        <div style="font-size: 12px; line-height: 10px;">
+                                            @foreach($detail->files AS $file)
+                                                @if($file->type == 'image')
+                                                    <img style="height: 200px; border: 1px solid #CCC; margin: 10px;" src="{{ storage_path("app/public/uploads/".$file->filename) }}">
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    @elseif($detail->detail->type == 'date')
+                                        <div style="font-size: 12px; line-height: 10px;">{{ date('d/m/Y', strtotime($detail->value)) }}</div>
+                                    @elseif($detail->detail->type == 'datetime')
+                                        <div style="font-size: 12px; line-height: 10px;">{{ date('d/m/Y H:i:s', strtotime($detail->value)) }}</div>
+                                    @elseif($detail->detail->type == 'combo')
+                                        <div style="font-size: 12px; line-height: 10px;">{{ $detail->valueOption ? $detail->valueOption->option : '-' }}</div>
+                                    @else
+                                        <div style="font-size: 12px; line-height: 10px;">{{$detail->value ?: '-'}}</div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                        @endif
+                    </td>
                 </tr>
-            @endif
-          @endif
+            </table>
+        </div>
         @endforeach
-      @endforeach
-      </table>
-      <div class="page-break"></div>
-    @endforeach
-     @if($data->parts!='[]')
-     <table class="tg" style="table-layout: fixed; width: 100%;padding-top: 80px">
-      <tr>
-          <td class="tg-c3ow" colspan="12">Bill Of Quantity</td>
-        </tr>
-        <tr>
-          <td class="tg-0pky">No</td>
-          <td class="tg-0pky" colspan="3">Name</td>
-          <td class="tg-0pky" colspan="3">Model</td>
-          <td class="tg-0pky" colspan="2">Serial No</td>
-          <td class="tg-0pky" colspan="3">Description</td>
-        </tr>
-        <tr>
-          <td class="tg-0pky" colspan="12">A. Perangkat</td>
-        </tr>
-        <?php $count = 0; ?>
-        @foreach($data->parts as $part)
-        @if($part->type=="EQUIPMENT")
-        <?php $count++ ?>
-        <tr>
-          <td class="tg-0pky">{{ $count }}.</td>
-          <td class="tg-0pky" colspan="3">{{ $part->name }}</td>
-          <td class="tg-0pky" colspan="3">{{ $part->model }}</td>
-          <td class="tg-0pky" colspan="2">{{ $part->serial }}</td>
-          <td class="tg-0pky" colspan="3">{{ $part->description }}</td>
-        </tr>
-        @endif
-      @endforeach
-        <tr>
-          <td class="tg-0pky" colspan="12">B. Material</td>
-        </tr>
-        <?php $count = 0; ?>
-        @foreach($data->parts as $part)
-        @if($part->type=="MATERIAL")
-        <?php $count++ ?>
-        <tr>
-          <td class="tg-0pky">{{ $count }}.</td>
-          <td class="tg-0pky" colspan="3">{{ $part->name }}</td>
-          <td class="tg-0pky" colspan="3">{{ $part->model }}</td>
-          <td class="tg-0pky" colspan="2">{{ $part->serial }}</td>
-          <td class="tg-0pky" colspan="3">{{ $part->description }}</td>
-        </tr>
-        @endif
-      @endforeach
-    </table>
-    @endif
+    </div>
 </body>

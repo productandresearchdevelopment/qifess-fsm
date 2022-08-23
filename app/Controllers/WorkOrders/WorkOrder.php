@@ -2,6 +2,7 @@
 
 namespace App\Controllers\WorkOrders;
 
+use PDF;
 use App\Jobs\NotifJob;
 use App\Libraries\ExportExcel;
 use App\Libraries\FileUpload;
@@ -170,20 +171,6 @@ class WorkOrder extends Controller
         $query = Site::query();
         return Query::open($query, ['id','name','link_id'], false);
     }
-
-//    public function dataFieldtech(Request $request){
-//        $startDate = $request->input('start_date');
-//        $slot = $request->input('slot');
-//
-//        $query = Fieldtech::where('vendor_id', $request->vendor);
-//        if(false) {
-//            $query->whereDoesntHave('workorders', function ($query) use ($startDate, $slot) {
-//                $query->where('start_date', $startDate);
-//                $query->where('slot_id', $slot);
-//            });
-//        }
-//        return Query::open($query, null, false);
-//    }
 
     public function dataFieldtech(Request $request){
         $startDate = $request->input('start_date');
@@ -562,7 +549,7 @@ class WorkOrder extends Controller
             ["text"=> "DESCRIPTION", "dataIndex"=> "description", "width"=> 250],
         ];
 
-        $footers = ['Total Count: '.count($data).' Row', ' ', 'Asianet (QIFESS)', 'Downloaded at ('.date('d F Y H:i:s').')'];
+        $footers = ['Total Count: '.count($data).' Row', ' ', 'Asianet', 'Downloaded (QFEST)` ('.date('d F Y H:i:s').')'];
         $params = array(
             'title' => $titles,
             'columns' => $columns,
@@ -573,6 +560,16 @@ class WorkOrder extends Controller
 
         $excel = new ExportExcel($params);
         $excel->run($params);
+    }
+
+    public function exportPdf(Request $request, $id = null){
+        $user = $request->user();
+        $view = 'reports.wo_pdf';
+        $data = Wo::find($id);
+        $params = ['user' => $user, 'data' => $data];
+        $html = view($view, $params);
+        $pdf = PDF::loadHtml($html);
+        return $pdf->stream("WO ($data->id).pdf");
     }
 }
 

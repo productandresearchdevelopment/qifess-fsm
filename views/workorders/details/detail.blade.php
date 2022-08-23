@@ -169,7 +169,7 @@
             dataTpl.last_action.duration_color = (dataTpl.duration_target < dataTpl.last_action.duration) ? 'DD0000' : '333333'
 
             dataTpl.link_bast = '{{ route('report.bast.pdf') }}/'+data.id;
-            dataTpl.link_wo = '{{ route('report.wo.pdf') }}/'+data.id;
+            dataTpl.link_pdf = '{{ route('wo.export.pdf') }}/'+data.id;
 
             // ACTIONS TPL ------------------------------------------------
             let actionTpl = [];
@@ -399,9 +399,7 @@
 
                     if(isNull(me.partEdit) && isNull(me.partDelete)) $('.button-menu-part').hide();
 
-                    // DOWNLOAD DOC ------------------------------------------
-                  // if(me.data.activity_id==1 && me.data.last_action.status_id==1810)$('#download-doc').show();
-                  // else $('#download-doc').hide();
+
                 });
             }
             return true;

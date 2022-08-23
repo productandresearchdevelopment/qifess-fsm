@@ -82,6 +82,10 @@
         </div>
     </div>
 
+    <a href="{link_pdf}" target="_blank" style="text-decoration: none">
+        <div class="btn" id="download-pdf" style="background: #CC0000">DOWNLOAD PDF</div>
+    </a>
+
 {{--
     <div class="part" style="position: relative">
         <div class="header-title" style="margin-top: 20px">Spare Part</div>

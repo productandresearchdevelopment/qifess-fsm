@@ -9,6 +9,7 @@ use App\Models\Sites\Site;
 use App\Models\Vendors\Vendor;
 use App\Models\WorkOrders\Masters\Activity;
 use App\Models\WorkOrders\Masters\Service;
+use App\Models\WorkOrders\Masters\Slot;
 use App\SystemModels\Auth\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -62,6 +63,10 @@ class WorkOrder extends Model
 
     public function vendor(){
         return $this->hasOne(Vendor::class, 'id', 'vendor_id')->withTrashed();
+    }
+
+    public function slot(){
+        return $this->hasOne(Slot::class, 'id', 'slot_id');
     }
 
     public function fieldtech(){
