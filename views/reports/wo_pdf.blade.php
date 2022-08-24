@@ -2,7 +2,19 @@
 <style>
     @font-face {
         font-family: 'Quicksand';
-        src: url('file://{{ storage_path('fonts/quicksand/Quicksand-VariableFont_wght.ttf') }}') format('truetype');
+        src: url('file://{{ storage_path('fonts/quicksand/Quicksand.ttf') }}') format('truetype');
+    }
+
+    @font-face {
+        font-family: 'Quicksand';
+        src: url('file://{{ storage_path('fonts/quicksand/Quicksand-SemiBold.ttf') }}') format('truetype');
+        font-weight: 600;
+    }
+
+    @font-face {
+        font-family: 'Quicksand';
+        src: url('file://{{ storage_path('fonts/quicksand/Quicksand-Bold.ttf') }}') format('truetype');
+        font-weight: bold;
     }
 
     body, table, td, div {font-family: Quicksand;}
