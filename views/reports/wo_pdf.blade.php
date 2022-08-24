@@ -2,7 +2,7 @@
 <style>
     @font-face {
         font-family: 'Quicksand';
-        src: url('{{ storage_path('fonts/quicksand/Quicksand-VariableFont_wght.ttf') }}') format('truetype');
+        src: url('file://{{ storage_path('fonts/quicksand/Quicksand-VariableFont_wght.ttf') }}') format('truetype');
     }
 
     body, table, td, div {font-family: Quicksand;}
