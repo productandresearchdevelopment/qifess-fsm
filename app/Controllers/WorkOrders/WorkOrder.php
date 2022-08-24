@@ -326,7 +326,7 @@ class WorkOrder extends Controller
                         if($statusDetail->type == 'file'){
                             if($detail->value && count($detail->value)) {
                                 $actionDetail = ActionDetail::create(['action_id' => $action->id, 'detail_id' => $statusDetail->id]);
-                                $watermark  = "DEMO (WO: $action->wo_id) - (".strtoupper(date('d M Y H:i')).")";
+                                $watermark  = "ASIANET (WO: $action->wo_id) - (".strtoupper(date('d M Y H:i')).")";
                                 $watermark .= "\n".$action->status->name;
                                 $watermark .= "\n".$statusDetail->name;
                                 if($action->lat && $action->long) $watermark .= "\nCoordinate ($action->lat, $action->long)";
