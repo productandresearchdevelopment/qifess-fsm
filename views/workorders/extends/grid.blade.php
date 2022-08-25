@@ -208,6 +208,7 @@
                     },
 
                     {text: "ID", dataIndex: 'id', width: 115},
+                    {text: "TICKET", dataIndex: 'no_wo', width: 115},
                     {
                         text: "CLIENT", dataIndex: 'client_id', width: 150,
                         renderer: function(val, meta, rec){
