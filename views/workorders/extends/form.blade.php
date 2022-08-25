@@ -52,16 +52,6 @@
                         autoScroll: true,
                         layout: {type: 'vbox', align: 'stretch'},
                         items: [
-                            // NOMOR WO --------------------------------------------------------------------------------
-                            {
-                                xtype: 'textfield',
-                                name: 'no_wo',
-                                fieldLabel: 'WO Number',
-                                allowBlank: true,
-                                hidden: true,
-                                margin: '5 15 5 15'
-                            },
-
                             // SERVICE & ACTIVITY ----------------------------------------------------------------------
                             {
                                 xtype: 'fieldcontainer', margin: '0 5',
@@ -113,6 +103,15 @@
                                         }),
                                     },
                                 ]
+                            },
+
+                            // NOMOR WO --------------------------------------------------------------------------------
+                            {
+                                xtype: 'textfield',
+                                name: 'no_wo',
+                                fieldLabel: 'Ticket Number (Customer)',
+                                allowBlank: true,
+                                margin: '5 15 5 15'
                             },
 
                             // SITE INSTALL & REMOVE -------------------------------------------------------------------
