@@ -184,8 +184,10 @@
                                 }
                                 window.location = '{{ route('wo.export.excel') }}?' + params.join('&');
                             }
-                        }
+                        },
                         @endif
+                        '->',
+                        {xtype: 'searchfield', flex:1, maxWidth: 300, minWidth: 180, store: me.store}
                     ]
                 }],
                 columns: [
