@@ -518,6 +518,7 @@ class WorkOrder extends Controller
         $data = DB::select(DB::raw($sql));
         $columns = [
             ["text"=> "ID", "dataIndex"=> "id", "width"=> 115],
+            ["text"=> "TICKET ID", "dataIndex"=> "ticket", "width"=> 115],
             ["text"=> "SERVICE", "dataIndex"=> "service_name", "width"=> 100, "align"=> "center"],
             ["text"=> "ACTIVITY", "dataIndex"=> "activity_name", "width"=> 150, "align"=> "center"],
             ["text"=> "CLIENT", "dataIndex"=> "client_name", "width"=> 150],
