@@ -494,7 +494,7 @@ class WorkOrder extends Controller
             $where = "WHERE $query";
         }
 
-        $sql = "SELECT A.*, X.ont_serial,
+        return $sql = "SELECT A.*, X.ont_serial,
                        B.created_at lastupdate_at,
                        B1.`name` status_name,
                        C.`name` activity_name,
