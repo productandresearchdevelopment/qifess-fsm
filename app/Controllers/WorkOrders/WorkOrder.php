@@ -461,7 +461,7 @@ class WorkOrder extends Controller
             array_push($titles, ['Archive Data','h4']);
         }
         else {
-            $mindate = date('Y-m-d', strtotime('-7 days'));
+            $mindate = date('Y-m-d', strtotime('-0 days'));
             $query[] = "(A.close_date IS NULL OR A.close_date >= '$mindate')";
             array_push($titles, ['Data On Going','h4']);
         }
@@ -494,7 +494,7 @@ class WorkOrder extends Controller
             $where = "WHERE $query";
         }
 
-        return $sql = "SELECT A.*, X.ont_serial,
+        $sql = "SELECT A.*, X.ont_serial,
                        B.created_at lastupdate_at,
                        B1.`name` status_name,
                        C.`name` activity_name,
