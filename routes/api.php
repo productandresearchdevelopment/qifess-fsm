@@ -34,4 +34,73 @@ Route::post('/mobile/login', function (Request $request){
     return ['success' => false, 'message'=> 'User Notfound'];
 });
 
+Route::group(['middleware' => ['auth.api'] ], function(){
+
+    Route::group(['prefix' => 'public'], function (){
+
+        Route::post('/getToken', function (Request $request){
+            $username = $request->input('username');
+            $password = $request->input('password');
+
+            if($username && $password) {
+                if($user = User::where('username', $username)->where('role_id', 20)->first()) {
+                    if(Hash::check($password, $user->password)) {
+                        $token = \Illuminate\Support\Str::uuid();
+                        $user->update(['token_api' => $token]);
+                        return [
+                            'success' => true,
+                            'message' => 'Success...',
+                            'name' => $user->name,
+                            'username' => $username,
+                            'token' => $token
+                        ];
+                    }
+                    return response()->json(['success' => false, 'message' => 'Invalid Password!']);
+                }
+                return response()->json(['success' => false, 'message' => 'Invalid Username']);
+            }
+            return response()->json(['success' => false, 'message' => 'Invalid Username Or Password!']);
+        });
+
+        Route::group(['middleware' => ['auth.api.role'] ], function(){
+            Route::get('/test', function (Request $request){
+                return $request->user();
+            });
+            Route::get('/area/data', 'Vendors\Vendor@data');
+            Route::get('/team/data', 'Fieldtechs\Fieldtech@data');
+            Route::get('/service/data', 'Services\Service@data');
+            Route::get('/client/data', 'Clients\Client@data');
+            Route::get('/site/data', 'Sites\Site@data');
+            Route::get('/booking/data', 'WorkSchedule@data');
+            Route::get('/slot/data', function (Request $request){
+                return \App\Models\WorkOrders\Masters\Slot::all();
+            });
+            Route::get('/activity/data', function (Request $request){
+                $activities = \App\Models\WorkOrders\Masters\Activity::all();
+                foreach ($activities AS $activity){
+                    $status = \App\Models\WorkOrders\Masters\Status::where('activities', 'LIKE', "%$activity->id%")
+                        ->where('type', 0)
+                        ->first();
+
+                    if($status) $activity->status = ['id' => $status->id, 'name' => $status->name];
+                    else $activity->status = null;
+                }
+                return $activities;
+            });
+            Route::get('/wo/data', 'WorkOrders\WorkOrder@data');
+            Route::get('/wo/data/archive', 'WorkOrders\WorkOrder@dataArchive');
+
+            Route::post('/site/push/{id?}', 'Sites\Site@push');
+            Route::post('/wo/push', 'WorkOrders\WorkOrder@push');
+        });
+
+    });
+
+});
+
+
+
+
+
+
 

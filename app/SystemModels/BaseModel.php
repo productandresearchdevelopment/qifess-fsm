@@ -41,7 +41,7 @@ trait BaseModel {
         static::updating(function($model){
            if($model->timestamps && (!isset($model->modifyBy) || $model->modifyBy)){
                 $user = Auth::user();
-                $model->updated_by = $user->id;
+                $model->updated_by = ($user ? $user->id : null);
             }
         });
 

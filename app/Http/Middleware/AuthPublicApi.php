@@ -13,15 +13,10 @@ class AuthPublicApi
 {
     public function handle($request, Closure $next)
     {
-        $key = $request->header('key');
-        $key = $key ? $key : $request->input('key');
-        if($key) {
-            if ($user = User::where('token', $key)->where('role_id', 20)->first()) {
-                Auth::guard()->login($user);
-                $user->update(['last_ip' => Request::ip(), 'last_active' => date('Y-m-d H:i:s')]);
-                return $next($request);
-            }
+        $key = $request->header('key') ?: $request->input('key');
+        if($key == 'vxdWj33ubnHtlwj3iTbGheASMiN5yZLhbbUvC5Umy872huCNcAtOC'){
+            return $next($request);
         }
-        return abort(403);
+        return response(['success' => false, 'message' => 'Invalid Key!'], 403);
     }
 }

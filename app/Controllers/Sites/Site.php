@@ -38,6 +38,7 @@ class Site extends Controller
         $query = Mod::query();
         if($user->client_id) $query = $query->where("client_id", $user->client_id);
         if($filter = $request->input("filter-client")) $query = $query->where("client_id", $filter);
+        if($filter = $request->input("filter-area")) $query = $query->where("vendor_id", $filter);
         if($filter = $request->input("filter-service")) $query = $query->where("service_id", $filter);
         if($filter = $request->input("filter-status")) $query = $query->where("is_active", $filter>1?0:1);
         if($search = $request->input("query")){
@@ -50,7 +51,7 @@ class Site extends Controller
             });
         }
         $query->with(["workorders"]);
-        $query ->withCount(["workorders"]);
+        $query->withCount(["workorders"]);
         return Query::open($query);
     }
 

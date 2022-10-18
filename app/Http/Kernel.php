@@ -61,6 +61,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'roles' => \App\Http\Middleware\AuthRoles::class,
         'mobileRoles' => \App\Http\Middleware\AuthMobileRoles::class,
-        'publicApiRoles' => \App\Http\Middleware\AuthPublicApi::class,
+        'auth.api' => \App\Http\Middleware\AuthPublicApi::class,
+        'auth.api.role' => \App\Http\Middleware\AuthPublicApiRoles::class,
     ];
 }

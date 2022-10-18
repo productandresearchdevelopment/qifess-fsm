@@ -206,6 +206,7 @@ class WorkOrder extends Controller
                 'description' => $request->input('description'),
                 'no_wo' => $request->input('no_wo'),
                 'start_date' => $request->input('start_date'),
+                'fieldtech_id' => $request->input('fieldtech_id'),
                 'expire_date' => $request->input('expire_date'),
             ];
 
