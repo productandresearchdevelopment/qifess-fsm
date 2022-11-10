@@ -14,6 +14,10 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        If (env('APP_ENV') != 'local') {
+            $this->app['request']->server->set('HTTPS', true);
+        }
+
         Blade::directive('require', function ($args) {
             $args = Blade::stripParentheses($args);
             $viewBasePath = Blade::getPath();
