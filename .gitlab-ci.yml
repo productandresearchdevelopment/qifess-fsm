@@ -19,19 +19,19 @@ deploy-devel:
     - ssh $SSH_USER@$SSH_HOST_DEVEL "cd $WORK_DIR_DEVEL && sudo git pull https://$GIT_USER:$GIT_PASSWORD@$GIT_URL main"
     - ssh $SSH_USER@$SSH_HOST_DEVEL "cd $WORK_DIR_DEVEL && sudo sh deploy.sh"
 
-#deploy-production:
-#  stage: production
-#  image: ubuntu:latest
-#  only:
-#    - /-RELEASE$/
-#  before_script:
-#    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-#    - eval $(ssh-agent -s)
-#    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-#    - mkdir -p ~/.ssh
-#    - '[[ -f /.dockerenv ]] && ssh-keyscan -H "$SSH_HOST_PRODUCTION" > ~/.ssh/known_hosts'
-#  script:
-#    - ssh $SSH_USER@$SSH_HOST_PRODUCTION "cd $WORK_DIR_PRODUCTION && sudo git checkout -f main"
-#    - ssh $SSH_USER@$SSH_HOST_PRODUCTION "cd $WORK_DIR_PRODUCTION && sudo git clean -fd"
-#    - ssh $SSH_USER@$SSH_HOST_PRODUCTION "cd $WORK_DIR_PRODUCTION && sudo git pull https://$GIT_USER:$GIT_PASSWORD@$GIT_URL main"
-#    - ssh $SSH_USER@$SSH_HOST_PRODUCTION "cd $WORK_DIR_PRODUCTION && sudo sh deploy.sh"
+deploy-production:
+  stage: production
+  image: ubuntu:latest
+  only:
+    - /-RELEASE$/
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && ssh-keyscan -H "$SSH_HOST_PRODUCTION" > ~/.ssh/known_hosts'
+  script:
+    - ssh $SSH_USER@$SSH_HOST_PRODUCTION "cd $WORK_DIR_PRODUCTION && sudo git checkout -f main"
+    - ssh $SSH_USER@$SSH_HOST_PRODUCTION "cd $WORK_DIR_PRODUCTION && sudo git clean -fd"
+    - ssh $SSH_USER@$SSH_HOST_PRODUCTION "cd $WORK_DIR_PRODUCTION && sudo git pull https://$GIT_USER:$GIT_PASSWORD@$GIT_URL main"
+    - ssh $SSH_USER@$SSH_HOST_PRODUCTION "cd $WORK_DIR_PRODUCTION && sudo sh deploy.sh"
