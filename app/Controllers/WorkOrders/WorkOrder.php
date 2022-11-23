@@ -564,7 +564,7 @@ class WorkOrder extends Controller
                 ]
             ],
             ["text"=> "ONT SERIALNUMBER", "dataIndex"=> "ont_serial", "width"=> 200],
-            ["text"=> "DESCRIPTION", "dataIndex"=> "description", "width"=> 250],
+//            ["text"=> "DESCRIPTION", "dataIndex"=> "description", "width"=> 250],
         ];
 
         $footers = ['Total Count: '.count($data).' Row', ' ', 'Asianet', 'Downloaded (QFEST)` ('.date('d F Y H:i:s').')'];
