@@ -503,6 +503,8 @@ class WorkOrder extends Controller
                        E.`name` owner_name,
                        F.`name` client_name,
                        G1.`name` site_name,
+                       G1.`address` site_address,
+                       G1.`pic_phone` site_phone,
                        G2.`name` remove_site_name,
                        H.`name` vendor_name,
                        I.`name` fieldtech_name,
@@ -538,7 +540,14 @@ class WorkOrder extends Controller
             ["text"=> "SERVICE", "dataIndex"=> "service_name", "width"=> 100, "align"=> "center"],
             ["text"=> "ACTIVITY", "dataIndex"=> "activity_name", "width"=> 150, "align"=> "center"],
             ["text"=> "CLIENT", "dataIndex"=> "client_name", "width"=> 150],
-            ["text"=> "SITE", "dataIndex"=> "site_name", "width"=> 200],
+            [
+                "text"=> "SITE",
+                "columns"=> [
+                    ["text"=> "SITE", "dataIndex"=> "site_name", "width"=> 200],
+                    ["text"=> "ADDRESS", "dataIndex"=> "site_address", "width"=> 250],
+                    ["text"=> "PHONE", "dataIndex"=> "site_phone", "width"=> 150],
+                ]
+            ],
             ["text"=> "AREA", "dataIndex"=> "vendor_name", "width"=> 200],
             ["text"=> "TEAM", "dataIndex"=> "fieldtech_name", "width"=> 250],
             ["text"=> "DURATION (DAY)", "dataIndex"=> "duration", "align"=> "center", "width"=> 100, 'type' => 'int'],
