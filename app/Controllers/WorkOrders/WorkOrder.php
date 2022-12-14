@@ -309,7 +309,7 @@ class WorkOrder extends Controller
 
                 return $action;
             }
-            catch(QueryException $error){{
+            catch(QueryException $error){
                 DB::rollback();
                 return '500 (Action WO) '.$error->getMessage();
             }
@@ -381,7 +381,7 @@ class WorkOrder extends Controller
                 DB::commit();
                 return false;
             }
-            catch(QueryException $error){{
+            catch(QueryException $error){
                 DB::rollback();
                 return '500 (WO Action Detail) '.$error->getMessage();
             }

@@ -48,7 +48,7 @@ class Service extends Controller
             DB::commit();
             return ['success' => true, 'message' => 'Success...'];
         }
-        catch(QueryException $error){{
+        catch(QueryException $error){
             DB::rollback();
             return ['success' => false, 'message' => '500 '.$error->getMessage()];
         }
