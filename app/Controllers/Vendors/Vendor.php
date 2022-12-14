@@ -5,6 +5,7 @@ namespace App\Controllers\Vendors;
 use App\Http\Controllers\Controller;
 use App\Libraries\FileUpload;
 use App\Libraries\Query;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use App\Models\Vendors\Vendor as Mod;
 use Illuminate\Http\Request;
@@ -72,7 +73,7 @@ class Vendor extends Controller
             DB::commit();
             return ['success' => true, 'message' => 'Success...'];
         }
-        catch(Exception $error){
+        catch(QueryException $error){
             DB::rollback();
             return ['success' => false, 'message' => '500 '.$error->getMessage()];
         }

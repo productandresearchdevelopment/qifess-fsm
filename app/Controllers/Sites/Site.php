@@ -5,6 +5,7 @@ namespace App\Controllers\Sites;
 use App\Libraries\ExportExcel;
 use App\Http\Controllers\Controller;
 use App\Libraries\Query;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use App\Models\Sites\Site as Mod;
 use Illuminate\Http\Request;
@@ -104,7 +105,7 @@ class Site extends Controller
             DB::commit();
             return ['success' => true, 'message' => 'Success...', 'data' => $data];
         }
-        catch(Exception $error){
+        catch(QueryException $error){
             DB::rollback();
             return ["success" => false, "message" => "500 ".$error->getMessage()];
         }

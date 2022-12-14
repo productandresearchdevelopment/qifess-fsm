@@ -2,6 +2,7 @@
 
 namespace App\Controllers\WorkOrders;
 
+use Illuminate\Database\QueryException;
 use PDF;
 use App\Jobs\NotifJob;
 use App\Libraries\ExportExcel;
@@ -237,7 +238,7 @@ class WorkOrder extends Controller
             DB::commit();
             return ['success' => true, 'message' => 'Success...', 'data' => $wo];
         }
-        catch(Exception $error) {
+        catch(QueryException $error){ {
             DB::rollback();
             return ['success' => false, 'message' => '500 (Create WO)'.$error->getMessage()];
         }
@@ -308,7 +309,7 @@ class WorkOrder extends Controller
 
                 return $action;
             }
-            catch(Exception $error){
+            catch(QueryException $error){{
                 DB::rollback();
                 return '500 (Action WO) '.$error->getMessage();
             }
@@ -380,7 +381,7 @@ class WorkOrder extends Controller
                 DB::commit();
                 return false;
             }
-            catch(Exception $error){
+            catch(QueryException $error){{
                 DB::rollback();
                 return '500 (WO Action Detail) '.$error->getMessage();
             }
@@ -423,7 +424,7 @@ class WorkOrder extends Controller
             DB::commit();
             return ['success' => true, 'message' => 'Success...'];
         }
-        catch(Exception $error) {
+        catch(QueryException $error){ {
             DB::rollback();
             return ['success' => false, 'message' => '500 (Create WO)'.$error->getMessage()];
         }

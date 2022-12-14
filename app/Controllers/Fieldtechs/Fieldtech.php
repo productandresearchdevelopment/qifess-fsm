@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\FileUpload;
 use App\Models\WorkOrders\Masters AS Master;
 use App\Libraries\Query;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use App\SystemModels\Auth;
 use App\Models\Fieldteches\Fieldtech as Mod;
@@ -63,7 +64,7 @@ class Fieldtech extends Controller
             DB::commit();
             return ['success' => true, 'message' => 'Success...'];
         }
-        catch(Exception $error){
+        catch(QueryException $error){
             DB::rollback();
             return ['success' => false, 'message' => '500 '.$error->getMessage()];
         }

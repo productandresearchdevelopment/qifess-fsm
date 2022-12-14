@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Samples;
 
+use Illuminate\Database\QueryException;
 use PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -47,7 +48,7 @@ class Sample extends Controller
             DB::commit();
             return ['success' => true, 'message' => 'Success...'];
         }
-        catch(Exception $error){
+        catch(QueryException $error){
             DB::rollback();
             return ['success' => false, 'message' => '500 '.$error->getMessage()];
         }
