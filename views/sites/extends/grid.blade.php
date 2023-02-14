@@ -31,6 +31,7 @@
                 {name: 'workorders', type: 'auto'},
                 {name: 'province', type: 'string'},
                 {name: 'city', type: 'string'},
+                {name: 'district', type: 'string'},
                 {name: 'ward', type: 'string'},
                 {name: 'postal_code', type: 'string'},
             ]);

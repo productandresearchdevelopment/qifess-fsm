@@ -70,6 +70,7 @@
                             {xtype: 'textfield',name: 'pic_email', fieldLabel: 'PIC Email', vtype: 'email', allowBlank: true},
                             {xtype: 'textfield',name: 'province', fieldLabel: 'Province',allowBlank:true},
                             {xtype: 'textfield',name: 'city', fieldLabel: 'City',allowBlank:true},
+                            {xtype: 'textfield',name: 'district', fieldLabel: 'District',allowBlank:true},
                             {xtype: 'textfield',name: 'ward', fieldLabel: 'Ward',allowBlank:true},
                             {xtype: 'textfield',name: 'postal_code', fieldLabel: 'Postal',allowBlank:true},
                             {xtype: 'textfield', name: 'address', fieldLabel: 'Address', allowBlank:true},
@@ -161,6 +162,7 @@
                 me.setField('pic_email', rec.pic_email);
                 me.setField('province', rec.province);
                 me.setField('city', rec.city);
+                me.setField('district', rec.district);
                 me.setField('ward', rec.ward);
                 me.setField('postal_code', rec.postal_code);
                 me.setField('description', rec.description);

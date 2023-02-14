@@ -87,6 +87,7 @@ class Site extends Controller
                 "pic_email" => $request->input("pic_email"),
                 "province" => $request->input("province"),
                 "city" => $request->input("city"),
+                "district" => $request->input("district"),
                 "ward" => $request->input("ward"),
                 "postal_code" => $request->input("postal_code"),
                 "address" => $request->input("address"),
