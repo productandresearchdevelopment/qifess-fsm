@@ -305,7 +305,7 @@ class WorkOrder extends Controller
                 DB::commit();
 
                 // SEND EMAIL ----------------------------------------------------------------
-                dispatch(new NotifJob($wo->id));
+                // dispatch(new NotifJob($wo->id));
 
                 return $action;
             }
