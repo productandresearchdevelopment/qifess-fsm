@@ -17,6 +17,7 @@
         <td align="center" valign="center" height="30" width="30" rowspan="2" bgcolor="#EEEEEE" style="border: 1px solid #666"><b>PIC EMAIL</b></td>
         <td align="center" valign="center" height="30" width="30" rowspan="2" bgcolor="#EEEEEE" style="border: 1px solid #666"><b>PROVINCE</b></td>
         <td align="center" valign="center" height="30" width="30" rowspan="2" bgcolor="#EEEEEE" style="border: 1px solid #666"><b>CITY</b></td>
+        <td align="center" valign="center" height="30" width="30" rowspan="2" bgcolor="#EEEEEE" style="border: 1px solid #666"><b>DISTRICT</b></td>
         <td align="center" valign="center" height="30" width="30" rowspan="2" bgcolor="#EEEEEE" style="border: 1px solid #666"><b>WARD</b></td>
         <td align="center" valign="center" height="30" width="15" rowspan="2" bgcolor="#EEEEEE" style="border: 1px solid #666"><b>POSTAL</b></td>
         <td align="center" valign="center" height="30" width="30" rowspan="2" bgcolor="#EEEEEE" style="border: 1px solid #666"><b>ADDRESS</b></td>
