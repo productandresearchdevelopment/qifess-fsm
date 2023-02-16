@@ -72,8 +72,8 @@ class ImportSheet implements ToCollection, WithChunkReading
                     DB::beginTransaction();
                     try {
                         $site = Site::create((array) $data);
-                        $ticketNumber = $rows[$i][20];
-                        $ticketDescription = $rows[$i][21];
+                        $ticketNumber = $rows[$i][21];
+                        $ticketDescription = $rows[$i][22];
                         if($this->activity) {
                             $ticket = $this->createTicket($site, $ticketNumber, $ticketDescription);
                         }
