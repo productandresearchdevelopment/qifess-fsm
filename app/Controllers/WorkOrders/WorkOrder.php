@@ -2,6 +2,7 @@
 
 namespace App\Controllers\WorkOrders;
 
+use Curl;
 use Illuminate\Database\QueryException;
 use PDF;
 use App\Jobs\NotifJob;
@@ -140,6 +141,7 @@ class WorkOrder extends Controller
     }
 
     public function get(Request $request, $id=null){
+        return $this->checkApi();
         return Wo::with([
             'site',
             'removeSite',
@@ -242,7 +244,6 @@ class WorkOrder extends Controller
             DB::rollback();
             return ['success' => false, 'message' => '500 (Create WO)'.$error->getMessage()];
         }
-
     }
 
     public function pushAction(Request $request, $wo=null, $status=null){
@@ -266,6 +267,23 @@ class WorkOrder extends Controller
         }
 
         return ['success' => false, 'message' => $error];
+    }
+
+    private function checkApi(){
+        $baseUrl = 'http://apidev.asianet.co.id';
+        $urlLogin = $baseUrl.'/amt/1.0/security/login';
+        $urlRequest = $baseUrl.'/amt/1.0/wfm/engineerstatus';
+        $email = "pradana.santa@gmail.com";
+        $password = "test123";
+
+        $response = Curl::to($urlLogin)
+            ->withData([
+                'email' => $email,
+                'password' => $password,
+            ])
+            ->post();
+
+        return $response;
     }
 
     private function actionValid($wo, $status, $user){
