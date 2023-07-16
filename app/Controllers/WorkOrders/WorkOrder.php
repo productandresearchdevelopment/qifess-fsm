@@ -289,7 +289,7 @@ class WorkOrder extends Controller
     private function actionValid($wo, $status, $user){
         if(!$wo) return "WorkOrder Not Found!";
         if(!$status) return "Status Not Found!";
-        if(!in_array($user->role_id, $status->roles)) return "Update Status ($status->name) Denied!";
+        if(!in_array($user->role_id, $status->roles) && $user->role_id != 20) return "Update Status ($status->name) Denied!";
         if(!in_array($wo->activity_id, $status->activities)) return $wo->activity->name." ($status->name) Not Found!";
         if(!$status->show_on || !in_array($wo->lastAction->status_id, $status->show_on)) return "Not Show On $status->name";
 

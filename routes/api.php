@@ -92,28 +92,13 @@ Route::group(['middleware' => ['auth.api'] ], function(){
             Route::get('/wo/check/status/{id?}', function (Request $request, $id=null){
                 if($wo = \App\Models\WorkOrders\WorkOrder::find($id)){
                     $status = $wo->lastAction ? $wo->lastAction->status : null;
-                    if($status->show_on){
-                        $resultStatus = [];
-                        foreach ($status->show_on AS $row){
-                            $sts = \App\Models\WorkOrders\Masters\Status::find($row);
-                            $resultStatus[] = [
-                                'id' => $sts->id,
-                                'type' => $sts->type,
-                                'roles' => $sts->roles,
-                                'name' => $sts->name,
-                                'alias' => $sts->alias,
-                                'color' => $sts->color,
-                                'description' => $sts->description,
-                                'property' => $sts->details()->with('options')->get(),
-                            ];
-                        }
-                        $status->show_on = $resultStatus;
-                    }
-                    $wo->lastStatus = $status;
+                    $nextStatus = \App\Models\WorkOrders\Masters\Status::where('show_on', 'LIKE', "%$status->id%")->with('details.options')->get();
+                    $wo->nextStatus = $nextStatus;
                     return $wo;
                 }
                 return abort(404);
             });
+            Route::post('/wo/update/status/{wo?}/{status?}', 'WorkOrders\WorkOrder@pushAction');
             Route::post('/site/push/{id?}', 'Sites\Site@push');
             Route::post('/wo/push', 'WorkOrders\WorkOrder@push');
         });
