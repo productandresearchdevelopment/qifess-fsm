@@ -270,7 +270,7 @@ class WorkOrder extends Controller
     }
 
     private function checkApi(){
-        $baseUrl = 'http://apidev.asianet.co.id';
+        $baseUrl = 'http://api.asianet.co.id';
         $urlLogin = $baseUrl.'/amt/1.0/security/login';
         $urlRequest = $baseUrl.'/amt/1.0/wfm/engineerstatus';
         $email = "pradana.santa@gmail.com";
