@@ -2,8 +2,8 @@
 
 namespace App\Controllers\WorkOrders;
 
-use Curl;
 use Illuminate\Database\QueryException;
+use Ixudra\Curl\Facades\Curl;
 use PDF;
 use App\Jobs\NotifJob;
 use App\Libraries\ExportExcel;
