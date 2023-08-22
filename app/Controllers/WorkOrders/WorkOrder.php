@@ -141,6 +141,7 @@ class WorkOrder extends Controller
     }
 
     public function get(Request $request, $id=null){
+        return $this->checkApi();
         $data = Wo::with([
             'site',
             'removeSite',
@@ -270,56 +271,20 @@ class WorkOrder extends Controller
     }
 
     private function checkApi(){
-        // $baseUrl = 'https://api.asianet.co.id';
-        // $urlLogin = $baseUrl.'/amt/1.0/security/login';
-        // $urlPush = $baseUrl.'/amt/1.0/wfm/engineerstatus';
-        // $email = "ikhsan.darmawan@qualita-indonesia.com";
-        // $password = "ltsm321Q@";
-
-
-        $baseUrl  = 'http://apidev.asianet.co.id';
+        $baseUrl = 'http://api.asianet.co.id';
         $urlLogin = $baseUrl.'/amt/1.0/security/login';
-        $urlPush  = $baseUrl.'/amt/1.0/wfm/engineerstatus';
-        $email    = "pradana.santa@gmail.com";
-        $password = "test123";
+        $urlRequest = $baseUrl.'/amt/1.0/wfm/engineerstatus';
+        $email = "ikhsan.darmawan@qualita-indonesia.com";
+        $password = "ltsm321Q@";
 
-
-        if(Cache::has('token')) $token = Cache::get('woaccesstoken');
-        else {
-            $login = Curl::to($urlLogin)
-                ->withData(['email' => $email, 'password' => $password])
-                ->asJson()
-                ->post();
-            if($login && isset($login->accessToken)){
-                $token = $login->accessToken; 
-                Cache::put('woaccesstoken', $login, 60);
-            }  
-        }
-
-        $response = Curl::to($urlPush)
+        $response = Curl::to($urlLogin)
             ->withData([
-                'activityName' => "INSTALLATION",
-                'orderNumber' => "OH1044695020479673907",
-                'workFlowNumber' => "2023000011045",
-                'orderStatus' => "COMPLETED",
-                'teamID' => "123123",
-                'longitude' => 106.492169,
-                'latitude' => -6.193073,
-                'serialNumber' => "ALCLB2A8976DQ",
-                'fatLongitude' => 106.489150,
-                'fatLatitude' => -6.193315,
-                'additionalUTP' => 0,
-                'additionalDropCable' => 0
+                'email' => $email,
+                'password' => $password,
             ])
-            ->withBearer($token)
-            ->asJson()
             ->post();
 
-        return  [
-            "url"=>$urlPush,
-            "token"=>$token,
-            "respon"=>(array)$response
-        ];
+        return $response;
     }
 
     private function actionValid($wo, $status, $user){
