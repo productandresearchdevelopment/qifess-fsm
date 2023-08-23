@@ -359,7 +359,7 @@ class WorkOrder extends Controller
                 Cache::put('woaccesstoken', $login, 60);
             }
             else {
-                dd($login->status);
+                dd($login);
             }
         }
 
