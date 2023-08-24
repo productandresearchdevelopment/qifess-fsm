@@ -358,7 +358,7 @@ class WorkOrder extends Controller
 
         $sql = "SELECT A.`name`, B.`value`
                 FROM po_wo_m_status_detail A JOIN po_wo_action_detail B ON A.id = B.detail_id
-                WHERE B.action_id = '$action->id' AND (type != 'file' AND A.name IN ('ONT Serial Number', 'Aditional UTP'))";
+                WHERE B.action_id = '$action->id' AND type != 'file'";
         $extras = DB::select(DB::raw($sql));
         foreach ($extras AS $extra){
             if($extra->name == 'ONT Serial Number') $serialNumber = $extra->value;
