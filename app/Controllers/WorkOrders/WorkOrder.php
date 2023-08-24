@@ -290,31 +290,9 @@ class WorkOrder extends Controller
                 }
 
                 if($pushapi = $this->pushApi($action)){
-                    if($pushapi->respon) {
-                        if (isset($pushapi->respon->statusCode) && $pushapi->respon->statusCode == 0) {
-                            DB::commit();
-                            return [
-                                'success' => true,
-                                'message' => 'Success',
-                                'api' => [
-                                    "url" => $pushapi->urlPush,
-                                    "respon" => (array)$pushapi->response,
-                                    "data" => (array)$pushapi->data
-                                ]
-                            ];
-                        }
-                        DB::rollback();
-                        return [
-                            'success' => false,
-                            'message' => 'Error API',
-                            'api' => [
-                                "url" => $pushapi->urlPush,
-                                "respon" => (array)$pushapi->response,
-                                "data" => (array)$pushapi->data
-                            ]
-                        ];
-                    }
-                    DB::rollback();
+                    if($pushapi->success) DB::commit();
+                    else DB::rollback();
+                    return (array) $pushapi;
                 }
 
                 DB::rollback();
@@ -333,11 +311,13 @@ class WorkOrder extends Controller
     }
 
     private function pushApi($action){
-         $baseUrl = 'https://api.asianet.co.id';
-         $urlLogin = $baseUrl.'/amt/1.0/security/login';
-         $urlPush = $baseUrl.'/amt/1.0/wfm/engineerstatus';
-         $email = "ikhsan.darmawan@qualita-indonesia.com";
-         $password = "ltsm321Q@";
+        $result = (object) ['success' => false];
+
+        $baseUrl = 'https://api.asianet.co.id';
+        $urlLogin = $baseUrl.'/amt/1.0/security/login';
+        $urlPush = $baseUrl.'/amt/1.0/wfm/engineerstatus';
+        $email = "ikhsan.darmawan@qualita-indonesia.com";
+        $password = "ltsm321Q@";
 
          /*
             $baseUrl = 'http://apidev.asianet.co.id';
@@ -359,7 +339,8 @@ class WorkOrder extends Controller
                 Cache::put('woaccesstoken', $login, 60);
             }
             else {
-                dd($login);
+                $result->message = "ERROR API LOGIN (".$login->status.")";
+                return $result;
             }
         }
 
@@ -393,18 +374,30 @@ class WorkOrder extends Controller
 
         // PUSH API ----------------------------------------------------------------------------------------------------
 
-        $result = (object) ['success' => false];
-        $response = Curl::to($urlPush)->withData($data)->withBearer($token)->asJson()->post();
-        dd($response);
-        if($response){
-
+        $response = Curl::to($urlPush)->withData($data)->withBearer($token)->asJson()->returnResponseObject()->post();
+        if($response->status == 200){
+            if($content = $response->content){
+                if(isset($content->statusCode)){
+                    if(!$content->statusCode){
+                        $result->success = true;
+                        $result->message = "Success";
+                    }
+                    else $result->message = "Error API engineer status response failed";
+                    $result->data = [
+                        'url' => $urlPush,
+                        'dataPush' => $data,
+                        'response' => (array) $content,
+                    ];
+                }
+                else $result->message = "Error API engineer status statusCode Not Found";
+            }
+            else $result->message = "Error API engineer status (response is null)";
+        }
+        else {
+            $result->message = "ERROR API ENGINEERSTATUS (".$response->status.")";
         }
 
-        return (object) [
-            "url" => $urlPush,
-            "respon" => $response,
-            "data" => $data
-        ];
+        return $result;
     }
 
     private function actionValid($wo, $status, $user){
