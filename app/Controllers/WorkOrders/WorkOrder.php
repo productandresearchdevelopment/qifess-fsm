@@ -358,14 +358,14 @@ class WorkOrder extends Controller
         }
 
         $data = [
-            'activityName' => $action->wo->activity->name,
-            'orderNumber' => $action->wo->no_wo,
-            'workFlowNumber' => strval($action->wo->id),
-            'orderStatus' => $action->status->name,
-            'teamID' => $action->wo->fieldtech_id,
+            'activityName' => (string) $action->wo->activity->name,
+            'orderNumber' => (string) $action->wo->no_wo,
+            'workFlowNumber' => (string) $action->wo->id,
+            'orderStatus' => (string) $action->status->name,
+            'teamID' => (string) $action->wo->fieldtech_id,
+            'serialNumber' => (string) $serialNumber,
             'longitude' => $action->long,
             'latitude' => $action->lat,
-            'serialNumber' => $serialNumber,
             'fatLongitude' => $action->long,
             'fatLatitude' => $action->lat,
             'additionalUTP' => $additionalUTP,
