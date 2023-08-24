@@ -339,7 +339,7 @@ class WorkOrder extends Controller
                 Cache::put('woaccesstoken', $token, 60);
             }
             else {
-                $result->message = "ERROR API LOGIN (".$login->status.") ".json_encode($response->content);
+                $result->message = "ERROR API LOGIN (".$login->status.") ".json_encode($login->content);
                 return $result;
             }
         }
