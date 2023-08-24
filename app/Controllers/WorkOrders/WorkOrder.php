@@ -375,7 +375,7 @@ class WorkOrder extends Controller
         // PUSH API ----------------------------------------------------------------------------------------------------
 
         $response = Curl::to($urlPush)->withData($data)->withBearer($token)->asJson()->returnResponseObject()->post();
-        if($response->status == 200){
+        if($response->status == 200 || $response->status == 400){
             if($content = $response->content){
                 if(isset($content->statusCode)){
                     if(!$content->statusCode){
