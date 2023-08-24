@@ -356,14 +356,11 @@ class WorkOrder extends Controller
         $additionalUTP = null;
         $additionalDropCable = null;
 
-        $sql = "SELECT A.`name`, B.`value`
-                FROM po_wo_m_status_detail A JOIN po_wo_action_detail B ON A.id = B.detail_id
-                WHERE B.action_id = '$action->id' AND A.type != 'file'";
-        $extras = DB::select(DB::raw($sql));
-        foreach ($extras AS $extra){
-            if($extra->name == 'ONT Serial Number') $serialNumber = $extra->value;
-            else if($extra->name == 'Serial Number registration') $serialNumber = $extra->value;
-            else if($extra->name == 'Serial Number Unregistration') $serialNumber = $extra->value;
+
+        foreach ($action->details AS $extra){
+            if($extra->detail->name == 'ONT Serial Number') $serialNumber = $extra->value;
+            else if($extra->detail->name == 'Serial Number registration') $serialNumber = $extra->value;
+            else if($extra->detail->name == 'Serial Number Unregistration') $serialNumber = $extra->value;
         }
 
         if($action->status->name == "PREPARATION") $status = 'PREPARED';
