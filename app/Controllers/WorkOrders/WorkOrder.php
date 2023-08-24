@@ -339,7 +339,7 @@ class WorkOrder extends Controller
                 Cache::put('woaccesstoken', $token, 60);
             }
             else {
-                $result->message = "ERROR API LOGIN (".$login->status.") ".json_encode($login->content);
+                $result->message = "ERROR API LOGIN (".$login->status.") ". ($login->content ? json_encode($login->content) : '');
                 return $result;
             }
         }
@@ -394,7 +394,7 @@ class WorkOrder extends Controller
             else $result->message = "Error API engineer status (response is null)";
         }
         else {
-            $result->message = "ERROR API ENGINEERSTATUS (".$response->status.") ".json_encode($response->content);
+            $result->message = "ERROR API ENGINEERSTATUS (".$response->status.") ". ($response->content ? json_encode($response->content) : '');
         }
 
         return $result;
