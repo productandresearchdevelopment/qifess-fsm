@@ -334,8 +334,8 @@ class WorkOrder extends Controller
                 ->asJson()
                 ->returnResponseObject()
                 ->post();
-            if ($login && isset($login->accessToken)) {
-                $token = $login->accessToken;
+            if(isset($login->content) && isset($login->content->accessToken)) {
+                $token = $login->content->accessToken;
                 Cache::put('woaccesstoken', $login, 60);
             }
             else {
