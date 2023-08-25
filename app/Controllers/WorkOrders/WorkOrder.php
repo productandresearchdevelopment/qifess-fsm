@@ -385,12 +385,12 @@ class WorkOrder extends Controller
             'orderStatus' => $status,
             'teamID' => (string) $action->wo->fieldtech_id,
             'serialNumber' => (string) $serialNumber,
-            'longitude' => $action->long,
-            'latitude' => $action->lat,
-            'fatLongitude' => $action->long,
-            'fatLatitude' => $action->lat,
-            'additionalUTP' => $additionalUTP,
-            'additionalDropCable' => $additionalDropCable
+            'longitude' => (float) $action->long,
+            'latitude' => (float) $action->lat,
+            'fatLongitude' => (float) $action->long,
+            'fatLatitude' => (float) $action->lat,
+            'additionalUTP' => (float) $additionalUTP,
+            'additionalDropCable' => (float) $additionalDropCable
         ];
 
         // PUSH API ----------------------------------------------------------------------------------------------------
