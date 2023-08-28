@@ -357,6 +357,11 @@ class WorkOrder extends Controller
         $additionalUTP = null;
         $additionalDropCable = null;
 
+        /*
+            Excess Material - Drop Wire
+            Excess Material - UTP
+         */
+
         foreach (json_decode($details) AS $extra){
             if($extra && isset($extra->id)) {
                 if ($detail = Master\StatusDetail::find($extra->id)) {
@@ -364,6 +369,8 @@ class WorkOrder extends Controller
                         if (strtolower($detail->name) == 'ont serial number') $serialNumber = $extra->value;
                         else if (strtolower($detail->name) == 'serial number registration') $serialNumber = $extra->value;
                         else if (strtolower($detail->name) == 'serial number unregistration') $serialNumber = $extra->value;
+                        else if (strtolower($detail->name) == 'excess material - drop wire') $additionalDropCable = $extra->value;
+                        else if (strtolower($detail->name) == 'excess material - utp') $additionalUTP = $extra->value;
                     }
                 }
             }
