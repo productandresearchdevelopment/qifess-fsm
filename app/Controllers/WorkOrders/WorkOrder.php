@@ -365,7 +365,7 @@ class WorkOrder extends Controller
         foreach (json_decode($details) AS $extra){
             if($extra && isset($extra->id)) {
                 if ($detail = Master\StatusDetail::find($extra->id)) {
-                    if ($detail->type == 'text') {
+                    if ($detail->type != 'file') {
                         if (strtolower($detail->name) == 'ont serial number') $serialNumber = $extra->value;
                         else if (strtolower($detail->name) == 'serial number registration') $serialNumber = $extra->value;
                         else if (strtolower($detail->name) == 'serial number unregistration') $serialNumber = $extra->value;
