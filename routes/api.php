@@ -45,7 +45,7 @@ Route::group(['middleware' => ['auth.api'] ], function(){
             if($username && $password) {
                 if($user = User::where('username', $username)->where('role_id', 20)->first()) {
                     if(Hash::check($password, $user->password)) {
-                        if($user->token_api && ($user->token_api_expired_at < date('Y-m-d H:i:s'))) {
+                        if($user->token_api && ($user->token_api_expired_at > date('Y-m-d H:i:s'))) {
                             $token = $user->token_api;
                         }
                         else $token = \Illuminate\Support\Str::uuid();
