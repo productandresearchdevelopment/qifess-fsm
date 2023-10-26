@@ -14,9 +14,6 @@ deploy-devel:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && ssh-keyscan -H "$SSH_HOST_DEVEL" > ~/.ssh/known_hosts'
   script:
-    - ssh $SSH_USER@$SSH_HOST_DEVEL "cd $WORK_DIR_DEVEL && sudo git checkout -f main"
-    - ssh $SSH_USER@$SSH_HOST_DEVEL "cd $WORK_DIR_DEVEL && sudo git clean -fd"
-    - ssh $SSH_USER@$SSH_HOST_DEVEL "cd $WORK_DIR_DEVEL && sudo git pull https://$GIT_USER:$GIT_PASSWORD@$GIT_URL main"
     - ssh $SSH_USER@$SSH_HOST_DEVEL "cd $WORK_DIR_DEVEL && sudo sh deploy.sh"
 
 deploy-production:
