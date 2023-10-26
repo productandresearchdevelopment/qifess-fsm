@@ -552,6 +552,84 @@ class WorkOrder extends Controller
         }
     }
 
+    public function rebooking(Request $request, $id=null){
+        if($wo = Wo::find($id)){
+            $laststs = $wo->lastAction->status_id;
+            $status = Master\Status::whereIn('id', [1214,2214,3214,4214,5214,6214,7214])->get();
+            foreach ($status AS $sts){
+                foreach ($sts->show_on AS $sid){
+                    if($sid == $laststs){
+                        if(!$date = $request->input('date')) return ['success' => false, 'message' => 'date is empty'];
+                        if(!$slot = $request->input('slot_id')) return ['success' => false, 'message' => 'slot_id is empty'];
+                        if(!$fieldtech = $request->input('fieldtech_id')) return ['success' => false, 'message' => 'fieldtech_id is empty'];
+                        if(!$notes = $request->input('notes')) return ['success' => false, 'message' => 'notes is empty'];
+
+                        if(!Master\Slot::find($slot)) return ['success' => false, 'message' => 'slot_id not found'];
+                        if(!Fieldtech::find($fieldtech)) return ['success' => false, 'message' => 'fieldtech_id not found'];
+
+                        $action = Action::create([
+                            'wo_id' => $wo->id,
+                            'status_id' => $sts->id,
+                            'note' => $notes,
+                        ]);
+
+                        foreach ($sts->details AS $detail){
+                            $value = null;
+                            if($detail->property == 'fieldtech') $value = $fieldtech;
+                            else if($detail->property == 'startdate') $value = $date;
+                            else if($detail->property == 'slot') $value = $slot;
+
+                            ActionDetail::create([
+                                'action_id' => $action->id,
+                                'detail_id' => $detail->id,
+                                'value' => $value,
+                            ]);
+                        }
+
+                        $wo->update([
+                            'last_action' => $action->id,
+                            'start_date' => $date,
+                            'slot_id' => $slot,
+                            'fieldtech_id' => $fieldtech,
+                        ]);
+
+                        return ['success' => true, 'message' => 'Success!'];
+                    }
+                }
+            }
+
+            return ['success' => false, 'message' => 'Rebooking not permitted!'];
+        }
+        return ['success' => false, 'message' => 'Undefined WO ID!'];
+    }
+
+    public function cancel(Request $request, $id=null){
+        if($wo = Wo::find($id)){
+            $laststs = $wo->lastAction->status_id;
+            $status = Master\Status::whereIn('id', [1910,2910, 3910, 4910, 5910, 6910, 7910])->get();
+            foreach ($status AS $sts){
+                foreach ($sts->show_on AS $sid){
+                    if($sid == $laststs){
+                        if(!$notes = $request->input('notes')) return ['success' => false, 'message' => 'notes is empty'];
+                        $action = Action::create([
+                            'wo_id' => $wo->id,
+                            'status_id' => $sts->id,
+                            'note' => $notes,
+                        ]);
+
+                        $wo->update([
+                            'last_action' => $action->id,
+                        ]);
+
+                        return ['success' => true, 'message' => 'Success!'];
+                    }
+                }
+            }
+            return ['success' => false, 'message' => 'Cancel not permitted!'];
+        }
+        return ['success' => false, 'message' => 'Undefined WO ID!'];
+    }
+
     public function delete(Request $request){
         if($data = json_decode($request->data)) {
             $user = $request->user();

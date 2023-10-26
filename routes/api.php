@@ -109,8 +109,11 @@ Route::group(['middleware' => ['auth.api'] ], function(){
                 return abort(404);
             });
             Route::post('/wo/update/status/{wo?}/{status?}', 'WorkOrders\WorkOrder@pushAction');
-            Route::post('/site/push/{id?}', 'Sites\Site@push');
+            Route::post('/wo/rebooking/{wo?}', 'WorkOrders\WorkOrder@rebooking');
+            Route::post('/wo/cancel/{wo?}', 'WorkOrders\WorkOrder@cancel');
+            Route::post('/wo/delete', 'WorkOrders\WorkOrder@delete');
             Route::post('/wo/push', 'WorkOrders\WorkOrder@push');
+            Route::post('/site/push/{id?}', 'Sites\Site@push');
         });
 
     });
