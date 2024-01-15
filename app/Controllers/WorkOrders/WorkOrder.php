@@ -385,6 +385,9 @@ class WorkOrder extends Controller
         else if($action->status->name == "DE-ACTIVATION") $status = 'ACTIVATED';
         else if($action->status->name == "POST ACTIVATION") $status = 'COMPLETED';
 
+        /*
+        // PUSH API ----------------------------------------------------------------------------------------------------
+
         $data = [
             'activityName' => (string) $action->wo->activity->name,
             'orderNumber' => (string) $action->wo->no_wo,
@@ -400,9 +403,8 @@ class WorkOrder extends Controller
             'additionalDropCable' => (float) $additionalDropCable
         ];
 
-        // PUSH API ----------------------------------------------------------------------------------------------------
-
         $response = Curl::to($urlPush)->withData($data)->withBearer($token)->asJson()->returnResponseObject()->post();
+
         if($response->status == 200 || $response->status == 400){
             if($content = $response->content){
                 if(isset($content->statusCode)){
@@ -425,8 +427,9 @@ class WorkOrder extends Controller
         else {
             $result->message = "ERROR API ENGINEERSTATUS (".$response->status.") ". ($response->content ? json_encode($response->content) : '');
         }
+        */
 
-        return $result;
+        return ['success' => true, 'message' => 'success...'];
     }
 
     private function actionValid($wo, $status, $user){
