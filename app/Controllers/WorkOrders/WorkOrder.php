@@ -291,7 +291,7 @@ class WorkOrder extends Controller
                     $wo->update(['close_date' => $action->created_at]);
                 }
 
-                /*
+
                 if(in_array($wo->activity->name, ['INSTALLATION', 'SERVICE UPDATE', 'RELOCATION', 'DEVICE MOVING', 'TERMINATION'])) {
                     if (in_array($action->status->name, ['PREPARATION', 'IN PROGRESS', 'ARRIVED', 'INSTALLATION', 'ACTIVATION', 'POST ACTIVATION', 'DE-INSTALLATION', 'DE-ACTIVATION'])) {
                         if ($pushapi = $this->pushApi($action, $details)) {
@@ -303,7 +303,7 @@ class WorkOrder extends Controller
                         return ['success' => false, 'message' => 'API ERROR'];
                     }
                 }
-                */
+                
 
                 DB::commit();
                 return ['success' => true, 'message' => 'Success'];
