@@ -291,18 +291,19 @@ class WorkOrder extends Controller
                     $wo->update(['close_date' => $action->created_at]);
                 }
 
-                if(in_array($wo->activity->name, ['INSTALLATION', 'SERVICE UPDATE', 'RELOCATION', 'DEVICE MOVING', 'TERMINATION'])) {
-                    if (in_array($action->status->name, ['PREPARATION', 'IN PROGRESS', 'ARRIVED', 'INSTALLATION', 'ACTIVATION', 'POST ACTIVATION', 'DE-INSTALLATION', 'DE-ACTIVATION'])) {
-                        if ($pushapi = $this->pushApi($action, $details)) {
-                            if ($pushapi->success) DB::commit();
-                            else DB::rollback();
-                            return (array) $pushapi;
+                if($wo->created_at > '2024-01-23 00:00:00') {
+                    if (in_array($wo->activity->name, ['INSTALLATION', 'SERVICE UPDATE', 'RELOCATION', 'DEVICE MOVING', 'TERMINATION'])) {
+                        if (in_array($action->status->name, ['PREPARATION', 'IN PROGRESS', 'ARRIVED', 'INSTALLATION', 'ACTIVATION', 'POST ACTIVATION', 'DE-INSTALLATION', 'DE-ACTIVATION'])) {
+                            if ($pushapi = $this->pushApi($action, $details)) {
+                                if ($pushapi->success) DB::commit();
+                                else DB::rollback();
+                                return (array)$pushapi;
+                            }
+                            DB::rollback();
+                            return ['success' => false, 'message' => 'API ERROR'];
                         }
-                        DB::rollback();
-                        return ['success' => false, 'message' => 'API ERROR'];
                     }
                 }
-
 
                 DB::commit();
                 return ['success' => true, 'message' => 'Success'];
