@@ -3,7 +3,7 @@
         let me = Ext.utils.windowForms(this);
 
         me.init = function(){
-            me.activities = [{id: '0', name: 'NONE'}, {id: '1', name: 'INSTALLATION'}];
+            me.activities = [{id: '0', name: 'NONE'}, {id: '1', name: 'INSTALLATION'}, {id: '5', name: 'TERMINATE'}];
 
             me.form = Ext.widget('form', {
                 bodyPadding: '10 20',
