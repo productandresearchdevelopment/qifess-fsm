@@ -117,11 +117,11 @@ class ImportSheet implements ToCollection, WithChunkReading
     private function createTicket($site, $ticketNumber, $ticketDescription){
         if($team = $this->getTeam($site->active_date, $site->vendor_id)) {
             try {
-                $status = ($this->activity == 5) ? 5110 : 1110;
+                $status = ($this->activity->id == 5) ? 5110 : 1110;
 
                 $input = [
                     'site_id' => $site->id,
-                    'activity_id' => $this->activity,
+                    'activity_id' => $this->activity->id,
                     'vendor_id' => $site->vendor_id,
                     'client_id' => $site->client_id,
                     'fieldtech_id' => $team->fieldtech,
