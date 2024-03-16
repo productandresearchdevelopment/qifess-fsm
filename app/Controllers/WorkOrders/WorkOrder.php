@@ -678,7 +678,7 @@ class WorkOrder extends Controller
             $month = date('F Y', strtotime("$filter 00:00:00"));
             array_push($titles, [$month,'h4']);
         }
-        if($filter = $request->input('filter-status')) $query[] = "(B.status_id = '$filter')";
+        if($filter = $request->input('filter-status')) if($filter != 'null') $query[] = "(B.status_id = '$filter')";
         if($filter = $request->input('filter-activity')) $query[] = "(A.activity_id = '$filter')";
         if($filter = $request->input('filter-service')) $query[] = "(A.service_id = '$filter')";
         if($filter = $request->input('filter-vendor')) $query[] = "(A.vendor_id = '$filter')";
