@@ -23,6 +23,11 @@
     .forms-action-details .box.add{background-color: #ddd}
 
     .jSignature{height: 150px !important; margin: 0px !important;}
+
+    .alert-dialog-content--material {
+        overflow: auto;
+        max-height: 300px;
+    }
 </style>
 
 <template modifier="material" id="forms.html">
@@ -387,12 +392,14 @@
                                             store.load();
 
                                         } else {
-                                            ons.notification.alert(res.message);
+                                            let message = res.message;
+                                            ons.notification.alert(message);
                                             //ai.toast('<div style="font-size: 18px; color: #ffa19b">ddddd</div>rrr');
                                         }
                                     },
                                     error: function (jqXHR, textStatus, errorThrown) {
-                                        ons.notification.alert(errorThrown);
+                                        let message = errorThrown;
+                                        ons.notification.alert(message);
                                         mask.hide();
                                     }
                                 });
