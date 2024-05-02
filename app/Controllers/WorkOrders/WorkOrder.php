@@ -322,9 +322,9 @@ class WorkOrder extends Controller
     private function pushApi($action, $details){
         $result = (object) ['success' => false];
 
-        $baseUrl = env("ASIANET_API_URL");
-        $email = env("ASIANET_API_USER");
-        $password = env("ASIANET_API_PASSWORD");
+        $baseUrl = config('site.asianet_api_url');
+        $email = config('site.asianet_api_user');
+        $password = config('site.asianet_api_password');
 
         $urlLogin = $baseUrl.'/amt/1.0/security/login';
         $urlPush = $baseUrl.'/amt/1.0/wfm/engineerstatus';
