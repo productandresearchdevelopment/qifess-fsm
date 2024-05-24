@@ -20,7 +20,6 @@ class Client extends Controller
         $user = $request->user();
         $params = [
             'user' => $user,
-            'sites' => Site::all(),
             'activities' => Master\Activity::all(),
             'services' => Master\Service::all(),
             'vendors' => Vendor::all(),

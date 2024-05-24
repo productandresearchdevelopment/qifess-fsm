@@ -128,7 +128,7 @@ class Site extends Controller
     public function exportExcel(Request $request){
         ini_set('memory_limit','64048M');
         ini_set('max_execution_time', '300');
-        
+
         $title = [];
 
         $title[] = ['Site', 'h2'];

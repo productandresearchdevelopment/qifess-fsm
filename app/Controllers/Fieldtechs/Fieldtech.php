@@ -31,7 +31,7 @@ class Fieldtech extends Controller
     public function data(Request $request){
         $user = $request->user();
         $search = ['nik', 'name'];
-        $query = Mod::with(['users','files','workorders']);
+        $query = Mod::with(['users','files']);
         $query ->withCount(['workorders']);
         if($user->vendor_id) $query = $query->where('vendor_id', $user->vendor_id);
         if($filter = $request->input('filter-vendor')) $query = $query->where('vendor_id', $filter);

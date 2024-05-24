@@ -23,7 +23,6 @@ class Vendor extends Controller
 
         $params = [
             'user' => $user,
-            'sites' => Site::all(),
             'title' => 'Area'
         ];
         return view('vendors.main', $params);

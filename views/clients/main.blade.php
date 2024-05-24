@@ -13,7 +13,6 @@
         var vendor = @json($vendors);
         var activity = @json($activities);
         var service = @json($services);
-        var site = @json($sites);
         var grids = new Grids();
         var forms = new Forms();
         var formdetail = new FormDetail();
