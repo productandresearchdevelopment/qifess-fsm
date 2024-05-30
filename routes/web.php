@@ -29,6 +29,8 @@ Route::group(['middleware' => ['auth','roles'] ], function(){
         Route::group(['prefix' => 'user'], function (){
             Route::get('/data/fieldtech', '\App\Http\Controllers\Systems\User@dataFieldtech')->name('auth.user.data.fieldtech');
         });
+
+        Route::get('/dev/test/push_api', '\App\Controllers\WorkOrders\WorkOrder@testApi')->name('sys.dev.test.push_api');
     });
 
     // VENDOR ROUTE ----------------------------------------------------------------------------------
@@ -38,7 +40,6 @@ Route::group(['middleware' => ['auth','roles'] ], function(){
         Route::post('/push/{id?}',  'Vendors\Vendor@push')->name('vendor.push');
         Route::delete('/delete', 'Vendors\Vendor@delete')->name('vendor.delete');
     });
-
 
     // CLIENT ROUTE ----------------------------------------------------------------------------------
     Route::group(['prefix' => 'client'], function (){

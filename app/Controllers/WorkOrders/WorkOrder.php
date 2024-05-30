@@ -319,6 +319,83 @@ class WorkOrder extends Controller
         }
     }
 
+    public function testApi(Request $request){
+        $result = (object) ['success' => false];
+
+        $baseUrl = config('site.asianet_api_url');
+        $email = config('site.asianet_api_user');
+        $password = config('site.asianet_api_password');
+
+        $urlLogin = $baseUrl.'/amt/1.0/security/login';
+        $urlPush = $baseUrl.'/amt/1.0/wfm/engineerstatus';
+
+        if (Cache::has('token')) $token = Cache::get('woaccesstoken');
+        else {
+            $login = Curl::to($urlLogin)
+                ->withData(['email' => $email, 'password' => $password])
+                ->asJson()
+                ->returnResponseObject()
+                ->post();
+            if(isset($login->content) && isset($login->content->accessToken)) {
+                $token = $login->content->accessToken;
+                Cache::put('woaccesstoken', $token, 10);
+            }
+            else {
+                $result->message = "ERROR API LOGIN (".$login->status.") ". ($login->content ? json_encode($login->content) : '');
+                return (array) $result;
+            }
+        }
+
+        // GET ACTION --------------------------------------------------------------------------------------------------
+
+        $data = [
+            'activityName' => $request->activity ?: 'INSTALLATION',
+            'orderNumber' => $request->wo ?: '0',
+            'workFlowNumber' => $request->id ?: '0',
+            'orderStatus' => $request->status ?: 'INSTALLATION',
+            'teamID' => $request->status ?: 0,
+            'serialNumber' => $request->sn ?: null,
+            'longitude' => $request->long ?: 0,
+            'latitude' => $request->lat ?: 0,
+            'fatLongitude' => $request->long ?: 0,
+            'fatLatitude' => $request->lat ?: 0,
+            'additionalUTP' => $request->additionalUTP ?: 0,
+            'additionalDropCable' => $request->additionalDropCable ?: 0,
+        ];
+
+        // PUSH API ----------------------------------------------------------------------------------------------------
+
+        $response = Curl::to($urlPush)->withData($data)->withBearer($token)->asJson()->returnResponseObject()->post();
+        if($response->status == 200 || $response->status == 400){
+            if($content = $response->content){
+                if(isset($content->statusCode)){
+                    if(!$content->statusCode){
+                        $result->success = true;
+                        $result->message = "Success";
+                    }
+                    else {
+                        $result->message = "Error API engineer status response failed";
+                        $result->result = json_encode($content);
+                    }
+
+                    $result->result = [
+                        'url' => $urlPush,
+                        'dataPush' => $data,
+                        'response' => (array) $content,
+                    ];
+                }
+                else $result->message = "Error API engineer status statusCode Not Found";
+            }
+            else $result->message = "Error API engineer status (response is null)";
+        }
+        else {
+            $result->message = "ERROR API ENGINEERSTATUS ($response->status)";
+            $result->result = $response->content ? json_encode($response->content) : null;
+        }
+
+        return (array) $result;
+    }
+
     private function pushApi($action, $details){
         $result = (object) ['success' => false];
 
@@ -797,4 +874,6 @@ class WorkOrder extends Controller
         return $pdf->stream("WO ($data->id).pdf");
     }
 }
+
+
 
