@@ -349,16 +349,16 @@ class WorkOrder extends Controller
         // GET ACTION --------------------------------------------------------------------------------------------------
 
         $data = [
-            'activityName' => $request->activity ?: 'INSTALLATION',
-            'orderNumber' => $request->wo ?: '0',
-            'workFlowNumber' => $request->id ?: '0',
-            'orderStatus' => $request->status ?: 'INSTALLATION',
-            'teamID' => $request->status ?: 0,
-            'serialNumber' => $request->sn ?: null,
-            'longitude' => $request->long ?: 0,
-            'latitude' => $request->lat ?: 0,
-            'fatLongitude' => $request->long ?: 0,
-            'fatLatitude' => $request->lat ?: 0,
+            'activityName' => $request->activityName ?: 'INSTALLATION',
+            'orderNumber' => $request->orderNumber ?: '0',
+            'workFlowNumber' => $request->workFlowNumber ?: '0',
+            'orderStatus' => $request->orderStatus ?: 'INSTALLATION',
+            'teamID' => $request->teamId ?: 0,
+            'serialNumber' => $request->serialNumber ?: null,
+            'longitude' => $request->longitude ?: 0,
+            'latitude' => $request->latitude ?: 0,
+            'fatLongitude' => $request->longitude ?: 0,
+            'fatLatitude' => $request->latitude ?: 0,
             'additionalUTP' => $request->additionalUTP ?: 0,
             'additionalDropCable' => $request->additionalDropCable ?: 0,
         ];
