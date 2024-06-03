@@ -86,6 +86,8 @@ class WorkOrder extends Controller
             'deletedBy'
         ]);
 
+        $search = $request->input('query');
+
         // FILTER ON GOING ---------------------------------------------------------------------------------------------
         if($archive) $query->whereNotNull('close_date');
         else {
@@ -113,13 +115,12 @@ class WorkOrder extends Controller
         if($ftr = $request->input('filter-client')) $query->where('client_id', $ftr);
         if($ftr = $request->input('filter-owner')) $query->where('owner_id', $ftr);
         if($ftr = $request->input('filter-vendor')) $query->where('vendor_id', $ftr);
-        if($ftr = $request->input('filterDate')) {
+        if($ftr = $request->input('filterDate') && !$search) {
             $month = date('Y-m', strtotime("$ftr 00:00:00")).'%';
             $query->where('start_date', 'LIKE', $month);
         }
 
         // SEARCH ------------------------------------------------------------------------------------------------------
-        $search = $request->input('query');
         if($search) {
             $query->where(function ($query) use ($search) {
                 $query->orWhereHas('site', function($query) use ($search){
