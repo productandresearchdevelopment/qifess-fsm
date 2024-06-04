@@ -115,7 +115,7 @@ class WorkOrder extends Controller
         if($ftr = $request->input('filter-client')) $query->where('client_id', $ftr);
         if($ftr = $request->input('filter-owner')) $query->where('owner_id', $ftr);
         if($ftr = $request->input('filter-vendor')) $query->where('vendor_id', $ftr);
-        if($ftr = $request->input('filterDate') && !$search) {
+        if(($ftr = $request->input('filterDate')) && !$search) {
             $month = date('Y-m', strtotime("$ftr 00:00:00")).'%';
             $query->where('start_date', 'LIKE', $month);
         }
