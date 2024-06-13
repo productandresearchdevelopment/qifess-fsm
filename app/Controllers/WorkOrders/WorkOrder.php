@@ -744,7 +744,7 @@ class WorkOrder extends Controller
         }
 
         // FILTER ------------------------------------------------------------------------------------------------------
-        if($filter = $request->input('filterDate')) {
+        if(!$search && ($filter = $request->input('filterDate'))) {
             $m = date('Y-m', strtotime("$filter 00:00:00")).'%';
             $query[] = "(A.start_date LIKE '$m')";
 
