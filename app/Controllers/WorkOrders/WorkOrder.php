@@ -94,6 +94,9 @@ class WorkOrder extends Controller
             if($request->input('activedOnly') == 1){
                 $query->whereNull('close_date');
             }
+            else if($request->input('activedOnly') == 1){
+                $query->where('close_date', '>', date('Y-m-d', strtotime('-1 days')));
+            }
             else {
                 $query->where(function ($query) {
                     $query->whereNull('close_date');
