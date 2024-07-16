@@ -619,7 +619,7 @@ class WorkOrder extends Controller
 
                 if(!$this->fieldtechCheck($fieldtechId, $startDate, $slotId)) {
                     DB::rollback();
-                    return ['success' => false, 'message' => 'Team already have installation ticket'];
+                    return ['success' => false, 'message' => "Team already have installation ticket ($fieldtechId, $startDate, $slotId)"];
                 }
 
                 DB::commit();
