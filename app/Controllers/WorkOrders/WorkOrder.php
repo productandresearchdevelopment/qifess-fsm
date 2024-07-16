@@ -599,15 +599,12 @@ class WorkOrder extends Controller
                             switch ($statusDetail->triger){
                                 case 'wo.fieldtech':
                                     $fieldtechId = $value;
-                                    $wo->update(['fieldtech_id' => $value]);
                                     break;
                                 case 'wo.startdate':
                                     $startDate = $value;
-                                    $wo->update(['start_date' => $value]);
                                     break;
                                 case 'wo.slot':
                                     $slotId = $value;
-                                    $wo->update(['slot_id' => $value]);
                                     break;
                                 case 'wo.unbook':
                                     $wo->update(['fieldtech_id' => null, 'start_date' => null, 'slot_id' => null]);
@@ -621,6 +618,10 @@ class WorkOrder extends Controller
                     DB::rollback();
                     return ['success' => false, 'message' => "Team already have installation ticket", 'data' => $err];
                 }
+
+                if($fieldtechId) $wo->update(['fieldtech_id' => $fieldtechId]);
+                if($startDate) $wo->update(['start_date' => $startDate]);
+                if($slotId) $wo->update(['slot_id' => $slotId]);
 
                 DB::commit();
                 return false;
