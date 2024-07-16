@@ -198,6 +198,11 @@ class WorkOrder extends Controller
     public function push(Request $request, $id = null){
         DB::beginTransaction();
         try{
+            $startDate = $request->input('start_date');
+            $fieldtechId = $request->input('fieldtech_id');
+            $slotId = $request->input('slot_id');
+            $activityId = $request->input('activity_id');
+
             if(!$request->input('remove_site_id') && !$request->input('site_id')) return ['success' => false, 'message' => 'site_id OR remove_site_id Is Null'];
             if(!$request->input('activity_id')) return ['success' => false, 'message' => 'activity_id Is Null'];
             if(!$request->input('client_id')) return ['success' => false, 'message' => 'client_id Is Null'];
@@ -205,20 +210,29 @@ class WorkOrder extends Controller
             //if(!$request->input('owner_id')) return ['success' => false, 'message' => 'owner_id Is Null'];
             if(!$request->input('description')) return ['success' => false, 'message' => 'description Is Null'];
             //if(!$request->input('no_wo')) return ['success' => false, 'message' => 'no_wo Is Null'];
+            if($startDate && $fieldtechId){
+                $cnt = Wo::where('fieldtech_id', $fieldtechId)
+                    ->where('start_date', $startDate)
+                    ->where('activity_id', 1)
+                    ->where('slot_id', $slotId)
+                    ->count();
+
+                return ['success' => false, 'message' => 'Team already have installation ticket'];
+            }
 
             $input = [
                 'site_id' => $request->input('site_id'),
                 'remove_site_id' => $request->input('remove_site_id'),
-                'activity_id' => $request->input('activity_id'),
+                'activity_id' => $activityId,
                 'vendor_id' => $request->input('vendor_id'),
                 'client_id' => $request->input('client_id'),
                 'service_id' => $request->input('service_id'),
-                'slot_id' => $request->input('slot_id'),
+                'slot_id' => $slotId,
                 'owner_id' => $request->input('owner_id'),
                 'description' => $request->input('description'),
                 'no_wo' => $request->input('no_wo'),
-                'start_date' => $request->input('start_date'),
-                'fieldtech_id' => $request->input('fieldtech_id'),
+                'start_date' => $startDate,
+                'fieldtech_id' => $fieldtechId,
                 'expire_date' => $request->input('expire_date'),
             ];
 
@@ -255,6 +269,10 @@ class WorkOrder extends Controller
             DB::rollback();
             return ['success' => false, 'message' => '500 (Create WO)'.$error->getMessage()];
         }
+    }
+
+    private function fieldtechCheck ($fieldtech){
+
     }
 
     public function pushAction(Request $request, $wo=null, $status=null){
