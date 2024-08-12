@@ -163,6 +163,12 @@
                                         @endif
                                     @endforeach
                                 </div>
+                            @elseif($detail->detail->type == 'signature')
+                                <div style="font-size: 12px;">
+                                    @if($fsign = \App\SystemModels\Globals\Upload::find($detail->value))
+                                        <img style="height: 200px; border: 1px solid #CCC; margin: 10px;" src="{{ storage_path("app/public/uploads/".$fsign->filename) }}">
+                                    @endif
+                                </div>
                             @elseif($detail->detail->type == 'date')
                                 <div style="font-size: 12px;">{{ date('d/m/Y', strtotime($detail->value)) }}</div>
                             @elseif($detail->detail->type == 'datetime')
