@@ -920,6 +920,7 @@ class WorkOrder extends Controller
         $user = $request->user();
         $view = 'reports.wo_pdf';
         $data = Wo::find($id);
+
         $params = ['user' => $user, 'data' => $data];
         $html = view($view, $params);
         $pdf = PDF::loadHtml($html);

@@ -144,39 +144,50 @@
                     </td>
                 </tr>
             </table>
-            @if(count($action->details))
+            @if(count($action->status->details))
                 <div style="margin-left: 37px">
-                    @foreach($action->details AS $detail)
+                    @foreach($action->status->details AS $statusDetail)
+                        @php
+                        $detail = \App\Models\WorkOrders\ActionDetail::where('action_id',$action->id)
+                            ->where('detail_id', $statusDetail->id)
+                            ->first();
+                        @endphp
                         <div style="margin-bottom: 10px;">
-                            <div style="font-weight: 600; font-size: 10px;">{{$detail->detail->name}} : </div>
-                            @if($detail->detail->triger == 'wo.fieldtech')
-                                <div style="font-size: 12px;">{{$detail->fieldtech->name}}</div>
-                            @elseif($detail->detail->triger == 'wo.startdate')
-                                <div style="font-size: 12px;">{{ date('d/m/Y', strtotime($detail->value)) }}</div>
-                            @elseif($detail->detail->triger == 'wo.slot')
-                                <div style="font-size: 12px;">{{ $detail->slot->name }}</div>
-                            @elseif($detail->detail->type == 'file')
+                            <div style="font-weight: 600; font-size: 10px;">{{$statusDetail->name}} : </div>
+                            @if($statusDetail->triger == 'wo.fieldtech')
+                                <div style="font-size: 12px;">{{$detail ? $detail->fieldtech->name : '-'}}</div>
+                            @elseif($statusDetail->triger == 'wo.startdate')
+                                <div style="font-size: 12px;">{{ $detail ? date('d/m/Y', strtotime($detail->value)) : '-' }}</div>
+                            @elseif($statusDetail->triger == 'wo.slot')
+                                <div style="font-size: 12px;">{{ $detail ? $detail->slot->name : '-' }}</div>
+                            @elseif($statusDetail->type == 'file')
                                 <div style="font-size: 12px;">
-                                    @foreach($detail->files AS $file)
-                                        @if($file->type == 'image')
-                                            <img style="height: 200px; border: 1px solid #CCC; margin: 10px;" src="{{ storage_path("app/public/uploads/".$file->filename) }}">
-                                        @endif
-                                    @endforeach
-                                </div>
-                            @elseif($detail->detail->type == 'signature')
-                                <div style="font-size: 12px;">
-                                    @if($fsign = \App\SystemModels\Globals\Upload::find($detail->value))
-                                        <img style="height: 200px; border: 1px solid #CCC; margin: 10px;" src="{{ storage_path("app/public/uploads/".$fsign->filename) }}">
+                                    @if($detail)
+                                    @else
+                                        @foreach($detail->files AS $file)
+                                            @if($file->type == 'image')
+                                                <img style="height: 200px; border: 1px solid #CCC; margin: 10px;" src="{{ storage_path("app/public/uploads/".$file->filename) }}">
+                                            @endif
+                                        @endforeach
                                     @endif
                                 </div>
-                            @elseif($detail->detail->type == 'date')
-                                <div style="font-size: 12px;">{{ date('d/m/Y', strtotime($detail->value)) }}</div>
-                            @elseif($detail->detail->type == 'datetime')
-                                <div style="font-size: 12px;">{{ date('d/m/Y H:i:s', strtotime($detail->value)) }}</div>
-                            @elseif($detail->detail->type == 'combo')
-                                <div style="font-size: 12px;">{{ $detail->valueOption ? $detail->valueOption->option : '-' }}</div>
+                            @elseif($statusDetail->type == 'signature')
+                                <div style="font-size: 12px;">
+                                    @if($detail)
+                                    @else
+                                        @if($fsign = \App\SystemModels\Globals\Upload::find($detail->value))
+                                            <img style="height: 200px; border: 1px solid #CCC; margin: 10px;" src="{{ storage_path("app/public/uploads/".$fsign->filename) }}">
+                                        @endif
+                                    @endif
+                                </div>
+                            @elseif($statusDetail->type == 'date')
+                                <div style="font-size: 12px;">{{ $detail ? date('d/m/Y', strtotime($detail->value)) : '-' }}</div>
+                            @elseif($statusDetail->type == 'datetime')
+                                <div style="font-size: 12px;">{{ $detail ? date('d/m/Y H:i:s', strtotime($detail->value)) : '-' }}</div>
+                            @elseif($statusDetail->type == 'combo')
+                                <div style="font-size: 12px;">{{ $detail ? ($detail->valueOption ? $detail->valueOption->option : '-') : '-' }}</div>
                             @else
-                                <div style="font-size: 12px;">{{$detail->value ?: '-'}}</div>
+                                <div style="font-size: 12px;">{{ $detail ? ($detail->value ?: '-') : '-'}}</div>
                             @endif
                         </div>
                     @endforeach
