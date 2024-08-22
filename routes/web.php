@@ -113,6 +113,7 @@ Route::group(['middleware' => ['auth','roles'] ], function(){
 
         Route::get('/export/excel', 'WorkOrders\WorkOrder@exportExcel')->name('wo.export.excel');
         Route::get('/export/pdf/{id?}', 'WorkOrders\WorkOrder@exportPdf')->name('wo.export.pdf');
+        Route::get('/export/balap/{id?}', 'WorkOrders\WorkOrder@exportBalapPdf')->name('wo.export.balap');
     });
 
     // REPORTING ----------------------------------------------------------------------------------

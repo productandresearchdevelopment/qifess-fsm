@@ -926,6 +926,35 @@ class WorkOrder extends Controller
         $pdf = PDF::loadHtml($html);
         return $pdf->stream("WO ($data->id).pdf");
     }
+
+    public function exportBalapPdf(Request $request, $id = null){
+        $user = $request->user();
+        $view = 'reports.wo_balap_pdf';
+        $data = Wo::find($id);
+
+        $params = [
+            'user' => $user,
+            'data' => $data,
+        ];
+
+        $params['time_start'] = null;
+        $params['time_finish'] = null;
+
+        if($data) {
+            foreach ($data->actions as $action) {
+                if (str_contains(strtoupper($action->status->name), 'INSTALLATION')) {
+                    $params['time_start']  = $action->created_at;
+                } else if (str_contains(strtoupper($action->status->name), 'POST ACTIVATION')) {
+                    $params['time_finish'] = $action->created_at;
+                }
+            }
+        }
+
+
+        $html = view($view, $params);
+        $pdf = PDF::loadHtml($html);
+        return $pdf->stream("BALAP ($data->id).pdf");
+    }
 }
 
 

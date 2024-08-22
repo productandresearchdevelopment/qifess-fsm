@@ -177,6 +177,7 @@
 
             dataTpl.link_bast = '{{ route('report.bast.pdf') }}/'+data.id;
             dataTpl.link_pdf = '{{ route('wo.export.pdf') }}/'+data.id;
+            dataTpl.link_balap = '{{ route('wo.export.balap') }}/'+data.id;
 
             // ACTIONS TPL ------------------------------------------------
             let actionTpl = [];
