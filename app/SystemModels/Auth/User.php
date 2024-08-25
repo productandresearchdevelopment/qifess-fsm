@@ -65,5 +65,7 @@ class User extends Authenticatable
         return $this->hasOne(Fieldtech::class, 'id', 'fieldtech_id');
     }
 
-
+    public function vendors(){
+        return $this->belongsToMany(Vendor::class, 'po_m_vendor_user', 'user_id', 'vendor_id');
+    }
 }

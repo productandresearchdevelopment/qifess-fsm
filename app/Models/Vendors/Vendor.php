@@ -4,6 +4,7 @@ namespace App\Models\Vendors;
 
 use App\Models\Fieldteches\Fieldtech;
 use App\Models\WorkOrders\WorkOrder;
+use App\SystemModels\Auth\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\SystemModels\Globals\Upload;
@@ -25,6 +26,10 @@ class Vendor extends Model
         return $this->hasMany(WorkOrder::class, 'vendor_id', 'id');
     }
 
+    public function users(){
+        return $this->belongsToMany(User::class, 'po_m_vendor_user', 'vendor_id', 'user_id');
+    }
+
     public function files(){
         return $this->belongsToMany(
             Upload::class,
@@ -32,6 +37,6 @@ class Vendor extends Model
             'vendor_id',
             'file_id'
         );
-    }      
+    }
 
 }

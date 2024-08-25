@@ -21,14 +21,19 @@ class User extends Controller
     public function index(Request $request){
         $user   = $request->user();
         $view   = 'systems.users.main';
+
+        if($user->vendors && count($user->vendors)){
+            $vendors = $user->vendors;
+        }
+        else $vendors = Vendor::orderBy('name')->get();
+
         $params = [
             'user' => $user,
             'roles' => Auth\Role::where('id', '>=' , $user->role_id)->get(),
             'activities' => Activity::all(),
             'owners' => Owner::all(),
-            'roles' => Auth\Role::where('id', '>=' , $user->role_id)->get(),
             'clients' => $user->client_id ? Client::where('id', $user->client_id)->get() : Client::all(),
-            'vendors' => $user->vendor_id ? Vendor::where('id', $user->vendor_id)->get() : Vendor::all(),
+            'vendors' => $vendors,
         ];
         return view($view, $params);
     }
@@ -36,7 +41,7 @@ class User extends Controller
     public function data(Request $request){
         $user   = $request->user();
         $search = ['id', 'name', 'username', 'last_ip', 'email', 'phone'];
-        $query  = Auth\User::with('fieldtech');
+        $query  = Auth\User::with('fieldtech', 'vendors');
 
         $query->where('role_id', '>=', $user->role_id);
 
@@ -106,6 +111,12 @@ class User extends Controller
                 if($password = $request->password) $input['password'] = Hash::make($password);
                 else return ['success' => false, 'message' => 'Password Is Null'];
                 $user = Auth\User::create($input);
+            }
+
+            if($vendors = json_decode($request->input('vendors'))){
+                if(count($vendors)){
+                    $user->vendors()->sync($vendors);
+                }
             }
 
 

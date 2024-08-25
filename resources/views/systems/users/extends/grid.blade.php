@@ -27,6 +27,7 @@
                 {name: 'fieldtech', type: 'auto'},
                 {name: 'owners', type: 'auto'},
                 {name: 'activities', type: 'auto'},
+                {name: 'vendors', type: 'auto'},
             ]);
 
             me.menus = Ext.create('Ext.menu.Menu', {
