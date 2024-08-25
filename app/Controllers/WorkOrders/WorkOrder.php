@@ -46,12 +46,16 @@ class WorkOrder extends Controller
 
     private function getParams($request, $params = null){
         $user = $request->user();
+
+        if($user->vendors && count($user->vendors)) $vendors = $user->vendors;
+        else $vendors = Vendor::orderBy('name')->get();
+
         $result = [
             'user' => $user,
             'activities' => ($ftr = $user->activities) ? Master\Activity::whereIn('id',$ftr)->get() : Master\Activity::all(),
             'clients' => Client::all(),
             'owners' => ($ftr = $user->owners) ? Owner::whereIn('id',$ftr)->get() : Owner::all(),
-            'vendors' => Vendor::all(),
+            'vendors' => $vendors,
             'services' => Master\Service::all(),
             'slots' => Master\Slot::all(),
             'status' => Master\Status::with('details.options')->get(),
@@ -111,6 +115,9 @@ class WorkOrder extends Controller
         if($ftr = $user->client_id) $query->where('client_id', $ftr);
         if($ftr = $user->vendor_id) $query->where('vendor_id', $ftr);
         if($ftr = $user->fieldtech_id) $query->where('fieldtech_id', $ftr);
+        if(count($user->vendors)){
+            $query->whereIn('vendor_id', $user->vendors->pluck('id')->toArray());
+        }
 
         // FILTER ------------------------------------------------------------------------------------------------------
         if($ftr = $request->input('filter-status')){
@@ -185,9 +192,13 @@ class WorkOrder extends Controller
     }
 
     public function dataFieldtech(Request $request){
+        $user = $request->user();
         $startDate = $request->input('start_date');
         $slot = $request->input('slot');
         $query = Fieldtech::where('vendor_id', $request->vendor);
+        if(count($user->vendors)){
+            $query->whereIn('vendor_id', $user->vendors->pluck('id')->toArray());
+        }
         $query->withCount(['workorders' => function ($query) use ($startDate, $slot) {
             $query->where('start_date', $startDate);
             $query->where('slot_id', $slot);

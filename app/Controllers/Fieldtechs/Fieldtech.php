@@ -18,9 +18,13 @@ class Fieldtech extends Controller
     public function index(Request $request){
         $user = $request->user();
 
+        if($user->vendors && count($user->vendors)) $vendors = $user->vendors;
+        else $vendors = Vendor::orderBy('name')->get();
+
+
         $params = [
             'user' => $user,
-            'vendors' => Vendor::all(),
+            'vendors' => $vendors,
             'activity' => Master\Activity::all(),
             'service' => Master\Service::all(),
             'title' => 'Fieldtech Data'
@@ -34,6 +38,9 @@ class Fieldtech extends Controller
         $query = Mod::with(['users','files']);
         $query ->withCount(['workorders']);
         if($user->vendor_id) $query = $query->where('vendor_id', $user->vendor_id);
+        if(count($user->vendors)){
+            $query->whereIn('vendor_id', $user->vendors->pluck('id')->toArray());
+        }
         if($filter = $request->input('filter-vendor')) $query = $query->where('vendor_id', $filter);
         return Query::open($query, $search);
     }

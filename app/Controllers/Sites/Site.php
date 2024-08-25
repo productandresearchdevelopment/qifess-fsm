@@ -24,11 +24,14 @@ class Site extends Controller
     public function index(Request $request){
         $user = $request->user();
 
+        if($user->vendors && count($user->vendors)) $vendors = $user->vendors;
+        else $vendors = Vendor::orderBy('name')->get();
+
         $params = [
             "user" => $user,
             "activities" => Master\Activity::all(),
             "clients" => Client::all(),
-            "vendors" => Vendor::all(),
+            "vendors" => $vendors,
             "services" => Master\Service::all(),
             "status" => Master\Status::with("details.options")->get(),
             "title" => "Sites Data"
@@ -40,6 +43,10 @@ class Site extends Controller
         $user = $request->user();
         $query = Mod::query();
         if($user->client_id) $query->where("client_id", $user->client_id);
+        if(count($user->vendors)){
+            $query->whereIn('vendor_id', $user->vendors->pluck('id')->toArray());
+        }
+
         if($filter = $request->input("filter-client")) $query->where("client_id", $filter);
         if($filter = $request->input("filter-area")) $query->where("vendor_id", $filter);
         if($filter = $request->input("filter-service")) $query->where("service_id", $filter);

@@ -40,6 +40,7 @@ class User extends Controller
 
     public function data(Request $request){
         $user   = $request->user();
+
         $search = ['id', 'name', 'username', 'last_ip', 'email', 'phone'];
         $query  = Auth\User::with('fieldtech', 'vendors');
 
@@ -47,6 +48,9 @@ class User extends Controller
 
         if($user->client_id) $query->where('client_id', '>=', $user->client_id);
         if($user->vendor_id) $query->where('vendor_id', '>=', $user->vendor_id);
+        if($user->vendors && count($user->vendors)) {
+            $query->whereIn('vendor_id', $user->vendors->pluck('id')->toArray());
+        }
 
         if($filter = $request->role) $query->where('role_id', $filter);
         if($filter = $request->client) $query->where('client_id', $filter);
