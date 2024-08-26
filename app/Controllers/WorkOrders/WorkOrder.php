@@ -978,6 +978,9 @@ class WorkOrder extends Controller
                         if(strtoupper($detail->detail->name) == 'EXCESS MATERIAL - DROP WIRE'){
                             $params['emWire'] = $detail->value;
                         }
+                        else if(strtoupper($detail->detail->name) == 'EXCESS MATERIAL - UTP'){
+                            $params['emUtp'] = $detail->value;
+                        }
                         else if(strtoupper($detail->detail->name) == 'SIGNATURE INSTALLER'){
                             $params['ttdFieldtech'] = Upload::find($detail->value);
                         }

@@ -78,7 +78,7 @@
                    <tr>
                        <td width="150"> <b>Nomor</b> <br> <i>Number</i> </td>
                        <td width="10">:</td>
-                       <td> <div class="divsquare">{{ $data->id ?: '-' }}</div> </td>
+                       <td> <div class="divsquare">{{ $data->no_wo ?: '-' }}</div> </td>
                    </tr>
                    <tr>
                        <td> <b>Tanggal</b> <br> <i>Date</i> </td>
@@ -443,7 +443,7 @@
             </td>
             <td width="33%" align="center">
                 @if($ttdFieldtech)
-                <img style="height: 100px; border: 1px solid #CCC;" src="{{ storage_path("app/public/uploads/".$ttdFieldtech->filename) }}">
+                <img style="height: 100px;" src="{{ storage_path("app/public/uploads/".$ttdFieldtech->filename) }}">
                 <div style="height: 20px; padding: 0px">{{ $ttdFieldtechName }}</div>
                 @else
                     <div style="height: 150px"></div>
@@ -454,7 +454,7 @@
             </td>
             <td width="33%" align="center">
                 @if($ttdCustomer)
-                    <img style="height: 100px; border: 1px solid #CCC;" src="{{ storage_path("app/public/uploads/".$ttdCustomer->filename) }}">
+                    <img style="height: 100px;" src="{{ storage_path("app/public/uploads/".$ttdCustomer->filename) }}">
                     <div>{{ $ttdCustomerName }}</div>
                 @else
                     <div style="height: 150px"></div>
