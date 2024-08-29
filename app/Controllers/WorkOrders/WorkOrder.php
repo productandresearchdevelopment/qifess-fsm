@@ -423,6 +423,31 @@ class WorkOrder extends Controller
             'fatLatitude' => $request->input('latitude') ?: 0,
             'additionalUTP' => $request->input('additionalUTP') ?: 0,
             'additionalDropCable' => $request->input('additionalDropCable') ?: 0,
+            'cpe' => [
+                [
+                    "type" => 'ont',
+                    "serialNumber" => "AMTB2400001",
+                    "macaddressont" => '12345'
+                ],
+                [
+                    "type" => 'stb',
+                    "stbType" => "stbType1",
+                    "serialNumber" => "AMTB2400001",
+                    "macAddressstb" => '12345'
+                ],
+                [
+                    "type" => 'stb',
+                    "stbType" => "stbType2",
+                    "serialNumber" => "AMTB2400001",
+                    "macAddressstb" => '12345'
+                ],
+                [
+                    "type" => 'stb',
+                    "stbType" => "stbType3",
+                    "serialNumber" => "AMTB2400001",
+                    "macAddressstb" => '12345'
+                ],
+            ]
         ];
 
         // PUSH API ----------------------------------------------------------------------------------------------------
