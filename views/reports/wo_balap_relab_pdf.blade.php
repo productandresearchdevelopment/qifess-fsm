@@ -177,22 +177,22 @@
                 <td style="font-weight: bold; text-align: center" width="100" bgcolor="#ffd38e">Jumlah</td>
             </tr>
             <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
+                <td align="center">1</td>
+                <td> {{ $ontType ?: '-' }} </td>
+                <td> {{ $ontSN ?: '-' }} </td>
+                <td> 1 Unit </td>
             </tr>
             <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
+                <td align="center"> 2 </td>
+                <td>UTP</td>
+                <td> - </td>
+                <td>{{ $emUtp ?: 0 }} meter</td>
             </tr>
             <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
+                <td align="center">3</td>
+                <td> Drop Wire </td>
+                <td> - </td>
+                <td>{{ $emWire ?: 0 }} meter</td>
             </tr>
             <tr>
                 <td>&nbsp;</td>
@@ -215,21 +215,44 @@
         </table>
 
         <br>
-        Catatan :<br><br>
-        _______________________________________________________________________________________<br><br>
-        _______________________________________________________________________________________<br><br>
-        _______________________________________________________________________________________<br><br>
+        Catatan : 
+        <br> {{ $lastNote ?: '-'}}
 
     <br><br>
-        * Hasil Tes :   [   ] Youtube      [   ] Speedtest Upload ………   [   ] Speedtest Download ……….
+        * Hasil Tes : &nbsp; &nbsp;
+        [X] Youtube &nbsp; &nbsp;  &nbsp; 
+        [X] Speedtest Upload ……… &nbsp; &nbsp;  &nbsp; 
+        [X] Speedtest Download ……….
 
     </p>
 
-    <table style="font-size: 11px">
+    <table style="font-size: 11px;margin-top: 100px">
         <tr>
-            <td align="center" valign="bottom" height="150" width="33%"><div style="border-top: 1px solid #333333; margin: 20px 70px;">Petugas Teknis</div></td>
-            <td align="center" valign="bottom" height="150" width="33%"><div style="border-top: 1px solid #333333; margin: 20px 70px;">Petugas Admin</div></td>
-            <td align="center" valign="bottom" height="150" width="33%"><div style="border-top: 1px solid #333333; margin: 20px 70px;">Pelanggan</div></td>
+            <td width="33%" align="center">
+                @if($ttdFieldtech)
+                <img style="height: 100px;" src="{{ storage_path("app/public/uploads/".$ttdFieldtech->filename) }}">
+                <div style="height: 20px; padding: 0px">{{ $ttdFieldtechName }}</div>
+                @else
+                    <div style="height: 120px"></div>
+                @endif
+                <div style="padding: 10px 20px; border-top: 1px solid #333333; text-align: center; margin: 1px 60px;">Petugas Teknis</div>
+            </td>
+
+            <td width="33%" align="center">
+                <div style="height: 120px"></div>
+                <div style="padding: 10px 20px; border-top: 1px solid #333333; text-align: center; margin: 1px 60px;">Petugas Admin</div>
+            </td>
+            
+            <td width="33%" align="center">
+                @if($ttdCustomer)
+                    <img style="height: 100px;" src="{{ storage_path("app/public/uploads/".$ttdCustomer->filename) }}">
+                    <div>{{ $ttdCustomerName }}</div>
+                @else
+                    <div style="height: 120px"></div>
+                @endif
+                <div style="padding: 10px 20px; border-top: 1px solid #333333; text-align: center; margin: 1px 60px;">Pelanggan</div>
+            </td>
         </tr>
     </table>
+
 </body>

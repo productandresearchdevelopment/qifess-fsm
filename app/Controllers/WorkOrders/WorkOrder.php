@@ -353,19 +353,19 @@ class WorkOrder extends Controller
                     $wo->update(['close_date' => $action->created_at]);
                 }
 
-                if(strtoupper(substr($wo->no_wo, 0, 2)) == 'OH') {
-                    if (in_array($wo->activity->name, ['INSTALLATION', 'SERVICE UPDATE', 'RELOCATION', 'DEVICE MOVING', 'TERMINATION'])) {
-                        if (in_array($action->status->name, ['PREPARATION', 'IN PROGRESS', 'ARRIVED', 'INSTALLATION', 'ACTIVATION', 'POST ACTIVATION', 'DE-INSTALLATION', 'DE-ACTIVATION'])) {
-                            if ($pushapi = $this->pushApi($action, $details)) {
-                                if ($pushapi->success) DB::commit();
-                                else DB::rollback();
-                                return (array)$pushapi;
-                            }
-                            DB::rollback();
-                            return ['success' => false, 'message' => 'API ERROR'];
-                        }
-                    }
-                }
+                // if(strtoupper(substr($wo->no_wo, 0, 2)) == 'OH') {
+                //     if (in_array($wo->activity->name, ['INSTALLATION', 'SERVICE UPDATE', 'RELOCATION', 'DEVICE MOVING', 'TERMINATION'])) {
+                //         if (in_array($action->status->name, ['PREPARATION', 'IN PROGRESS', 'ARRIVED', 'INSTALLATION', 'ACTIVATION', 'POST ACTIVATION', 'DE-INSTALLATION', 'DE-ACTIVATION'])) {
+                //             if ($pushapi = $this->pushApi($action, $details)) {
+                //                 if ($pushapi->success) DB::commit();
+                //                 else DB::rollback();
+                //                 return (array)$pushapi;
+                //             }
+                //             DB::rollback();
+                //             return ['success' => false, 'message' => 'API ERROR'];
+                //         }
+                //     }
+                // }
 
                 DB::commit();
                 return ['success' => true, 'message' => 'Success'];
@@ -384,12 +384,14 @@ class WorkOrder extends Controller
     public function testApi(Request $request){
         $result = (object) ['success' => false];
 
-        $baseUrl = config('site.asianet_api_url');
-        $email = config('site.asianet_api_user');
-        $password = config('site.asianet_api_password');
+        $baseUrl = 'http://103.66.38.238'; //config('site.asianet_api_url');
+        $email = 'QA.Asianet+C52@gmail.com';//config('site.asianet_api_user');
+        $password = 'odm'; //config('site.asianet_api_password');
 
-        $urlLogin = $baseUrl.'/amt/1.0/security/login';
-        $urlPush = $baseUrl.'/amt/1.0/wfm/engineerstatus';
+        $urlLogin = $baseUrl.'/amt/1.1/atm/generate-token';
+        //$urlPush = $baseUrl.'/amt/1.0/wfm/engineerstatus';
+        $urlPush = $baseUrl.'/amt/1.1/apm/engineerstatus';
+ 
 
         if (Cache::has('token')) $token = Cache::get('woaccesstoken');
         else {
@@ -398,8 +400,9 @@ class WorkOrder extends Controller
                 ->asJson()
                 ->returnResponseObject()
                 ->post();
-            if(isset($login->content) && isset($login->content->accessToken)) {
-                $token = $login->content->accessToken;
+
+            if(isset($login->content) && isset($login->content->body->accessToken)) {
+                $token = $login->content->body->accessToken;
                 Cache::put('woaccesstoken', $token, 10);
             }
             else {
@@ -407,15 +410,16 @@ class WorkOrder extends Controller
                 return (array) $result;
             }
         }
+        $token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnZpcm9ubWVudCI6ImRldiIsImV4cCI6MTcyNTAwNzkwMCwiZGF0YSI6eyJ1c2VySWQiOiJmN2JkYzhiMDgyOTM3YjJlMzc2ZjM5ODdiZmUxNzc2YSIsImVtYWlsIjoiUUEuQXNpYW5ldCtDNTJAZ21haWwuY29tIiwiYXBwbGljYXRpb24iOiJBTEwiLCJyb2xlIjoic3VwZXJBZG1pbiIsInBlcm1pc3Npb24iOnt9fX0.dt9lJHXpfJIYE-vqSCB8CninETqqzJ32fCQiN5RJumJ5tfInALV7NfXBvzMWeJZ2mm2bBKfiNUWZTIKppdbH7I4yUAIRLkv5w2HWCtswbR4-Em0lRSyggd631cWbfihJQYzIF9z-AzUwoZsh-1Ve2u_-3t_WJEhcpe8yBsGkj3w1RNr6owyl9lwYa9WCXnUfFGabMvPXd6ByH_lFWE1pN32Ffj23ciSTlyrh3t4Pthym8WBs6w8uKwh98AisCcX58YFiQp0-Q92SJxBfB9iXCZ1-pbL4e76SBD8yMP4AjEAXpf0v9nMdarF0eNG_cq1hE6B5Nmsi3POfZ2YhwaFirQ";
 
         // GET ACTION --------------------------------------------------------------------------------------------------
 
         $data = [
             'activityName' => $request->input('activityName') ?: 'INSTALLATION',
-            'orderNumber' => $request->input('orderNumber') ?: '0',
-            'workFlowNumber' => $request->input('workFlowNumber') ?: '0',
-            'orderStatus' => $request->input('orderStatus') ?: 'INSTALLATION',
-            'teamID' => $request->input('teamId') ?: 0,
+            'orderNumber' => 'OH1093851648341319601',//$request->input('orderNumber') ?: '0',
+            'workFlowNumber' => '202408000041',//$request->input('workFlowNumber') ?: '0',
+            'orderStatus' => $request->input('orderStatus') ?: 'PREPARED',
+            'teamID' => 42,//$request->input('teamId') ?: 0,
             'serialNumber' => $request->input('serialNumber') ?: null,
             'longitude' => $request->input('longitude') ?: 0,
             'latitude' => $request->input('latitude') ?: 0,
@@ -1000,6 +1004,7 @@ class WorkOrder extends Controller
             $params['emWire'] = 0;
             $params['ontType'] = null;
             $params['ontSN'] = null;
+            $params['ontMac'] = null;
             $params['stbType1'] = null;
             $params['stbType2'] = null;
             $params['stbType3'] = null;
@@ -1010,12 +1015,14 @@ class WorkOrder extends Controller
             $params['ttdCustomer'] = null;
             $params['ttdFieldtechName'] = null;
             $params['ttdCustomerName'] = null;
+            $params['lastNote'] = null;
 
             if ($data) {
                 foreach ($data->actions as $action) {
                     if (str_contains(strtoupper($action->status->name), 'INSTALLATION')) {
                         $params['time_start'] = $action->created_at;
                     } else if (str_contains(strtoupper($action->status->name), 'POST ACTIVATION')) {
+                        $params['lastNote'] = $action->note;
                         $params['time_finish'] = $action->created_at;
                         foreach ($action->details as $detail) {
                             if (strtoupper($detail->detail->name) == 'EXCESS MATERIAL - DROP WIRE') {
@@ -1036,8 +1043,12 @@ class WorkOrder extends Controller
                         foreach ($action->details as $detail) {
                             if (strtoupper($detail->detail->name) == 'QOS REGISTRATION') {
                                 $params['internet'] = $detail->valueOption ? $detail->valueOption->option : null;
-                            } else if (strtoupper($detail->detail->name) == 'TOTAL STB') {
+                            } 
+                            else if (strtoupper($detail->detail->name) == 'TOTAL STB') {
                                 $params['totalStb'] = $detail->value;
+                            }
+                            else if (strtoupper($detail->detail->name) == 'MAC ADDRESS ONT') {
+                                $params['ontMac'] = $detail->value;
                             }
                         }
                     } else if (str_contains(strtoupper($action->status->name), 'PREPARATION')) {

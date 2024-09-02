@@ -119,7 +119,7 @@
             <td>Upgrade Service</td>
             <td>: @if(in_array($data->activity_id, [0])) Yes @endif</td>
             <td>Internet</td>
-            <td>: - </td>
+            <td>: {{ $internet ?: '-'}} </td>
         </tr>
         <tr>
             <td>Downgrade Service</td>
@@ -174,7 +174,7 @@
         </tr>
         <tr>
             <td>MAC Address</td>
-            <td>: -</td>
+            <td>: {{ $ontMac ?: '-' }}</td>
         </tr>
 
         {{-- SECTION 4  --}}
@@ -185,7 +185,7 @@
             <td colspan="4" align="center"><b>Installation Notes</b></td>
         </tr>
         <tr>
-            <td colspan="4" style="height: 100px">&nbsp;</td>
+            <td colspan="4" style="height: 100px"> {{ $lastNote ?: '-'}} </td>
         </tr>
     </table>
 
@@ -239,11 +239,33 @@
         </tr>
     </table>
 
-    <table style="font-size: 11px">
+    <table style="font-size: 11px;margin-top: 100px">
         <tr>
-            <td align="center" valign="bottom" height="150" width="33%"><div style="border-top: 1px solid #333333; margin: 20px 70px;">Field Admin</div></td>
-            <td align="center" valign="bottom" height="150" width="33%"><div style="border-top: 1px solid #333333; margin: 20px 70px;">Technician</div></td>
-            <td align="center" valign="bottom" height="150" width="33%"><div style="border-top: 1px solid #333333; margin: 20px 70px;">Customer</div></td>
+            <td width="33%" align="center">
+                <div style="height: 120px"></div>
+                <div style="padding: 10px 20px; border-top: 1px solid #333333; text-align: center; margin: 1px 60px;">Field Admin</div>
+            </td>
+
+            <td width="33%" align="center">
+                @if($ttdFieldtech)
+                <img style="height: 100px;" src="{{ storage_path("app/public/uploads/".$ttdFieldtech->filename) }}">
+                <div style="height: 20px; padding: 0px">{{ $ttdFieldtechName }}</div>
+                @else
+                    <div style="height: 120px"></div>
+                @endif
+                <div style="padding: 10px 20px; border-top: 1px solid #333333; text-align: center; margin: 1px 60px;">Technician</div>
+            </td>
+            
+            <td width="33%" align="center">
+                @if($ttdCustomer)
+                    <img style="height: 100px;" src="{{ storage_path("app/public/uploads/".$ttdCustomer->filename) }}">
+                    <div>{{ $ttdCustomerName }}</div>
+                @else
+                    <div style="height: 120px"></div>
+                @endif
+                <div style="padding: 10px 20px; border-top: 1px solid #333333; text-align: center; margin: 1px 60px;">Customer</div>
+            </td>
         </tr>
     </table>
+
 </body>
