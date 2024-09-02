@@ -1,1 +1,101 @@
-<?php /*** PHP Encode v1.0 by zeura.com ***/ $XnNhAWEnhoiqwciqpoHH=file(__FILE__);eval(base64_decode("aWYoIWZ1bmN0aW9uX2V4aXN0cygiWWl1bklVWTc2YkJodWhOWUlPOCIpKXtmdW5jdGlvbiBZaXVuSVVZNzZiQmh1aE5ZSU84KCRnLCRiPTApeyRhPWltcGxvZGUoIlxuIiwkZyk7JGQ9YXJyYXkoNjU1LDIzNiw0MCk7aWYoJGI9PTApICRmPXN1YnN0cigkYSwkZFswXSwkZFsxXSk7ZWxzZWlmKCRiPT0xKSAkZj1zdWJzdHIoJGEsJGRbMF0rJGRbMV0sJGRbMl0pO2Vsc2UgJGY9dHJpbShzdWJzdHIoJGEsJGRbMF0rJGRbMV0rJGRbMl0pKTtyZXR1cm4oJGYpO319"));eval(base64_decode(YiunIUY76bBhuhNYIO8($XnNhAWEnhoiqwciqpoHH)));eval(ZsldkfhGYU87iyihdfsow(YiunIUY76bBhuhNYIO8($XnNhAWEnhoiqwciqpoHH,2),YiunIUY76bBhuhNYIO8($XnNhAWEnhoiqwciqpoHH,1)));__halt_compiler();aWYoIWZ1bmN0aW9uX2V4aXN0cygiWnNsZGtmaEdZVTg3aXlpaGRmc293Iikpe2Z1bmN0aW9uIFpzbGRrZmhHWVU4N2l5aWhkZnNvdygkYSwkaCl7aWYoJGg9PXNoYTEoJGEpKXtyZXR1cm4oZ3ppbmZsYXRlKGJhc2U2NF9kZWNvZGUoJGEpKSk7fWVsc2V7ZWNobygiRXJyb3I6IEZpbGUgTW9kaWZpZWQiKTt9fX0=ac456ad365d35b946a424bf5f2f65aef5ed5567f1Vdbb9s2FH5egPwHFggguUjidxnNFgwLOqABiqTZHiwjYKVjiShNarxULQb/9x1SF1MX18ZehumJJj9+5/A7F9LLt6Q0ptLJclnX9W1VViAymcOtVMWSvF1eXlxeCLoDXdEMyH1Vpe8Rnv4qhVGSc1A6vbemXDmc1UcQh/GqQf3Oud0xQQ2kz7aqpDLpA81oDjp9T3U5RXnKJ/jLgjanOZ6kNXAc9mxm/PiDcpZTw6QIhr99y6Bygyn+QVrR4p0A6FzOFGRGv2g88mn8p1JJYzjoD7Jgotvg5Hv+rg3sHjEIvBE3dZQdoBM741Rr4jcf5CXwzYDINQmm/r68IPi5zRMfu4WpM81ahdOIh5xcqXbvJ0nekWgZHTD2M2cZ2VqRudOR19dMCm2UzUy8cIDWAfddmZLpm7sdy3MONVUQR4ULabS4uQOvdRxxWWD4okXr3v6YHfRbucyMF4EBBcYqQaJuMTrFoktZ+0M/SLXrqX5qeb4yqOOIoua33IFOe+VhcZupTjU/CF286nxDHbv1m7tuchUAK4xwLVU+AHaTqxEjglxUk6QuAXVdHyQg7+4ORjeo9JYpjbEJGNg29ojQz3be1WOSZCVkX+Leo+uG8ODNYrzTfS5Xk6SwVOUxmm2kaeyspuhW8i7P3A4mXDZDHrd50619pKaMF2OS/fBny9du1Uj0QBmH3Ef7CRsaZinEnbDXJOrOEoXE+0lunU/YR2CaNX1dHRIR+YZMP0yiPh80aI37nVwKChCgsNsMgts6nHGgylu4N9hfKqN7X0P08JQu9UEYliFpHpytXe5j646KESE/J/8igKdkmZN5LI5z6XsFoUYGm1pNZpo51ggz5SMKRwvQYalgpayNokK3Rb/1lqPFZnOOr0OxZjwcldhyOdxyurVgYzzdWyZ9ZZgNTeHaKnd5so7wGjGvO5lb3nQKYTnH3PXTVvF+bjOTUmFpO9cGkLkMZeJrE45hho5LH6+Xc/RuzU/b/6DxnOrYO/kZg/zhv+/bmJNxhJc2uNvw/9rFr4z8AsKdvKH2P2dw6NObBjtnc8AU42OCiWJB8N2WJNayPJ6zPJfcnqKRzg83cxv3R++i9byVSNssw6T2xPjQgesjuF3TYjyu33QMHPgaSHcM7SAH8Axqc9btuB6cZUu5huuR338qKQrysbscNz+8HM/ge+nK6AVvhi0TkL/pScdFqg127qBWlXvYP/qCHdS9f/AnSSW1ax7NUw3tpkf/r6Sjh/MvQRcY9p79Pw==
+<?php
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Foundation\Auth\RedirectsUsers;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
+use App\SystemModels\Auth\User;
+use Auth;
+
+class LoginController extends Controller {
+    use RedirectsUsers;
+    use ThrottlesLogins;
+
+    protected $redirectTo = '/';
+
+    public function __construct()    {
+        $this->middleware('guest')->except('logout');
+    }
+
+    public function username(){
+        return 'username';
+    }
+
+    public function showLoginForm(){
+        return view('auth.login');
+    }
+
+    public function login(Request $request){
+        $username = $request->username;
+        $password = $request->password;
+        $user = User::where(['username' => $username])->first();
+        if($user){
+            if(Hash::check($password, $user->password)){
+                Auth::guard()->login($user);
+                return redirect()->intended($this->redirectPath());
+            }
+            return $this->sendFailedLoginResponse($request, 'password');
+        }
+        return $this->sendFailedLoginResponse($request, 'username');
+    }
+
+    protected function sendLoginResponse(Request $request){
+        $request->session()->regenerate();
+        $this->clearLoginAttempts($request);
+        return $this->authenticated($request, $this->guard()->user()) ?: redirect()->intended($this->redirectPath());
+    }
+
+    protected function sendFailedLoginResponse(Request $request, $type){
+        throw ValidationException::withMessages(['username'=> [trans('auth.failed')]]);
+    }
+
+    protected function authenticated(Request $request, $user){
+        // authenticated
+    }
+
+    public function logout(Request $request){
+        $user = $request->user();
+        $user->update(['last_module' => null, 'last_url' => null]);
+        $this->guard()->logout();
+        $request->session()->invalidate();
+        return redirect('/');
+    }
+
+    protected function guard(){
+        return Auth::guard();
+    }
+
+    public function mobileLogin(Request $request){
+        $username = $request->username;
+        $password = $request->password;
+        $user = User::with('role')->where(['username' => $username])->first();
+        if($user){
+            if(Hash::check($password, $user->password)){
+                Auth::guard()->login($user);
+                $token = $user->token;
+                if(!$token){
+                    $token = (string) Str::uuid();
+                    $user->update(['token' => $token]);
+                }
+                return [
+                    'success' => true,
+                    'message' => 'success',
+                    'token' => $user->token,
+                    'user' => $user,
+                ];
+            }
+            return ['success' => false, 'message' => 'Wrong Password'];
+        }
+        return ['success' => false, 'message' => 'Username Undefined!'];
+    }
+
+    public static function routeMobile(){
+        Route::post('/login', '\App\Http\Controllers\Auth\LoginController@mobileLogin');
+    }
+
+}
