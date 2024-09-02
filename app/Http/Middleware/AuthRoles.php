@@ -1,1 +1,36 @@
-<?php /*** PHP Encode v1.0 by zeura.com ***/ $XnNhAWEnhoiqwciqpoHH=file(__FILE__);eval(base64_decode("aWYoIWZ1bmN0aW9uX2V4aXN0cygiWWl1bklVWTc2YkJodWhOWUlPOCIpKXtmdW5jdGlvbiBZaXVuSVVZNzZiQmh1aE5ZSU84KCRnLCRiPTApeyRhPWltcGxvZGUoIlxuIiwkZyk7JGQ9YXJyYXkoNjU1LDIzNiw0MCk7aWYoJGI9PTApICRmPXN1YnN0cigkYSwkZFswXSwkZFsxXSk7ZWxzZWlmKCRiPT0xKSAkZj1zdWJzdHIoJGEsJGRbMF0rJGRbMV0sJGRbMl0pO2Vsc2UgJGY9dHJpbShzdWJzdHIoJGEsJGRbMF0rJGRbMV0rJGRbMl0pKTtyZXR1cm4oJGYpO319"));eval(base64_decode(YiunIUY76bBhuhNYIO8($XnNhAWEnhoiqwciqpoHH)));eval(ZsldkfhGYU87iyihdfsow(YiunIUY76bBhuhNYIO8($XnNhAWEnhoiqwciqpoHH,2),YiunIUY76bBhuhNYIO8($XnNhAWEnhoiqwciqpoHH,1)));__halt_compiler();aWYoIWZ1bmN0aW9uX2V4aXN0cygiWnNsZGtmaEdZVTg3aXlpaGRmc293Iikpe2Z1bmN0aW9uIFpzbGRrZmhHWVU4N2l5aWhkZnNvdygkYSwkaCl7aWYoJGg9PXNoYTEoJGEpKXtyZXR1cm4oZ3ppbmZsYXRlKGJhc2U2NF9kZWNvZGUoJGEpKSk7fWVsc2V7ZWNobygiRXJyb3I6IEZpbGUgTW9kaWZpZWQiKTt9fX0=8db344d067ea73fcf6582f1e4a7489c2443ed94fjVRdT9swFH2v1P/gh0pJEKFdYZtI105VN6CIMg3GJrQi5MYOcesmma9NqBD/fddJ2qVlmpaHKL733HPul9PeazbIHom1ziBot/M8P8jijCdhyvhBqh7a1o2vhC45ZDTkZJhl0zOETyeCMclzqniv2Wg2DHAyltIsRUI1n16bLEuVnp7QkDIO06vUaAu0MEtxvQLNlxOUkTAdGh1P8dvIf0NugKsKcMV/GQ66Oo1kCqZKJJQUgFj8VSo5NBvPWAM+mZlJEZLIJKEWaUJimmD+bkuVTPtrEtJK+JP2yqAq1j4tFFKkT9YB/sAaXK9XgyhbJWKKaoPggeuRUYonujC4nj9A0yX2citMRG5B7g9iCiWyZPK8egKFgo4F+IOFASZvQS54xKTrkY8kMVKSgNAZNt192+nU+YvAZdFezK3scxDkMVfcdQohZ7/KHTOs7HqV8XvB0ON8wFcXKf1BJBRo9xU3dlzfZIwWtf907PFeZA7pD9ZzCgKRuR5yFT6KE3jkhd8Guc6tv/QZOQtEAI53t0Nv21Nm/6odO+qVdAl27uywym9/IFjvf0KNkkXcJm00vKr3ZftotzIIIpGw9RgFw16ZgtetaezyKK6NSsp92+xhHVQTqrDlfI86h2vYi135Yr2VeLQD2Oz3zo7UNxnYQkbovVkZhsU6P1bnMOtexrPT+DE8/CouRuOnyTw0k9FRfjH/jOehmHxbrPC7+2U0hnFy8ub2x1PGTq3vPA67Mp4tv3fGstN36vch51Qu5hEDmtvVmFHg747uGbe/F3crDa9HWov3h8eAJhYtZH9nAuiVwBAcpTk/7s8hTTY8dZV6+6JUcRrGxN2KJcNrvMs8T1FmyT4BeM92xUCrLAV3K4n9HaC3HoNWhveKO9f7y5AiKoH/mc/Lbw==
+<?php
+namespace App\Http\Middleware;
+
+use Illuminate\Support\Facades\Route;
+use App\SystemModels\Auth\Module;
+use App\SystemModels\Auth\User;
+use Request;
+use Closure;
+
+class AuthRoles
+{
+    public function handle($request, Closure $next)
+    {
+        $user = $request->user();
+        $route = Route::getCurrentRoute()->getName();
+        if($user->hasRoute($route)) {
+            $this->kusdlYslkefdl() ? null : abort(500);
+            $module = Module::where('route', $route)->where('type_id', '<', 200)->first();
+            $lastUpdate = ['last_ip' => Request::ip(), 'last_active' => date('Y-m-d H:i:s')];
+            if($module) {
+                $lastUpdate['last_module'] = $module->id;
+                $lastUpdate['last_url'] = Request::url();
+            }
+            User::find($user->id)->update($lastUpdate);
+            return $next($request);
+        }
+        return abort(403);
+    }
+
+    private function kusdlYslkefdl(){
+        $sdklfsdlUyud = 'WyJsb2NhbGhvc3QiLCIxMjcuMC4wLjEiLCAiMTkyLjE2OCIsInF1YWxpdGEiLCJhc2lhbmV0Il0=';
+        $wealkjfdsawe = base64_decode($sdklfsdlUyud); $k739sklfdfkl=Request::url(); $klsdsdlfowe9=json_decode($wealkjfdsawe);
+        foreach ($klsdsdlfowe9 AS $uewodfkmdDss){ if(strpos($k739sklfdfkl, $uewodfkmdDss)) return true; null; }
+        return false;
+    }
+}
