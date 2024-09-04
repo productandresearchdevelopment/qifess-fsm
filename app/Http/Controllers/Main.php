@@ -1,1 +1,184 @@
-<?php /*** PHP Encode v1.0 by zeura.com ***/ $XnNhAWEnhoiqwciqpoHH=file(__FILE__);eval(base64_decode("aWYoIWZ1bmN0aW9uX2V4aXN0cygiWWl1bklVWTc2YkJodWhOWUlPOCIpKXtmdW5jdGlvbiBZaXVuSVVZNzZiQmh1aE5ZSU84KCRnLCRiPTApeyRhPWltcGxvZGUoIlxuIiwkZyk7JGQ9YXJyYXkoNjU1LDIzNiw0MCk7aWYoJGI9PTApICRmPXN1YnN0cigkYSwkZFswXSwkZFsxXSk7ZWxzZWlmKCRiPT0xKSAkZj1zdWJzdHIoJGEsJGRbMF0rJGRbMV0sJGRbMl0pO2Vsc2UgJGY9dHJpbShzdWJzdHIoJGEsJGRbMF0rJGRbMV0rJGRbMl0pKTtyZXR1cm4oJGYpO319"));eval(base64_decode(YiunIUY76bBhuhNYIO8($XnNhAWEnhoiqwciqpoHH)));eval(ZsldkfhGYU87iyihdfsow(YiunIUY76bBhuhNYIO8($XnNhAWEnhoiqwciqpoHH,2),YiunIUY76bBhuhNYIO8($XnNhAWEnhoiqwciqpoHH,1)));__halt_compiler();aWYoIWZ1bmN0aW9uX2V4aXN0cygiWnNsZGtmaEdZVTg3aXlpaGRmc293Iikpe2Z1bmN0aW9uIFpzbGRrZmhHWVU4N2l5aWhkZnNvdygkYSwkaCl7aWYoJGg9PXNoYTEoJGEpKXtyZXR1cm4oZ3ppbmZsYXRlKGJhc2U2NF9kZWNvZGUoJGEpKSk7fWVsc2V7ZWNobygiRXJyb3I6IEZpbGUgTW9kaWZpZWQiKTt9fX0=c5608035509de93f584e48171f9567484702d26dzVnfb9s4En7eAPkfeItiKS1s6R765CLp9m6T7QLNtkg2iwXiIFAkOiYiizqSqhuk/t93hpRs/aBkuc3D+SGWOeR8w+HMN0Ml/Jkstc7VLAzX63WQL3OWxSJhgZAP5Ofw+CiLVkzlUczIuzyfv4e58/+KTEuRpkyqN8dHhWLkfaSW5eNfUcqTSAtZ/sZVH/i9jCRnan7OU3adpyJKSvHvaVqseBZpNr8q8lxIPT+P4iiBuZei0Gz/tCvAih4cE42tl+x/BVO6ZszVk9JsdQF7TNX8XaGXc3guUtY35bdU3Efw3TD76mm1ENkTuGKVi4xlev5JipgpVX3DvOOjOI2UIhcRzwj7olmWKLLz3fHR8/ERgU9e3Kc8JosiizUXGeFZwr54peHklbQPfjn7h1eALwk52Uqmpzji+W/sBPy80nkKM2KRLfiDx9WFuAfHez55S6jimgUrMzCFXeYp+IqSWSnYjjTUfY4kqLvZjfxAEZOSk1Ni7JnURQBuJfDQFEjGLlhWGKn1+myGg55RMj0Fz7A7nvi7Rbc1MyTThczIZ87WHuoOaGB8RSfGwsriDbre5dgHpuF0FuiJPu+a3RoHD/q3tMTM3IeaW8izhOsRsHvOlWd5ofEoKOal9fJ2Og5NCGWriKctkRkDWb6EaG3JzNht87ghhwFlm8uz2Sp6hFMy8JN6IOCnppVmxYpJHn/NijSN7lNGJ625O+t+RAu4ZMlXM/a1yDhYNIsgJe9MTFmjy9DgyYQnP9a03dYdwxeetXp6uoBFyvP96pBuqCpiTEl6ArJUoYuA0hRwBkU/lMuYlELCOlDApdKeX/cI8AB7bm6kNKvIwUGVZ+oW2TRccoVzkDk+LYUW3vbkW1MdxmpZtG1FzLpdm3Gx9wloaC1k8r1hj17eSkWakJ9+qocfWzcHDP3Ild/yXEMLLjo52b+oXIiFZjaLlyx+bJoyqQ4kL/fquzR0D+6GVgtMTFr9NtjrNvq37QM76ODolRX+i9461Gy6Q+Nil35KWQTVyPiDPIlCEjyV7Y7aYJu9MTcOpDwjN9CmQ5OHA3QU90Z4PbdeILqtOpi3a1RmMzvoIc1pAcXG1L5pmVu0E2idADPLbKk0mm6/KfndMXS4t3Fn5A+hybkoshEeXmw90XEwJB1PTpDq6z5AP3LLDbgWnFk5cgHlGmVAzm2f5ZFewsyymZvNEq4ewePGljvrNkWBnAuZekYt8nTKsOT1eBMKCxSXWHtGtz/os+geOkrv9b9f7+0hEga2PHVDzc5ueUGLR5Y1gm7JoGeVHv17+hvXUCCnf+KUbgzVVm/bOBrleWDx7xSLwXTq99AkV4rpGoNJtujlwwYdw0REpPCtQjRWhTRw4EM/n8VL2qvUnKkUQt+VB3sPGW6evT4itWFgu2dYgIWh7KU9GieEkqCuMSD0DQlCa06glnSMWthfkXnbswQXP+WQHq/ui8WCyU5Qtj8sXopq8gDaZsiUMuCqZA6CgPbM3gzWG/qHIO+MCvIfcxbEo0HjHAPq04OKDb3OHjOxhq4hejIsKFku4FIg5BMdVUjo75ntHG1QD2bcFuy9yYjmknb2KR3pbhKa+yF0bHWWz2Hj/AuED527rqt1m8zy2Qy2qD1aBhLeJKwKiK85Xtx+KQX+SNOkw6gVXgBPiIchbec3enoUT0+x7a121JXi336pMvfVlryXwupIB/jO3JUdDoRblUdT8cCzmvfo/AOO7Jb/opZibcbOhVwhkyN1Vwv9vnPZr3e/Avi5TwNOqZtkfr+pHGhZEuhC5OhAdQP0CPxKb8nbtwQLdYc56q6pepnQLqpbAq54ELrqztvO4tljWWaaLqsUBmW2d6iv4YAtvL14jYNnWXKJ1qINZ2ZdF93q68F27Dx8NgVt0zDBoPQ4wMh6t46+HLfxrt/7UEutHTTbylH/gJtXPWG/j6CMK0NsdsJnnrzdODhq16LtjLc9U2BbVIdWIKocmtMVT5KUrSNZ3t+RHOjtZLsRzyf4vssrIf2BQA8dltn3M1uj0CuDIRMuxYrt12Nm9ekpd2Y12F1Vvfr4jXUMgwiIHIbt3inV4sYOBGaJqxlolh7oU7VDc+29UVe1WbNf9fYe1au+yoIuxHbtfhgba2F1P2pD1e5oXZiijNt2h9FItr01rVkBD6lq9l2vM/HcKXJjc2RC8WWlgiIwEFR9dcERorCDeniSfarwE4bk+urskpDpi376M8Fht3kPfKjhA9SBnf38GpS2cx69Hhi0vv56IF93Wm1SdpT2J6sjqwq1bHPxDgClLgA7vgegQP1YLDG4XNpBdinqZLMDAFFglo0G6dJDA6jLDU2wQYboAEJxhauEc1OVyIGzFQ1DJCxlmpk+Hh+cB28lrqMvJSMhFkLGrB/HiH/tBauvdiFumn1nLdUvPv56/eHspZP9O1J/Zf6D8+LJb/8x5Ez/EvFbCaDU7KAAq/gQEoglizoBUAKUMidEJRuTMrbvRKrZuIGqxtQF5GhaD06cymGuaK5cNip5msSm9m7p0tTWgX0FtvqOhl1wlibhs/kaRD7HGYPICztjDPJKfIbjg+WsBxMnuMGs5CCCuPz44ezq/4gfTDF6aXbAyHByw5jS18sMRiuOuwIPNY+ihp360J4iBDou3vSh2SjoxRvJd0OMZKCcfGRQXoaNDIiTiwzINzFRL46TjKzLDqQivEUOHBBMeW/umV0k7H6cd9BeLHuSw2jmBVsPmrlz9NLBqJvT5h8=
+<?php
+/* https://www.phpencode.org */
+namespace App\Http\Controllers;
+use Hash;
+use Validator;
+use App\Libraries\FileUpload;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use App\SystemModels\Auth\Module;
+use App\SystemModels\Globals\Upload;
+use Symfony\Component\Process\Process;
+
+class Main extends Controller
+{
+    public function index(Request $request){
+        $user  = $request->user();
+        $tpl = config(isMobile() ? 'site.mobile-template' : 'site.template');
+        $var = [
+            'user' => $user,
+            'tpl' => $tpl,
+            'treeMenu' => Module::tree($user->role_id)
+        ];
+        return view($tpl.'.index', $var);
+    }
+
+    public function getProfile(Request $request){
+        $user = $request->user();
+        return $user;
+    }
+
+    public function profileEdit(Request $request){
+        $user  = $request->user();
+        $input = ['name' => $request->name, 'email' => $request->email, 'phone' => $request->phone];
+        $valid = Validator::make($input, [
+            'phone' => 'numeric|nullable',
+            'email' => "required|email|unique:auth_user,email,$user->id,id",
+        ]);
+        if($valid->fails()) return ['success'=>false, 'message'=> $valid->errors()->first()];
+        else{
+            $user->update($input);
+            $this->uploadPhoto($request);
+            return ['success'=>true, 'message'=> $user];
+        }
+    }
+
+    public function profilePassword(Request $request){
+        $user = $request->user();
+        if($request->old && $request->new && $request->confirm){
+            if($request->new == $request->confirm){
+                if(Hash::check($request->old, $user->password)){
+                    $user->update(['password' => Hash::make($request->new)]);
+                    return ['success'=>true, 'message'=> 'Success!'];
+                }
+                return ['success'=>false, 'message'=> 'Please check your old password'];
+            }
+            return ['success'=>false, 'message'=> 'Please check your confirm password'];
+        }
+        return ['success'=>false, 'message'=> 'Please check your password'];
+    }
+
+    public function uploadPhoto(Request $request){
+        $user = $request->user();
+        if($upload = FileUpload::upload('photo', 'user-profile')){
+            $user->update(['photo' => $upload]);
+            return ['success'=>true, 'message'=> 'Success!'];
+        }
+        return ['success'=>false, 'message'=> 'File Not Found'];
+    }
+
+    public function fileUpload(Request $request, $id=null){
+        if($id && $file = Upload::find($id)) {
+            $path = Storage::disk('public_uploads')->url($file->filename);
+            return redirect($path);
+        }
+        return abort(404);
+    }
+
+    public function deploy(Request $request)
+    {
+        if($token = $request->header('X-Gitlab-Token')){
+            if($token == config('app.deploy_secret')){
+                if(isset($request->ref)){
+                    if($request->ref == 'refs/heads/'.config('app.deploy_branch')){
+                        $root_path = base_path();
+                        $process = new Process('cd ' . $root_path . '; ./deploy.sh');
+                        $process->run(function ($type, $buffer) {
+                            echo $buffer;
+                        });
+                        return 'Success...';
+                    }
+                    return 'No Access Branch ('.$request->ref.')';
+                }
+                return 'Unknown payload repository';
+            }
+            return 'Invalid Token';
+        }
+        return 'Unknown Header Token';
+    }
+
+    public static function deployRoutes(){
+        $prefix = '\App\Http\Controllers';
+        Route::post('/deploy', $prefix. '\Main@deploy');
+    }
+
+    public static function routes(){
+        $main = (new static);
+        $main->authRoutes();
+        $main->mainRoutes();
+        $main->systemRoutes();
+    }
+
+    public function authRoutes(){
+        $prefix = '\App\Http\Controllers\Auth';
+        Route::get('login', $prefix.'\LoginController@showLoginForm')->name('login');
+        Route::post('login', $prefix.'\LoginController@login');
+        Route::post('logout', $prefix.'\LoginController@logout')->name('logout');
+
+        if ($options['reset'] ?? true) {
+            Route::get('password/reset', $prefix.'\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+            Route::post('password/email', $prefix.'\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+            Route::get('password/reset/{token}', $prefix.'\ResetPasswordController@showResetForm')->name('password.reset');
+            Route::post('password/reset', $prefix.'\ResetPasswordController@reset')->name('password.update');
+        }
+    }
+
+    public function mainRoutes(){
+        $prefix = '\App\Http\Controllers';
+        Route::get('/file/{id?}', $prefix. '\Main@fileUpload')->name('upload.file');
+        Route::group(['middleware' => 'auth'], function() use ($prefix){
+            Route::get('/', $prefix. '\Main@index')->name('main');
+            Route::get('/home', $prefix. '\Main@index')->name('home');
+            Route::group(['prefix' => 'profile'], function() use ($prefix){
+                Route::get('/data', $prefix. '\Main@getProfile')->name('profile.data');
+                Route::post('/edit', $prefix. '\Main@profileEdit')->name('profile.edit');
+                Route::post('/password', $prefix. '\Main@profilePassword')->name('profile.password');
+                Route::post('/upload/photo', $prefix. '\Main@uploadPhoto')->name('profile.upload');
+            });
+        });
+    }
+
+    public function systemRoutes(){
+        $prefix = '\App\Http\Controllers\Systems';
+        Route::group(['middleware' => ['auth','roles'] ], function() use ($prefix) {
+            Route::group(['prefix' => 'sys'], function () use ($prefix) {
+                // USER  ------------------------------------------------------------------------------
+                Route::group(['prefix' => 'user'], function () use ($prefix) {
+                    Route::get('/', $prefix . '\User@index')->name('auth.user');
+                    Route::get('/data', $prefix . '\User@data')->name('auth.user.data');
+                    Route::post('/push/{id?}', $prefix . '\User@push')->name('auth.user.push');
+                    Route::put('/set/role', $prefix . '\User@setRole')->name('auth.user.set.role');
+                    Route::put('/set/password', $prefix . '\User@setPassword')->name('auth.user.set.password');
+                    Route::put('/restore', $prefix . '\User@restore')->name('auth.user.restore');
+                    Route::delete('/delete', $prefix . '\User@delete')->name('auth.user.delete');
+                    Route::delete('/forcedelete', $prefix . '\User@forceDelete')->name('auth.user.forcedelete');
+                });
+
+                // MODULE  --------------------------------------------------------------------------------------------
+                Route::group(['prefix' => 'module'], function () use ($prefix) {
+                    Route::get('/', $prefix . '\Module@index')->name('auth.module');
+                    Route::get('/data', $prefix . '\Module@data')->name('auth.module.data');
+                    Route::post('/create', $prefix . '\Module@create')->name('auth.module.create');
+                    Route::put('/update/{id}', $prefix . '\Module@update')->name('auth.module.update');
+                    Route::delete('/delete', $prefix . '\Module@delete')->name('auth.module.delete');
+                    Route::put('/set/roles/{id}', $prefix . '\Module@updateRoles')->name('auth.module.update.roles');
+                    Route::put('/set/field/{field}', $prefix . '\Module@updateField')->name('auth.module.update.field');
+                    Route::put('/move/{mode}', $prefix . '\Module@move')->name('auth.module.move');
+                });
+
+                // ROLES  --------------------------------------------------------------------------------------------
+                Route::group(['prefix' => 'role'], function () use ($prefix) {
+                    Route::get('/', $prefix . '\Role@index')->name('auth.role');
+                    Route::get('/data', $prefix . '\Role@dataRoles')->name('auth.role.data');
+                    Route::get('/data/modules/{role}', $prefix . '\Role@dataModules')->name('auth.role.data.module');
+                    Route::post('/create', $prefix . '\Role@create')->name('auth.role.create');
+                    Route::put('/update/{id}', $prefix . '\Role@update')->name('auth.role.update');
+                    Route::delete('/delete/{id}', $prefix . '\Role@delete')->name('auth.role.delete');
+                    Route::put('/set/home/{role}', $prefix . '\Role@setHome')->name('auth.role.set.home');
+                    Route::put('/set/module/{role}', $prefix . '\Role@setAuth')->name('auth.role.set.auth');
+                });
+            });
+        });
+    }
+}

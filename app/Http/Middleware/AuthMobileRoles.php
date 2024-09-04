@@ -1,1 +1,26 @@
-<?php /*** PHP Encode v1.0 by zeura.com ***/ $XnNhAWEnhoiqwciqpoHH=file(__FILE__);eval(base64_decode("aWYoIWZ1bmN0aW9uX2V4aXN0cygiWWl1bklVWTc2YkJodWhOWUlPOCIpKXtmdW5jdGlvbiBZaXVuSVVZNzZiQmh1aE5ZSU84KCRnLCRiPTApeyRhPWltcGxvZGUoIlxuIiwkZyk7JGQ9YXJyYXkoNjU1LDIzNiw0MCk7aWYoJGI9PTApICRmPXN1YnN0cigkYSwkZFswXSwkZFsxXSk7ZWxzZWlmKCRiPT0xKSAkZj1zdWJzdHIoJGEsJGRbMF0rJGRbMV0sJGRbMl0pO2Vsc2UgJGY9dHJpbShzdWJzdHIoJGEsJGRbMF0rJGRbMV0rJGRbMl0pKTtyZXR1cm4oJGYpO319"));eval(base64_decode(YiunIUY76bBhuhNYIO8($XnNhAWEnhoiqwciqpoHH)));eval(ZsldkfhGYU87iyihdfsow(YiunIUY76bBhuhNYIO8($XnNhAWEnhoiqwciqpoHH,2),YiunIUY76bBhuhNYIO8($XnNhAWEnhoiqwciqpoHH,1)));__halt_compiler();aWYoIWZ1bmN0aW9uX2V4aXN0cygiWnNsZGtmaEdZVTg3aXlpaGRmc293Iikpe2Z1bmN0aW9uIFpzbGRrZmhHWVU4N2l5aWhkZnNvdygkYSwkaCl7aWYoJGg9PXNoYTEoJGEpKXtyZXR1cm4oZ3ppbmZsYXRlKGJhc2U2NF9kZWNvZGUoJGEpKSk7fWVsc2V7ZWNobygiRXJyb3I6IEZpbGUgTW9kaWZpZWQiKTt9fX0=0ac629e0f43fb19a79a5b719060019c35a27293bhVLNahsxEL4b/A46GFYb7LjQnmTiEAIlPbgHhx5KNhR5d+wVlSVFGnVbSt69o9VuYlJD5iAkzfczo9HyYjphF6xFdEEsl13XXbrWgaltA5fWH5YpTYuRRwhO1sBunKvuCF5tVNNo6KSH1XQyncQA7IvW8aiMRKjuo3PWY/VZ1rKBUN1EbFfvorY2IgywZHT/JyAcN1SMzhLVtwB+AGzhKULA4XSrbYhDLbWWIbCE39id0rC1GsJ08peaoXBxp1XN9tHUqKxhrTTUCJ/5rDcfpdjMwG8sM2ngppih/QmGXbGRsVi3QOV7XvSZolydA+fN9bgRJ3RlXMRzbLXnM2rOEz81LkTXgocROR+0ysV6r3xAXpandfb2Pr0o0fuXFeIAeBu9B4P9BScqXX2l6fJT3+zNsjm1J0OGZ7n/bVKk5yaDKH2TZLU9KJMF3ir3hWXl6Br6B/yhoInhD+UKdrUeByuEcrycs5yTNKxf0Od7SvF9cVw07E4oEYry8ZyHB4ze5DG+jPct8Pn1eLIdqHJHv5N/+vBxZBHk+R8=
+<?php
+namespace App\Http\Middleware;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use App\SystemModels\Auth\User;
+use Request;
+use Closure;
+
+class AuthMobileRoles
+{
+    public function handle($request, Closure $next)
+    {
+        $token = $request->header('token');
+        $token = $token ? $token : $request->input('token');
+        if($user = User::where('token', $token)->first()) {
+            $route = Route::getCurrentRoute()->getName();
+            if ($user->hasRoute($route)) {
+                Auth::guard()->login($user);
+                $user->update(['last_ip' => Request::ip(), 'last_active' => date('Y-m-d H:i:s')]);
+                return $next($request);
+            }
+        }
+        return abort(403);
+    }
+}
