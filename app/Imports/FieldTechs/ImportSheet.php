@@ -44,7 +44,7 @@ class ImportSheet implements ToCollection, WithChunkReading
                     'photo' => null,
                     'fieldtech1' => $rows[$i][6],
                     'fieldtech2' => $rows[$i][7],
-                    'vendor_name' => $rows[$i][1],
+                    'vendor_name' => $rows[$i][8],
                     'created_by' => $uid,
                     'updated_by' => $uid,
                 ];

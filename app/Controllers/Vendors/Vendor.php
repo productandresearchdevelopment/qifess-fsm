@@ -90,7 +90,7 @@ class Vendor extends Controller
         ini_set('max_execution_time', '300');
 
         $title = [
-            ['Client', 'h2']
+            ['Area', 'h2']
         ];
 
         $data = $this->data($request, false);
@@ -159,7 +159,7 @@ class Vendor extends Controller
             'title' => $title,
             'columns' => $columns,
             'data' => $data,
-            'filename' => config('app.name') . '-' . date('YmdHi'),
+            'filename' => 'Area' . '-' . date('YmdHi'),
             'footer' => [config('app.name') . ' (' . date('d F Y H:i:s') . ')'],
         ];
 
@@ -168,7 +168,7 @@ class Vendor extends Controller
 
     public function importFormat(Request $request)
     {
-        $filename = 'vendor_format.xlsx';
+        $filename = 'area_format.xlsx';
         return Excel::download(new Format(), $filename);
     }
 

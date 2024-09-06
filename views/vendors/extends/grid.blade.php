@@ -50,7 +50,15 @@
           name: 'fieldteches_count',
           type: 'int'
         },
-      ]);
+      ], {
+        beforeload: function(store, operation, opts) {
+          let filters = me.store.proxy.extraParams;
+          let query = '';
+          if (me.store.filters.items.length) query = me.store.filters.items[0].value;
+          filters.query = query;
+          return true;
+        }
+      });
 
       me.menus = Ext.create('Ext.menu.Menu', {
         items: [

@@ -90,7 +90,7 @@ class Fieldtech extends Controller
         ini_set('max_execution_time', '300');
 
         $title = [
-            ['Fieldtech', 'h2']
+            ['Team', 'h2']
         ];
 
         $data = $this->data($request, false);
@@ -155,9 +155,21 @@ class Fieldtech extends Controller
             [
                 'text' => 'FIELDTECH',
                 'columns' => [
-                    ['text' => 'SATU', 'dataIndex' => 'fieldtech1', 'width' => 200],
-                    ['text' => 'DUA', 'dataIndex' => 'fieldtech2', 'width' => 200],
+                    ['text' => 'SATU', 'dataIndex' => 'fieldtech1', 'width' => 200, 'renderer' => function ($e) {
+                        return $e ? $e : '-';
+                    }],
+                    ['text' => 'DUA', 'dataIndex' => 'fieldtech2', 'width' => 200, 'renderer' => function ($e) {
+                        return $e ? $e : '-';
+                    }],
                 ]
+            ],
+            [
+                'text' => 'VENDOR NAME',
+                'dataIndex' => 'vendor_name',
+                'width' => 200,
+                'renderer' => function ($e) {
+                    return $e ? $e : '-';
+                }
             ],
             [
                 'text' => 'PHONE',
@@ -182,7 +194,7 @@ class Fieldtech extends Controller
             'title' => $title,
             'columns' => $columns,
             'data' => $data,
-            'filename' => config('app.name') . '-' . date('YmdHi'),
+            'filename' => 'Team' . '-' . date('YmdHi'),
             'footer' => [config('app.name') . ' (' . date('d F Y H:i:s') . ')'],
         ];
 
@@ -191,7 +203,7 @@ class Fieldtech extends Controller
 
     public function importFormat(Request $request)
     {
-        $filename = 'fieldtech_format.xlsx';
+        $filename = 'team_format.xlsx';
         return Excel::download(new Format(), $filename);
     }
 
@@ -203,7 +215,7 @@ class Fieldtech extends Controller
             }
         }
 
-        if ($upload = FileUpload::upload('file', 'fieldtech-import')) {
+        if ($upload = FileUpload::upload('file', 'team-import')) {
             $user = $request->user();
             $file = Upload::find($upload);
             $fileexcel = Storage::disk('public_uploads')->path($file->filename);

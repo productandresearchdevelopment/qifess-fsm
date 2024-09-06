@@ -6,6 +6,7 @@ use App\Models\Vendors\Vendor;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 
@@ -33,10 +34,14 @@ class ImportSheet implements ToCollection, WithChunkReading
                 $error = null;
                 $uid = $this->user->id;
 
+                $color = !empty($rows[$i][2]) ? $rows[$i][2] : $this->generateDarkColor();
+
+                Log::info("Generated color: " . $color);
+
                 $data = (object) [
                     'name' => $name,
                     'alias' => $rows[$i][1],
-                    'color' => $rows[$i][2] ?? null,
+                    'color' => $color,
                     'address' => $rows[$i][3],
                     'phone' => $rows[$i][4],
                     'email' => $rows[$i][5],
@@ -89,5 +94,14 @@ class ImportSheet implements ToCollection, WithChunkReading
     public function chunkSize(): int
     {
         return 100;
+    }
+
+    public function generateDarkColor()
+    {
+        $r = rand(0, 50);
+        $g = rand(0, 50);
+        $b = rand(0, 50);
+
+        return sprintf("%02x%02x%02x", $r, $g, $b);
     }
 }

@@ -1,6 +1,6 @@
 <table>
   <tr>
-    <td style="font-size: 18;"><b>IMPORT DATABASE QFEST</b></td>
+    <td style="font-size: 18;"><b>IMPORT TEAM</b></td>
   </tr>
 </table>
 
@@ -19,6 +19,10 @@
       style="border: 1px solid #666"><b>EMAIL</b></td>
     <td align="center" valign="center" height="30" colspan="2" bgcolor="#EEEEEE" style="border: 1px solid #666">
       <b>FIELDTECH</b>
+    </td>
+    <td align="center" valign="center" height="30" rowspan="2" width="30" bgcolor="#EEEEEE"
+      style="border: 1px solid #666">
+      <b>VENDOR NAME</b>
     </td>
     <td align="center" valign="center" height="30" width="30" rowspan="2" bgcolor="#EEEEEE"
       style="border: 1px solid #666"><b>PHONE</b></td>
@@ -44,6 +48,7 @@
     <tr>
       <td></td>
       <td>=VLOOKUP(A{{ $i + 5 }},AREA!$A$3:$B${{ $vendors->count() + 3 }}, 2, FALSE)</td>
+      <td></td>
       <td></td>
       <td></td>
       <td></td>
