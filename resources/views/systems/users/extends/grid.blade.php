@@ -106,7 +106,15 @@
           name: 'vendors',
           type: 'auto'
         },
-      ]);
+      ], {
+        beforeload: function(store, operation, opts) {
+          let filters = me.store.proxy.extraParams;
+          let query = '';
+          if (me.store.filters.items.length) query = me.store.filters.items[0].value;
+          filters.query = query;
+          return true;
+        }
+      });
 
       me.menus = Ext.create('Ext.menu.Menu', {
         items: [
@@ -355,6 +363,19 @@
                 let data = find(vendors, val);
                 return data ? data.name : '';
               }
+            }
+          },
+          {
+            text: "MULTI AREA",
+            dataIndex: 'vendors',
+            width: 200,
+            renderer: function(vendors) {
+              if (vendors && vendors.length > 0) {
+                return vendors.map(function(vendor) {
+                  return vendor.name;
+                }).join(', ');
+              }
+              return '';
             }
           },
           {

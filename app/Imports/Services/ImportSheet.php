@@ -37,9 +37,12 @@ class ImportSheet implements ToCollection, WithChunkReading
         for ($i = $startLine; $i < count($rows); $i++) {
             $error = null;
 
+            $color = $this->generateDarkColor();
+
             $data = (object) [
                 'name' => $rows[$i][0],
                 'alias' => $rows[$i][1],
+                'color' => $color,
                 'description' => $rows[$i][2],
             ];
 
@@ -47,8 +50,6 @@ class ImportSheet implements ToCollection, WithChunkReading
                 $error = "Name Not Found";
             } elseif (!$data->alias) {
                 $error = "Alias Not Found";
-            } elseif (!$data->description) {
-                $error = "Description Not Found";
             } else {
                 DB::beginTransaction();
                 try {
@@ -85,5 +86,14 @@ class ImportSheet implements ToCollection, WithChunkReading
     public function chunkSize(): int
     {
         return 100;
+    }
+
+    public function generateDarkColor()
+    {
+        $r = rand(0, 50);
+        $g = rand(0, 50);
+        $b = rand(0, 50);
+
+        return sprintf("%02x%02x%02x", $r, $g, $b);
     }
 }

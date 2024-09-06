@@ -18,6 +18,7 @@ use App\Libraries\ExportExcel;
 use App\Libraries\FileUpload;
 use App\SystemModels\Auth;
 use App\Libraries\Query;
+use App\SystemModels\Auth\User as AuthUser;
 use App\SystemModels\Globals\Upload;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -61,24 +62,36 @@ class User extends Controller
         }
 
 
-        if ($request->has('role')) {
-            $query->where('role_id', $request->get('role')); // Mengambil role dari query string
-        }
-        if ($request->has('client')) {
-            $query->where('client_id', $request->get('client')); // Mengambil client dari query string
-        }
-        if ($request->has('vendor')) {
-            $query->where('vendor_id', $request->get('vendor')); // Mengambil vendor dari query string
-        }
-        if ($request->has('activities')) {
-            $query->where('activities', $request->get('activities')); // Mengambil activities dari query string
-        }
-        if ($request->has('owners')) {
-            $query->where('owners', $request->get('owners')); // Mengambil owners dari query string
+        if ($request->has('role') && !empty($request->get('role'))) {
+            $query->where('role_id', $request->get('role'));
         }
 
-        if (!$request->trash) $query->withTrashed();
-        if ($request->trash == 2) $query->onlyTrashed();
+        if ($request->has('client') && !empty($request->get('client'))) {
+            $query->where('client_id', $request->get('client'));
+        }
+
+        if ($request->has('vendor') && !empty($request->get('vendor'))) {
+            $query->where('vendor_id', $request->get('vendor'));
+        }
+
+        if ($request->has('activities') && !empty($request->get('activities'))) {
+            $query->where('activities', $request->get('activities'));
+        }
+
+        if ($request->has('owners') && !empty($request->get('owners'))) {
+            $query->where('owners', $request->get('owners'));
+        }
+
+        if (!$request->trash) {
+            $query->withoutTrashed(); // Ini memastikan hanya data yang tidak terhapus yang ditampilkan.
+        } elseif ($request->trash == 2) {
+            $query->onlyTrashed(); // Ini memastikan hanya data yang terhapus yang ditampilkan.
+        } else {
+            $query->withTrashed(); // Ini akan menampilkan semua data, baik yang terhapus maupun yang tidak.
+        }
+
+
+        $query->orderBy('role_id', 'asc');
 
         return Query::open($query, $search, $counter);
     }
@@ -215,10 +228,9 @@ class User extends Controller
         $title = [];
 
         $title[] = ['User Manager', 'h2'];
+        // $data = AuthUser::with(['role', 'vendor', 'client', 'fieldtech', 'vendors'])->orderBy('role_id', 'asc')->get();
 
         $data = $this->data($request, false);
-
-        // dd($data);
 
         $columns = [
             [
@@ -229,8 +241,10 @@ class User extends Controller
                     return $e ? $e->name : '-';
                 }
             ],
+            ['text' => 'USERNAME', 'dataIndex' => 'username', 'width' => 200],
+            ['text' => 'NAME', 'dataIndex' => 'name', 'width' => 200],
             [
-                'text' => 'VENDOR',
+                'text' => 'AREA',
                 'dataIndex' => 'vendor',
                 'width' => 200,
                 'renderer' => function ($e) {
@@ -238,11 +252,11 @@ class User extends Controller
                 }
             ],
             [
-                'text' => 'CLIENT',
-                'dataIndex' => 'client',
+                'text' => 'MULTI AREA',
+                'dataIndex' => 'vendors',
                 'width' => 200,
                 'renderer' => function ($e) {
-                    return $e ? $e->name : '-';
+                    return $e  ? $e->pluck('name')->implode(', ') : '-';
                 }
             ],
             [
@@ -255,9 +269,15 @@ class User extends Controller
             ],
             ['text' => 'ACTIVITIES', 'dataIndex' => 'activities', 'width' => 200],
             ['text' => 'OWNER', 'dataIndex' => 'owners', 'width' => 200],
-            ['text' => 'USERNAME', 'dataIndex' => 'username', 'width' => 200],
+            [
+                'text' => 'CLIENT',
+                'dataIndex' => 'client',
+                'width' => 200,
+                'renderer' => function ($e) {
+                    return $e ? $e->name : '-';
+                }
+            ],
             ['text' => 'EMAIL', 'dataIndex' => 'email', 'width' => 200],
-            ['text' => 'NAME', 'dataIndex' => 'name', 'width' => 200],
             ['text' => 'PHONE', 'dataIndex' => 'phone', 'width' => 200],
             ['text' => 'DESCRIPTION', 'dataIndex' => 'description', 'width' => 200],
         ];
@@ -266,7 +286,7 @@ class User extends Controller
             'title' => $title,
             'columns' => $columns,
             'data' => $data,
-            'filename' => config('app.name') . '-' . date('YmdHi'),
+            'filename' => 'Users' . '-' . date('YmdHi'),
             'footer' => [config('app.name') . ' (' . date('d F Y H:i:s') . ')'],
         );
 

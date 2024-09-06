@@ -95,7 +95,7 @@ class Service extends Controller
             'title' => $title,
             'columns' => $columns,
             'data' => $data,
-            'filename' => config('app.name') . '-' . date('YmdHi'),
+            'filename' => 'Services' . '-' . date('YmdHi'),
             'footer' => [config('app.name') . ' (' . date('d F Y H:i:s') . ')'],
         );
 
