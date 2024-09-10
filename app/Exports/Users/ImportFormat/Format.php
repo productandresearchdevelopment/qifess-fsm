@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Exports\Sites\ImportFormat;
+namespace App\Exports\Users\ImportFormat;
 
 use App\Models\Clients\Client;
 use App\Models\Fieldteches\Fieldtech;
 use App\Models\Services\Service;
 use App\Models\Vendors\Vendor;
 use App\Models\WorkOrders\Masters\Slot;
+use App\SystemModels\Auth\Role;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
 class Format implements WithMultipleSheets
@@ -18,19 +19,18 @@ class Format implements WithMultipleSheets
     {
         $vendors = Vendor::all();
         $clients = Client::all();
-        $services = Service::all();
-        $teams = Fieldtech::all();
-        $slots = Slot::all();
+        $fieldtech = Fieldtech::all();
+        $role = Role::all();
 
         return [
-            'DATA' => new Sheet1($vendors, $clients, $services, $teams, $slots),
+            'DATA' => new Sheet1($vendors, $clients, $role, $fieldtech),
             'AREA' => new Sheet2($vendors),
             'CLIENT' => new Sheet3($clients),
-            'SERVICE' => new Sheet4($services),
-            'TEAM' => new Sheet5($teams),
-            'SLOT' => new Sheet6($slots),
+            'ROLE' => new Sheet4($role),
+            'FIELDTECH' => new Sheet5($fieldtech),
         ];
     }
+
 
     public function onUnknownSheet($sheetName)
     {

@@ -94,7 +94,6 @@
                 store: me.store,
                 selType: 'checkboxmodel',
                 border: false,
-
                 tbar: [
                     {text: 'Menu', iconCls: 'icon-menu', menu: me.menus},
                     @if($user->hasRoute('site.export.excel'))

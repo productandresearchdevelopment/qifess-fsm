@@ -1,6 +1,8 @@
 <?php
 /* https://www.phpencode.org */
+
 namespace App\Http\Controllers;
+
 use Hash;
 use Validator;
 use App\Libraries\FileUpload;
@@ -13,7 +15,8 @@ use Symfony\Component\Process\Process;
 
 class Main extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $user  = $request->user();
         $tpl = config(isMobile() ? 'site.mobile-template' : 'site.template');
         $var = [
@@ -21,55 +24,60 @@ class Main extends Controller
             'tpl' => $tpl,
             'treeMenu' => Module::tree($user->role_id)
         ];
-        return view($tpl.'.index', $var);
+        return view($tpl . '.index', $var);
     }
 
-    public function getProfile(Request $request){
+    public function getProfile(Request $request)
+    {
         $user = $request->user();
         return $user;
     }
 
-    public function profileEdit(Request $request){
+    public function profileEdit(Request $request)
+    {
         $user  = $request->user();
         $input = ['name' => $request->name, 'email' => $request->email, 'phone' => $request->phone];
         $valid = Validator::make($input, [
             'phone' => 'numeric|nullable',
             'email' => "required|email|unique:auth_user,email,$user->id,id",
         ]);
-        if($valid->fails()) return ['success'=>false, 'message'=> $valid->errors()->first()];
-        else{
+        if ($valid->fails()) return ['success' => false, 'message' => $valid->errors()->first()];
+        else {
             $user->update($input);
             $this->uploadPhoto($request);
-            return ['success'=>true, 'message'=> $user];
+            return ['success' => true, 'message' => $user];
         }
     }
 
-    public function profilePassword(Request $request){
+    public function profilePassword(Request $request)
+    {
         $user = $request->user();
-        if($request->old && $request->new && $request->confirm){
-            if($request->new == $request->confirm){
-                if(Hash::check($request->old, $user->password)){
+        if ($request->old && $request->new && $request->confirm) {
+            if ($request->new == $request->confirm) {
+                if (Hash::check($request->old, $user->password)) {
                     $user->update(['password' => Hash::make($request->new)]);
-                    return ['success'=>true, 'message'=> 'Success!'];
+                    return ['success' => true, 'message' => 'Success!'];
                 }
-                return ['success'=>false, 'message'=> 'Please check your old password'];
+                return ['success' => false, 'message' => 'Please check your old password'];
             }
-            return ['success'=>false, 'message'=> 'Please check your confirm password'];
+            return ['success' => false, 'message' => 'Please check your confirm password'];
         }
-        return ['success'=>false, 'message'=> 'Please check your password'];
+        return ['success' => false, 'message' => 'Please check your password'];
     }
 
-    public function uploadPhoto(Request $request){
+    public function uploadPhoto(Request $request)
+    {
         $user = $request->user();
-        if($upload = FileUpload::upload('photo', 'user-profile')){
+        if ($upload = FileUpload::upload('photo', 'user-profile')) {
             $user->update(['photo' => $upload]);
-            return ['success'=>true, 'message'=> 'Success!'];
+            return ['success' => true, 'message' => 'Success!'];
         }
-        return ['success'=>false, 'message'=> 'File Not Found'];
+        return ['success' => false, 'message' => 'File Not Found'];
     }
 
-    public function fileUpload(Request $request, $id=null){
-        if($id && $file = Upload::find($id)) {
+    public function fileUpload(Request $request, $id = null)
+    {
+        if ($id && $file = Upload::find($id)) {
             $path = Storage::disk('public_uploads')->url($file->filename);
             return redirect($path);
         }
@@ -78,10 +86,10 @@ class Main extends Controller
 
     public function deploy(Request $request)
     {
-        if($token = $request->header('X-Gitlab-Token')){
-            if($token == config('app.deploy_secret')){
-                if(isset($request->ref)){
-                    if($request->ref == 'refs/heads/'.config('app.deploy_branch')){
+        if ($token = $request->header('X-Gitlab-Token')) {
+            if ($token == config('app.deploy_secret')) {
+                if (isset($request->ref)) {
+                    if ($request->ref == 'refs/heads/' . config('app.deploy_branch')) {
                         $root_path = base_path();
                         $process = new Process('cd ' . $root_path . '; ./deploy.sh');
                         $process->run(function ($type, $buffer) {
@@ -89,7 +97,7 @@ class Main extends Controller
                         });
                         return 'Success...';
                     }
-                    return 'No Access Branch ('.$request->ref.')';
+                    return 'No Access Branch (' . $request->ref . ')';
                 }
                 return 'Unknown payload repository';
             }
@@ -98,50 +106,55 @@ class Main extends Controller
         return 'Unknown Header Token';
     }
 
-    public static function deployRoutes(){
+    public static function deployRoutes()
+    {
         $prefix = '\App\Http\Controllers';
-        Route::post('/deploy', $prefix. '\Main@deploy');
+        Route::post('/deploy', $prefix . '\Main@deploy');
     }
 
-    public static function routes(){
+    public static function routes()
+    {
         $main = (new static);
         $main->authRoutes();
         $main->mainRoutes();
         $main->systemRoutes();
     }
 
-    public function authRoutes(){
+    public function authRoutes()
+    {
         $prefix = '\App\Http\Controllers\Auth';
-        Route::get('login', $prefix.'\LoginController@showLoginForm')->name('login');
-        Route::post('login', $prefix.'\LoginController@login');
-        Route::post('logout', $prefix.'\LoginController@logout')->name('logout');
+        Route::get('login', $prefix . '\LoginController@showLoginForm')->name('login');
+        Route::post('login', $prefix . '\LoginController@login');
+        Route::post('logout', $prefix . '\LoginController@logout')->name('logout');
 
         if ($options['reset'] ?? true) {
-            Route::get('password/reset', $prefix.'\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-            Route::post('password/email', $prefix.'\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-            Route::get('password/reset/{token}', $prefix.'\ResetPasswordController@showResetForm')->name('password.reset');
-            Route::post('password/reset', $prefix.'\ResetPasswordController@reset')->name('password.update');
+            Route::get('password/reset', $prefix . '\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+            Route::post('password/email', $prefix . '\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+            Route::get('password/reset/{token}', $prefix . '\ResetPasswordController@showResetForm')->name('password.reset');
+            Route::post('password/reset', $prefix . '\ResetPasswordController@reset')->name('password.update');
         }
     }
 
-    public function mainRoutes(){
+    public function mainRoutes()
+    {
         $prefix = '\App\Http\Controllers';
-        Route::get('/file/{id?}', $prefix. '\Main@fileUpload')->name('upload.file');
-        Route::group(['middleware' => 'auth'], function() use ($prefix){
-            Route::get('/', $prefix. '\Main@index')->name('main');
-            Route::get('/home', $prefix. '\Main@index')->name('home');
-            Route::group(['prefix' => 'profile'], function() use ($prefix){
-                Route::get('/data', $prefix. '\Main@getProfile')->name('profile.data');
-                Route::post('/edit', $prefix. '\Main@profileEdit')->name('profile.edit');
-                Route::post('/password', $prefix. '\Main@profilePassword')->name('profile.password');
-                Route::post('/upload/photo', $prefix. '\Main@uploadPhoto')->name('profile.upload');
+        Route::get('/file/{id?}', $prefix . '\Main@fileUpload')->name('upload.file');
+        Route::group(['middleware' => 'auth'], function () use ($prefix) {
+            Route::get('/', $prefix . '\Main@index')->name('main');
+            Route::get('/home', $prefix . '\Main@index')->name('home');
+            Route::group(['prefix' => 'profile'], function () use ($prefix) {
+                Route::get('/data', $prefix . '\Main@getProfile')->name('profile.data');
+                Route::post('/edit', $prefix . '\Main@profileEdit')->name('profile.edit');
+                Route::post('/password', $prefix . '\Main@profilePassword')->name('profile.password');
+                Route::post('/upload/photo', $prefix . '\Main@uploadPhoto')->name('profile.upload');
             });
         });
     }
 
-    public function systemRoutes(){
+    public function systemRoutes()
+    {
         $prefix = '\App\Http\Controllers\Systems';
-        Route::group(['middleware' => ['auth','roles'] ], function() use ($prefix) {
+        Route::group(['middleware' => ['auth', 'roles']], function () use ($prefix) {
             Route::group(['prefix' => 'sys'], function () use ($prefix) {
                 // USER  ------------------------------------------------------------------------------
                 Route::group(['prefix' => 'user'], function () use ($prefix) {
@@ -153,6 +166,9 @@ class Main extends Controller
                     Route::put('/restore', $prefix . '\User@restore')->name('auth.user.restore');
                     Route::delete('/delete', $prefix . '\User@delete')->name('auth.user.delete');
                     Route::delete('/forcedelete', $prefix . '\User@forceDelete')->name('auth.user.forcedelete');
+                    Route::get('/export/excel', $prefix . '\User@exportExcel')->name('auth.user.export.excel');
+                    Route::get('/export/format/import', $prefix . '\User@importFormat')->name('auth.user.export.excel.format.import');
+                    Route::post('/import', $prefix . '\User@importData')->name('auth.user.import');
                 });
 
                 // MODULE  --------------------------------------------------------------------------------------------

@@ -71,6 +71,9 @@ Route::group(['middleware' => ['auth', 'roles']], function () {
     Route::group(['prefix' => 'service'], function () {
         Route::get('/', 'Services\Service@index')->name('service');
         Route::get('/data', 'Services\Service@data')->name('service.data');
+        Route::get('/export/excel', 'Services\Service@exportExcel')->name('service.export.excel');
+        Route::get('/export/format/import', 'Services\Service@importFormat')->name('service.export.excel.format.import');
+        Route::post('/import', 'Services\Service@importData')->name('service.import');
         Route::post('/push/{id?}', 'Services\Service@push')->name('service.push');
         Route::delete('/delete', 'Services\Service@delete')->name('service.delete');
     });
