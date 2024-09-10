@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Sites\Site as Mod;
 use Illuminate\Http\Request;
 use App\Models\Clients\Client;
+use App\Models\Services\Service;
 use App\Models\Vendors\Vendor;
 use App\Models\WorkOrders\Masters as Master;
 use Illuminate\Support\Facades\Storage;
@@ -49,10 +50,19 @@ class Site extends Controller
             $query->whereIn('vendor_id', $user->vendors->pluck('id')->toArray());
         }
 
-        if ($filter = $request->input("filter-client")) $query->where("client_id", $filter);
-        if ($filter = $request->input("filter-area")) $query->where("vendor_id", $filter);
-        if ($filter = $request->input("filter-service")) $query->where("service_id", $filter);
-        if ($filter = $request->input("filter-status")) $query->where("is_active", (($filter > 1) ? 0 : 1));
+        if (($filter = $request->input('filter-client')) !== null && $filter !== 'null') {
+            $query->where('client_id', $filter);
+        }
+        if (($filter = $request->input('filter-area')) !== null && $filter !== 'null') {
+            $query->where('vendor_id', $filter);
+        }
+        if (($filter = $request->input('filter-service')) !== null && $filter !== 'null') {
+            $query->where('service_id', $filter);
+        }
+        if (($filter = $request->input('filter-status')) !== null && $filter !== 'null') {
+            $query->where('is_active', ($filter > 1) ? 0 : 1);
+        }
+
 
         $trash = $request->input("filter-trash");
         if ($trash < 1) $query->withTrashed();
@@ -142,6 +152,25 @@ class Site extends Controller
         $title = [];
 
         $title[] = ['Site', 'h2'];
+        if ($request->input('filter-trash') !== null && $request->input('filter-trash') !== 'null') {
+            $title[] = ['Data: ' . ($request->input('filter-trash') == 1 ? 'Data Active' : 'Data Deleted'), 'h4'];
+        }
+        if ($request->input('filter-client') !== null && $request->input('filter-client') !== 'null') {
+            $client = Client::find($request->input('filter-client'));
+            if ($client) {
+                $title[] = ['Client: ' . $client->name, 'h4'];
+            }
+        }
+        if ($request->input('filter-service') !== null && $request->input('filter-service') !== 'null') {
+            $service = Service::find($request->input('filter-service'));
+            if ($service) {
+                $title[] = ['Service: ' . $service->name, 'h4'];
+            }
+        }
+        if ($request->input('filter-status') !== null && $request->input('filter-status') !== 'null') {
+            $title[] = ['Status: ' . ($request->input('filter-status') == 1 ? 'Active' : 'Inactive'), 'h4'];
+        }
+
 
         $data = $this->data($request, false);
 
@@ -198,7 +227,7 @@ class Site extends Controller
             'title' => $title,
             'columns' => $columns,
             'data' => $data,
-            'filename' => config('app.name') . '-' . date('YmdHi'),
+            'filename' => 'Site' . '-' . date('YmdHi'),
             'footer' => [config('app.name') . ' (' . date('d F Y H:i:s') . ')'],
         );
 
@@ -241,5 +270,32 @@ class Site extends Controller
             return ["success" => true, "message" => "Success!"];
         }
         return ["success" => false, "message" => "No Data!"];
+    }
+
+    public function restore(Request $request)
+    {
+        if ($data = json_decode($request->data)) {
+            Mod::withTrashed()->whereIn('id', $data)->restore();
+            return ['success' => true, 'message' => 'Success!'];
+        }
+        return ['success' => false, 'message' => 'No Data!'];
+    }
+
+    public function forceDelete(Request $request)
+    {
+        try {
+            if ($data = json_decode($request->data)) {
+                Mod::withTrashed()->whereIn('id', $data)->forcedelete();
+                return response()->json(['success' => true, 'message' => 'Success!']);
+            }
+            return response()->json(['success' => false, 'message' => 'No Data!']);
+        } catch (QueryException $e) {
+            if ($e->getCode() === '23000') {
+                return response()->json(['success' => false, 'message' => 'Cannot delete records because there are related entries. Please remove or reassign the related data first.'], 400);
+            }
+            return response()->json(['success' => false, 'message' => 'An error occurred while deleting the records.'], 500);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'An unexpected error occurred.'], 500);
+        }
     }
 }

@@ -40,9 +40,11 @@ class Service extends Controller
         $search = ['alias', 'name'];
         $query = Mod::query();
 
-        $trash = $request->input("filter-trash");
-        if ($trash < 1) $query->withTrashed();
-        else if ($trash > 1) $query->onlyTrashed();
+        if ($request->trash < 1) {
+            $query->withTrashed();
+        } elseif ($request->trash > 1) {
+            $query->onlyTrashed();
+        }
 
         if ($search = $request->input("query")) {
             $query->where(function ($query) use ($search) {
@@ -139,5 +141,32 @@ class Service extends Controller
             return ['success' => true, 'message' => 'Success!'];
         }
         return ['success' => false, 'message' => 'No Data!'];
+    }
+
+    public function restore(Request $request)
+    {
+        if ($data = json_decode($request->data)) {
+            Mod::withTrashed()->whereIn('id', $data)->restore();
+            return ['success' => true, 'message' => 'Success!'];
+        }
+        return ['success' => false, 'message' => 'No Data!'];
+    }
+
+    public function forceDelete(Request $request)
+    {
+        try {
+            if ($data = json_decode($request->data)) {
+                Mod::withTrashed()->whereIn('id', $data)->forcedelete();
+                return response()->json(['success' => true, 'message' => 'Success!']);
+            }
+            return response()->json(['success' => false, 'message' => 'No Data!']);
+        } catch (QueryException $e) {
+            if ($e->getCode() === '23000') {
+                return response()->json(['success' => false, 'message' => 'Cannot delete records because there are related entries. Please remove or reassign the related data first.'], 400);
+            }
+            return response()->json(['success' => false, 'message' => 'An error occurred while deleting the records.'], 500);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'An unexpected error occurred.'], 500);
+        }
     }
 }

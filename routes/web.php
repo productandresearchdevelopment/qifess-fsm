@@ -57,7 +57,9 @@ Route::group(['middleware' => ['auth', 'roles']], function () {
         Route::get('/export/format/import', 'Sites\Site@importFormat')->name('site.export.excel.format.import');
         Route::post('/import', 'Sites\Site@importData')->name('site.import');
         Route::post('/push/{id?}', 'Sites\Site@push')->name('site.push');
+        Route::put('/restore', 'Sites\Site@restore')->name('site.restore');
         Route::delete('/delete', 'Sites\Site@delete')->name('site.delete');
+        Route::delete('/forcedelete', 'Sites\Site@forceDelete')->name('site.forcedelete');
     });
 
 
@@ -69,7 +71,9 @@ Route::group(['middleware' => ['auth', 'roles']], function () {
         Route::get('/export/format/import', 'Services\Service@importFormat')->name('service.export.excel.format.import');
         Route::post('/import', 'Services\Service@importData')->name('service.import');
         Route::post('/push/{id?}', 'Services\Service@push')->name('service.push');
+        Route::put('/restore', 'Services\Service@restore')->name('service.restore');
         Route::delete('/delete', 'Services\Service@delete')->name('service.delete');
+        Route::delete('/forcedelete', 'Services\Service@forceDelete')->name('service.forcedelete');
     });
 
     // FIELDTECH ROUTE ----------------------------------------------------------------------------------
