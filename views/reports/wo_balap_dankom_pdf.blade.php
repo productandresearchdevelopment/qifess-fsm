@@ -72,13 +72,13 @@
         </tr>
         <tr>
             <td>BAL Date / Tgl BAL</td>
-            <td>: {{ $data->closed_at ? date('d/m/Y', strtotime($data->closed_at)) : '-' }}</td>
+            <td>: {{ $data->close_date ? date('d/m/Y', strtotime($data->close_date)) : '-' }}</td>
             <td>Name</td>
             <td>: {{ $data->site->name }}</td>
         </tr>
         <tr>
             <td>Vendor / Company</td>
-            <td>: -</td>
+            <td>: {{ $data->fieldtech->vendor_name ?: '-' }}</td>
             <td rowspan="2">Address</td>
             <td rowspan="2">
                 :
@@ -111,32 +111,62 @@
             <td colspan="2" align="center" class="tableheadertitle"><b>Service Profile</b></td>
         </tr>
         <tr>
-            <td><img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/uncheck.jpg") }}">
-                <span style="vertical-align: middle;">New Installation / Pasang Baru</span></td>
+            <td>
+            @if(in_array($data->activity_id, [1,9]))
+                                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                            @else
+                                <img style="height: 16px;" src="{{ public_path("images/uncheck.jpg") }}">
+                            @endif
+                <span style="vertical-align: middle;">New Installation / Pasang Baru</span>
+            </td>
             <td align="center"><b>Service</b></td>
             <td colspan="2" align="center"><b>Note</b></td>
         </tr>
         <tr>
-            <td><img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/uncheck.jpg") }}">
-                <span style="vertical-align: middle;">Upgrade Service</span></td>
+            <td>
+            @if(in_array($data->activity_id, [2,3]))
+                                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                            @else
+                                <img style="height: 16px;" src="{{ public_path("images/uncheck.jpg") }}">
+                            @endif
+                <span style="vertical-align: middle;">Upgrade Service</span>
+            </td>
             <td>Internet</td>
             <td colspan="2">: {{ $internet ?: '-'}} </td>
         </tr>
         <tr>
-            <td><img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/uncheck.jpg") }}">
-                <span style="vertical-align: middle;">Downgrade Service</span></td>
+            <td>
+            @if(in_array($data->activity_id, []))
+                                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                            @else
+                                <img style="height: 16px;" src="{{ public_path("images/uncheck.jpg") }}">
+                            @endif
+                <span style="vertical-align: middle;">Downgrade Service</span>
+            </td>
             <td>Phone</td>
             <td colspan="2">: - </td>
         </tr>
         <tr>
-            <td><img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/uncheck.jpg") }}">
-                <span style="vertical-align: middle;">Relocation / Mutasi</span></td>
+            <td>
+            @if(in_array($data->activity_id, [4,6]))
+                                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                            @else
+                                <img style="height: 16px;" src="{{ public_path("images/uncheck.jpg") }}">
+                            @endif
+                <span style="vertical-align: middle;">Relocation / Mutasi</span>
+            </td>
             <td>TV</td>
             <td colspan="2">: - </td>
         </tr>
         <tr>
-            <td><img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/uncheck.jpg") }}">
-                <span style="vertical-align: middle;">Termination / Pemutusan</span></td>
+        <td>
+            @if(in_array($data->activity_id, [5]))
+                                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                            @else
+                                <img style="height: 16px;" src="{{ public_path("images/uncheck.jpg") }}">
+                            @endif
+            <span style="vertical-align: middle;">Termination / Pemutusan</span>
+            </td>
             <td>Other</td>
             <td colspan="2">: - </td>
         </tr>
@@ -153,11 +183,11 @@
             <td align="center" style="width: 25%">Equipment Name</td>
             <td align="center" style="width: 25%">Note</td>
             <td style="width: 25%">
-                <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/uncheck.jpg") }}">
+                <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/check.jpg") }}">
                 <span style="vertical-align: middle;">PING</span>
             </td>
             <td style="width: 25%">
-                <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/uncheck.jpg") }}">
+                <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/check.jpg") }}">
                 <span style="vertical-align: middle;">STREAMING</span>
             </td>
         </tr>
@@ -165,11 +195,11 @@
             <td>OLT</td>
             <td>: -</td>
             <td>
-                <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/uncheck.jpg") }}">
+                <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/check.jpg") }}">
                 <span style="vertical-align: middle;">TEST CALL</span>
             </td>
             <td>
-                <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/uncheck.jpg") }}">
+                <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/check.jpg") }}">
                 <span style="vertical-align: middle;">BROWSING</span>
             </td>
         </tr>
@@ -177,11 +207,11 @@
             <td>ODF</td>
             <td>: -</td>
             <td>
-                <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/uncheck.jpg") }}">
+                <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/check.jpg") }}">
                 <span style="vertical-align: middle;">SPEED TEST</span>
             </td>
             <td>
-                <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/uncheck.jpg") }}">
+                <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/check.jpg") }}">
                 <span style="vertical-align: middle;">VIDEO / TV</span>
             </td>
         </tr>
@@ -269,15 +299,15 @@
             <td align="center">1</td>
             <td>ONT</td>
             <td>{{ $ontType ?: '-' }}</td>
-            <td></td>
+            <td>1 Unit</td>
             <td></td>
         </tr>
         <tr>
             <td align="center">2</td>
             <td>DROP CABLE</td>
-            <td>{{ $emWire ?: 0 }}m</td>
             <td></td>
-            <td>{{ $emWire ?: 0 }}m</td>
+            <td>{{ $emWire ?: 0 }} Meter</td>
+            <td></td>
         </tr>
         <tr>
             <td align="center">3</td>
