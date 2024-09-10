@@ -1246,7 +1246,7 @@ class WorkOrder extends Controller
             else if (in_array($data->client_id, [5])) $view = 'reports.wo_balap_relab_pdf';
             else if (in_array($data->client_id, [2])) $view = 'reports.wo_balap_dankom_pdf';
             else if (in_array($data->client_id, [0])) $view = 'reports.wo_balap_viberlink_pdf';
-            $view = 'reports.wo_balap_viberlink_pdf';
+
             $html = view($view, $params);
             $pdf = PDF::loadHtml($html);
             return $pdf->stream("BALAP ($data->id).pdf");
