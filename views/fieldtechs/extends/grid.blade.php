@@ -47,6 +47,10 @@
           type: 'int'
         },
         {
+          name: 'vendor_name',
+          type: 'string'
+        },
+        {
           name: 'files',
           type: 'auto'
         },
@@ -186,7 +190,11 @@
               return data ? me.renderText(data.name, data.name, meta) : '';
             }
           },
-          //{text: "NIK", dataIndex: 'nik', width: 100},
+          {
+            text: "NIK",
+            dataIndex: 'nik',
+            width: 200
+          },
           {
             text: "NAME",
             dataIndex: 'name',
@@ -206,14 +214,37 @@
               return result.join('<br>')
             }
           },
-          // {text: "USER NAME", dataIndex: 'user', width: 150,hidden:true,
-          //     renderer: function (val) {
-          //         return val ? val.username : '';
-          //     }
-          // },
-          // {text: "PHONE", dataIndex: 'phone', width: 150},
-          // {text: "EMAIL", dataIndex: 'email', minWidth: 200},
-          // {text: "ADDRESS", dataIndex: 'address', minWidth: 250, flex: 1},
+          {
+            text: "ADDRESS",
+            dataIndex: 'address',
+            minWidth: 250,
+            flex: 1
+          },
+          {
+            text: "EMAIL",
+            dataIndex: 'email',
+            minWidth: 200
+          },
+          {
+            text: "FIELDTECH 1",
+            dataIndex: 'fieldtech1',
+            minWidth: 200
+          },
+          {
+            text: "FIELDTECH 2",
+            dataIndex: 'fieldtech2',
+            minWidth: 200
+          },
+          {
+            text: "VENDOR NAME",
+            dataIndex: 'vendor_name',
+            minWidth: 200
+          },
+          {
+            text: "PHONE",
+            dataIndex: 'phone',
+            width: 150
+          },
         ],
         @if (!$user->vendor_id)
           bbar: me.bbar([{

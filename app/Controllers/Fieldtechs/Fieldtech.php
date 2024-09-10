@@ -90,8 +90,10 @@ class Fieldtech extends Controller
         ini_set('max_execution_time', '300');
 
         $title = [
-            ['Team', 'h2']
+            ['TEAM', 'h2']
         ];
+
+        if ($request->input('filter-vendor')) $title[] = ['AREA : ' . Vendor::find($request->input('filter-vendor'))->name, 'h3'];
 
         $data = $this->data($request, false);
 
@@ -180,14 +182,6 @@ class Fieldtech extends Controller
                     return $e ? $e : '-';
                 }
             ],
-            [
-                'text' => 'DESCRIPTION',
-                'dataIndex' => 'description',
-                'width' => 400,
-                'renderer' => function ($e) {
-                    return $e ? $e : '-';
-                }
-            ],
         ];
 
         $params = [
@@ -209,17 +203,11 @@ class Fieldtech extends Controller
 
     public function importData(Request $request)
     {
-        if ($activity = $request->input('activity_id')) {
-            if (!Master\Activity::find($activity)) {
-                return ['success' => false, 'message' => 'Undefined Activity Ticket'];
-            }
-        }
-
         if ($upload = FileUpload::upload('file', 'team-import')) {
             $user = $request->user();
             $file = Upload::find($upload);
             $fileexcel = Storage::disk('public_uploads')->path($file->filename);
-            $importExcel = new Import($user, $activity);
+            $importExcel = new Import($user);
             Excel::import($importExcel, $fileexcel);
             unlink($fileexcel);
             Upload::where('id', $upload)->delete();

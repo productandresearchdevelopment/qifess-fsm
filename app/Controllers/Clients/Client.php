@@ -94,7 +94,7 @@ class Client extends Controller
         ini_set('max_execution_time', '300');
 
         $title = [
-            ['Client', 'h2']
+            ['CLIENT', 'h2']
         ];
 
         $data = $this->data($request, false);

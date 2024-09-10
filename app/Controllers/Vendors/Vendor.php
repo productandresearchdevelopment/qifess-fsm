@@ -90,7 +90,7 @@ class Vendor extends Controller
         ini_set('max_execution_time', '300');
 
         $title = [
-            ['Area', 'h2']
+            ['AREA', 'h2']
         ];
 
         $data = $this->data($request, false);
