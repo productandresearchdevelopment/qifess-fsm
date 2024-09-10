@@ -357,7 +357,7 @@ class WorkOrder extends Controller
                 if(strtoupper(substr($wo->no_wo, 0, 2)) == 'OH') {
                     if (in_array($wo->activity->name, ['INSTALLATION', 'SERVICE UPDATE', 'RELOCATION', 'DEVICE MOVING', 'TERMINATION'])) {
                         if (in_array($action->status->name, ['PREPARATION', 'IN PROGRESS', 'ARRIVED', 'INSTALLATION', 'ACTIVATION', 'POST ACTIVATION', 'DE-INSTALLATION', 'DE-ACTIVATION'])) {
-                            if ($pushapi = $this->pushApi($action, $details)) {
+                            if ($pushapi = $this->pushApi($wo, $action, $details)) {
                                 if ($pushapi->success) DB::commit();
                                 else DB::rollback();
                                 return (array)$pushapi;
@@ -488,7 +488,7 @@ class WorkOrder extends Controller
         return (array) $result;
     }
 
-    private function pushApi($action, $details){
+    private function pushApi($wo, $action, $details){
         $result = (object) ['success' => false];
 
         $baseUrl = config('site.asianet_api_url');
@@ -516,8 +516,6 @@ class WorkOrder extends Controller
             }
         }
 
-
-
         // GET ACTION --------------------------------------------------------------------------------------------------
         $serialNumber = null;
         $additionalUTP = null;
@@ -527,17 +525,33 @@ class WorkOrder extends Controller
         $bastURL = null;
 
 
-
-        if($action->status->name == 'POST ACTIVATION'){
-            $bastURL = route('wo.export.balap', $action->wo->id);
-        }
-
-
-        $ont = ["type" => 'ont', "serialNumber" => "", "macaddressont" => ""];
+        $ont  = ["type" => 'ont', "serialNumber" => "", "macaddressont" => ""];
         $stb1 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
         $stb2 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
         $stb3 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
 
+        if($action->status->name == 'POST ACTIVATION'){
+            $bastURL = route('wo.export.balap', $wo->id);
+            foreach ($wo->actions as $act) {
+                if(strtoupper($act->status->name) == 'ACTIVATION') {
+                    foreach ($act->details as $extra) {
+                        if (strtolower($extra->detail->name) == 'sn ont') $ont['serialNumber'] = $extra->value;
+                        else if (strtolower($extra->detail->name) == 'mac address ont') $ont['macaddressont'] = $extra->value;
+                        else if (strtolower($extra->detail->name) == 'tipe stb 1') $stb1['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
+                        else if (strtolower($extra->detail->name) == 'sn stb 1') $stb1['serialNumber'] = $extra->value;
+                        else if (strtolower($extra->detail->name) == 'mac address stb 1') $stb1['macAddressstb'] = $extra->value;
+                        else if (strtolower($extra->detail->name) == 'tipe stb 2') $stb2['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
+                        else if (strtolower($extra->detail->name) == 'sn stb 2') $stb2['serialNumber'] = $extra->value;
+                        else if (strtolower($extra->detail->name) == 'mac address stb 2') $stb2['macAddressstb'] = $extra->value;
+                        else if (strtolower($extra->detail->name) == 'tipe stb 3') $stb3['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
+                        else if (strtolower($extra->detail->name) == 'sn stb 3') $stb3['serialNumber'] = $extra->value;
+                        else if (strtolower($extra->detail->name) == 'mac address stb 3') $stb3['macAddressstb'] = $extra->value;
+                    }
+                }
+            }
+            
+            $cpe = [$ont, $stb1, $stb2, $stb3];
+        }
 
         foreach (json_decode($details) AS $extra){
             if($extra && isset($extra->id)) {
@@ -577,7 +591,6 @@ class WorkOrder extends Controller
                 }
             }
         }
-
 
         if($action->status->name == "ACTIVATION") {
             $cpe = [$ont, $stb1, $stb2, $stb3];
