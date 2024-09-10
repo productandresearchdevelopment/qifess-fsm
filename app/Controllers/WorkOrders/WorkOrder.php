@@ -19,6 +19,7 @@ use App\Libraries\Query;
 use App\Models\WorkOrders\WorkOrder AS Wo;
 use App\Models\WorkOrders\Action;
 use App\Models\WorkOrders\ActionDetail;
+use App\Models\WorkOrders\Masters\StatusDetailOption;
 use App\Models\Sites\Site;
 use App\Models\Clients\Client;
 use App\Models\Vendors\Vendor;
@@ -353,19 +354,19 @@ class WorkOrder extends Controller
                     $wo->update(['close_date' => $action->created_at]);
                 }
 
-                // if(strtoupper(substr($wo->no_wo, 0, 2)) == 'OH') {
-                //     if (in_array($wo->activity->name, ['INSTALLATION', 'SERVICE UPDATE', 'RELOCATION', 'DEVICE MOVING', 'TERMINATION'])) {
-                //         if (in_array($action->status->name, ['PREPARATION', 'IN PROGRESS', 'ARRIVED', 'INSTALLATION', 'ACTIVATION', 'POST ACTIVATION', 'DE-INSTALLATION', 'DE-ACTIVATION'])) {
-                //             if ($pushapi = $this->pushApi($action, $details)) {
-                //                 if ($pushapi->success) DB::commit();
-                //                 else DB::rollback();
-                //                 return (array)$pushapi;
-                //             }
-                //             DB::rollback();
-                //             return ['success' => false, 'message' => 'API ERROR'];
-                //         }
-                //     }
-                // }
+                if(strtoupper(substr($wo->no_wo, 0, 2)) == 'OH') {
+                    if (in_array($wo->activity->name, ['INSTALLATION', 'SERVICE UPDATE', 'RELOCATION', 'DEVICE MOVING', 'TERMINATION'])) {
+                        if (in_array($action->status->name, ['PREPARATION', 'IN PROGRESS', 'ARRIVED', 'INSTALLATION', 'ACTIVATION', 'POST ACTIVATION', 'DE-INSTALLATION', 'DE-ACTIVATION'])) {
+                            if ($pushapi = $this->pushApi($action, $details)) {
+                                if ($pushapi->success) DB::commit();
+                                else DB::rollback();
+                                return (array)$pushapi;
+                            }
+                            DB::rollback();
+                            return ['success' => false, 'message' => 'API ERROR'];
+                        }
+                    }
+                }
 
                 DB::commit();
                 return ['success' => true, 'message' => 'Success'];
@@ -391,7 +392,7 @@ class WorkOrder extends Controller
         $urlLogin = $baseUrl.'/amt/1.1/atm/generate-token';
         //$urlPush = $baseUrl.'/amt/1.0/wfm/engineerstatus';
         $urlPush = $baseUrl.'/amt/1.1/apm/engineerstatus';
- 
+
 
         if (Cache::has('token')) $token = Cache::get('woaccesstoken');
         else {
@@ -410,7 +411,6 @@ class WorkOrder extends Controller
                 return (array) $result;
             }
         }
-        $token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnZpcm9ubWVudCI6ImRldiIsImV4cCI6MTcyNTAwNzkwMCwiZGF0YSI6eyJ1c2VySWQiOiJmN2JkYzhiMDgyOTM3YjJlMzc2ZjM5ODdiZmUxNzc2YSIsImVtYWlsIjoiUUEuQXNpYW5ldCtDNTJAZ21haWwuY29tIiwiYXBwbGljYXRpb24iOiJBTEwiLCJyb2xlIjoic3VwZXJBZG1pbiIsInBlcm1pc3Npb24iOnt9fX0.dt9lJHXpfJIYE-vqSCB8CninETqqzJ32fCQiN5RJumJ5tfInALV7NfXBvzMWeJZ2mm2bBKfiNUWZTIKppdbH7I4yUAIRLkv5w2HWCtswbR4-Em0lRSyggd631cWbfihJQYzIF9z-AzUwoZsh-1Ve2u_-3t_WJEhcpe8yBsGkj3w1RNr6owyl9lwYa9WCXnUfFGabMvPXd6ByH_lFWE1pN32Ffj23ciSTlyrh3t4Pthym8WBs6w8uKwh98AisCcX58YFiQp0-Q92SJxBfB9iXCZ1-pbL4e76SBD8yMP4AjEAXpf0v9nMdarF0eNG_cq1hE6B5Nmsi3POfZ2YhwaFirQ";
 
         // GET ACTION --------------------------------------------------------------------------------------------------
 
@@ -427,6 +427,7 @@ class WorkOrder extends Controller
             'fatLatitude' => $request->input('latitude') ?: 0,
             'additionalUTP' => $request->input('additionalUTP') ?: 0,
             'additionalDropCable' => $request->input('additionalDropCable') ?: 0,
+            'bastURL' => route('wo.export.balap', 'OH1093851648341319601'),
             'cpe' => [
                 [
                     "type" => 'ont',
@@ -488,6 +489,171 @@ class WorkOrder extends Controller
     }
 
     private function pushApi($action, $details){
+        $result = (object) ['success' => false];
+
+        $baseUrl = config('site.asianet_api_url');
+        $email = config('site.asianet_api_user');
+        $password = config('site.asianet_api_password');
+
+        $urlLogin = $baseUrl.'/amt/1.1/atm/generate-token';
+        $urlPush = $baseUrl.'/amt/1.1/eda/engineerstatus';
+
+        if (Cache::has('token')) $token = Cache::get('woaccesstoken');
+        else {
+            $login = Curl::to($urlLogin)
+                ->withData(['email' => $email, 'password' => $password])
+                ->asJson()
+                ->returnResponseObject()
+                ->post();
+
+            if(isset($login->content) && isset($login->content->body->accessToken)) {
+                $token = $login->content->body->accessToken;
+                Cache::put('woaccesstoken', $token, 10);
+            }
+            else {
+                $result->message = "ERROR API LOGIN (".$login->status.") ". ($login->content ? json_encode($login->content) : '');
+                return (array) $result;
+            }
+        }
+
+
+
+        // GET ACTION --------------------------------------------------------------------------------------------------
+        $serialNumber = null;
+        $additionalUTP = null;
+        $additionalDropCable = null;
+        $fatPort = "";
+        $cpe = [];
+        $bastURL = null;
+
+
+
+        if($action->status->name == 'POST ACTIVATION'){
+            $bastURL = route('wo.export.balap', $action->wo->id);
+        }
+
+
+        $ont = ["type" => 'ont', "serialNumber" => "", "macaddressont" => ""];
+        $stb1 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
+        $stb2 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
+        $stb3 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
+
+
+        foreach (json_decode($details) AS $extra){
+            if($extra && isset($extra->id)) {
+                if ($detail = Master\StatusDetail::find($extra->id)) {
+                    if ($detail->type != 'file') {
+                        if (strtolower($detail->name) == 'ont serial number') $serialNumber = $extra->value;
+                        else if (strtolower($detail->name) == 'serial number registration') $serialNumber = $extra->value;
+                        else if (strtolower($detail->name) == 'serial number unregistration') $serialNumber = $extra->value;
+                        else if (strtolower($detail->name) == 'excess material - drop wire') $additionalDropCable = $extra->value;
+                        else if (strtolower($detail->name) == 'excess material - utp') $additionalUTP = $extra->value;
+
+                        else if (strtolower($detail->name) == 'fat port') {
+                            if($extra->value){
+                                if($opt = StatusDetailOption::find($extra->value)){
+                                    $fatPort = $opt->option;
+                                }
+                            }
+                        }
+
+                        // CPE --------------------------------------------------------------------------------------------------------------------------------------
+
+                        else if (strtolower($detail->name) == 'sn ont') $ont['serialNumber'] = $extra->value;
+                        else if (strtolower($detail->name) == 'mac address ont') $ont['macaddressont'] = $extra->value;
+
+                        else if (strtolower($detail->name) == 'tipe stb 1') $stb1['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
+                        else if (strtolower($detail->name) == 'sn stb 1') $stb1['serialNumber'] = $extra->value;
+                        else if (strtolower($detail->name) == 'mac address stb 1') $stb1['macAddressstb'] = $extra->value;
+
+                        else if (strtolower($detail->name) == 'tipe stb 2') $stb2['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
+                        else if (strtolower($detail->name) == 'sn stb 2') $stb2['serialNumber'] = $extra->value;
+                        else if (strtolower($detail->name) == 'mac address stb 2') $stb2['macAddressstb'] = $extra->value;
+
+                        else if (strtolower($detail->name) == 'tipe stb 3') $stb3['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
+                        else if (strtolower($detail->name) == 'sn stb 3') $stb3['serialNumber'] = $extra->value;
+                        else if (strtolower($detail->name) == 'mac address stb 3') $stb3['macAddressstb'] = $extra->value;
+                    }
+                }
+            }
+        }
+
+
+        if($action->status->name == "ACTIVATION") {
+            $cpe = [$ont, $stb1, $stb2, $stb3];
+        }
+
+        /*
+            if($action->status->name == "PREPARATION") $status = 'PREPARED';
+            else if($action->status->name == "IN PROGRESS") $status = 'ONGOING';
+            else if($action->status->name == "ARRIVED") $status = 'ARRIVED';
+            else if($action->status->name == "INSTALLATION") $status = 'TAGGED';
+            else if($action->status->name == "DE-INSTALLATION") $status = 'TAGGED';
+            else if($action->status->name == "ACTIVATION") $status = 'ACTIVATED';
+            else if($action->status->name == "DE-ACTIVATION") $status = 'ACTIVATED';
+            else if($action->status->name == "POST ACTIVATION") $status = 'COMPLETED';
+        */
+
+        $data = [
+            'activityName' => (string) $action->wo->activity->name,
+            'orderNumber' => (string) $action->wo->no_wo,
+            'workFlowNumber' => (string) $action->wo->id,
+            'orderStatus' => $action->status->name,
+            'teamID' =>  $action->wo->fieldtech_id * 1,
+            'serialNumber' => (string) $serialNumber,
+            'longitude' => (float) $action->long,
+            'latitude' => (float) $action->lat,
+            'fatLongitude' => (float) $action->long,
+            'fatLatitude' => (float) $action->lat,
+            'additionalUTP' => (float) $additionalUTP,
+            'additionalDropCable' => (float) $additionalDropCable,
+            'bastURL' => $bastURL,
+            'fatport' => (string) $fatPort,
+            'cpe' => $cpe
+        ];
+
+        // PUSH API ----------------------------------------------------------------------------------------------------
+
+        $response = Curl::to($urlPush)->withData($data)->withBearer($token)->asJson()->returnResponseObject()->post();
+        if($response->status >= 200 && $response->status <= 490){
+            if($content = $response->content){
+                if(isset($content->statusCode)){
+                    if($response->status == 200){
+                        $result->success = true;
+                        $result->message = "Success";
+                    }
+                    else if($response->status == 206){
+                        $result->success = false;
+                        $result->message = "Hold, waiting from partner acknowledgement";
+                    }
+                    else {
+                        $result->message = "Error API engineer status response failed (".json_encode($content).")";
+                        $result->data = [
+                            'url' => $urlPush,
+                            'dataPush' => $data,
+                            'response' => (array) $content,
+                        ];
+                    }
+                }
+                else {
+                    $result->message = "Error API engineer status statusCode Not Found";
+                }
+            }
+            else $result->message = "Error API engineer status (response is null)";
+        }
+        else {
+            $result->message = "ERROR API ENGINEERSTATUS (".$response->status.") ". ($response->content ? json_encode($response->content) : '');
+        }
+        $result->data = [
+            'url' => $urlPush,
+            'dataPush' => $data,
+            //'response' => (array) $content,
+        ];
+
+        return $result;
+    }
+
+    private function pushApi2($action, $details){
         $result = (object) ['success' => false];
 
         $baseUrl = config('site.asianet_api_url');
@@ -1043,7 +1209,7 @@ class WorkOrder extends Controller
                         foreach ($action->details as $detail) {
                             if (strtoupper($detail->detail->name) == 'QOS REGISTRATION') {
                                 $params['internet'] = $detail->valueOption ? $detail->valueOption->option : null;
-                            } 
+                            }
                             else if (strtoupper($detail->detail->name) == 'TOTAL STB') {
                                 $params['totalStb'] = $detail->value;
                             }
@@ -1078,6 +1244,8 @@ class WorkOrder extends Controller
             if (in_array($data->client_id, [3, 6])) $view = 'reports.wo_balap_hifi_pdf';
             else if (in_array($data->client_id, [4])) $view = 'reports.wo_balap_taranet_pdf';
             else if (in_array($data->client_id, [5])) $view = 'reports.wo_balap_relab_pdf';
+            else if (in_array($data->client_id, [2])) $view = 'reports.wo_balap_dankom_pdf';
+            else if (in_array($data->client_id, [0])) $view = 'reports.wo_balap_viberlink_pdf';
 
             $html = view($view, $params);
             $pdf = PDF::loadHtml($html);

@@ -201,30 +201,30 @@
             <td align="center">OTHERS/ SERIAL NUMBER</td>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
+            <td>ONT</td>
+            <td>{{ $ontType ?: '-' }}</td>
             <td></td>
             <td></td>
             <td></td>
         </tr>
         <tr>
+            <td>Drop Cable</td>
+            <td>{{ $emWire ?: 0 }}m</td>
             <td></td>
+            <td>{{ $emWire ?: 0 }}m</td>
             <td></td>
-            <td></td>
+        </tr>
+        <tr>
+            <td>Cable Duct</td>
+            <td>-</td>
+            <td>-</td>
             <td></td>
             <td></td>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>Connector</td>
+            <td>-</td>
+            <td>-</td>
             <td></td>
             <td></td>
         </tr>
