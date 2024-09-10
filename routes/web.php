@@ -41,7 +41,9 @@ Route::group(['middleware' => ['auth', 'roles']], function () {
         Route::get('/export/format/import', 'Vendors\Vendor@importFormat')->name('vendor.export.excel.format.import');
         Route::post('/import', 'Vendors\Vendor@importData')->name('vendor.import');
         Route::post('/push/{id?}',  'Vendors\Vendor@push')->name('vendor.push');
+        Route::put('/restore', 'Vendors\Vendor@restore')->name('vendor.restore');
         Route::delete('/delete', 'Vendors\Vendor@delete')->name('vendor.delete');
+        Route::delete('/forcedelete', 'Vendors\Vendor@forceDelete')->name('vendor.forcedelete');
     });
 
     // CLIENT ROUTE ----------------------------------------------------------------------------------
@@ -52,7 +54,9 @@ Route::group(['middleware' => ['auth', 'roles']], function () {
         Route::get('/export/format/import', 'Clients\Client@importFormat')->name('client.export.excel.format.import');
         Route::post('/import', 'Clients\Client@importData')->name('client.import');
         Route::post('/push/{id?}', 'Clients\Client@push')->name('client.push');
+        Route::put('/restore', 'Clients\Client@restore')->name('client.restore');
         Route::delete('/delete', 'Clients\Client@delete')->name('client.delete');
+        Route::delete('/forcedelete', 'Clients\Client@forceDelete')->name('client.forcedelete');
     });
 
     // SITE ROUTE ----------------------------------------------------------------------------------
@@ -83,7 +87,9 @@ Route::group(['middleware' => ['auth', 'roles']], function () {
         Route::get('/export/format/import', 'Fieldtechs\Fieldtech@importFormat')->name('fieldtech.export.excel.format.import');
         Route::post('/import', 'Fieldtechs\Fieldtech@importData')->name('fieldtech.import');
         Route::post('/push/{id?}', 'Fieldtechs\Fieldtech@push')->name('fieldtech.push');
+        Route::put('/restore', 'Fieldtechs\Fieldtech@restore')->name('fieldtech.restore');
         Route::delete('/delete', 'Fieldtechs\Fieldtech@delete')->name('fieldtech.delete');
+        Route::delete('/forcedelete', 'Fieldtechs\Fieldtech@forceDelete')->name('fieldtech.forcedelete');
     });
 
     // WORK SCHEDULE ----------------------------------------------------------------------------------

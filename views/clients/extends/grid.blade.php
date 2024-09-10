@@ -50,6 +50,10 @@
           name: 'sites_count',
           type: 'int'
         },
+        {
+          name: 'deleted_at',
+          type: 'date'
+        },
       ], {
         beforeload: function(store, operation, opts) {
           let filters = me.store.proxy.extraParams;
@@ -92,6 +96,94 @@
                     success: me.storeLoad
                   });
                 } else Ext.msg.warning('Please select data!');
+              }
+            },
+          @endif
+
+          @if ($user->hasRoute('client.restore') || $user->hasRoute('client.forcedelete'))
+            {
+              text: 'Trashed',
+              iconCls: 'icon-trash',
+              menu: {
+                items: [
+                  @if ($user->hasRoute('client.restore'))
+                    {
+                      text: 'Restore',
+                      iconCls: 'icon-refresh',
+                      handler: function() {
+                        let recs = me.getValues();
+                        if (recs.length) {
+                          Ext.ajaxConfirm('Restore Client', {
+                            mask: me.grid,
+                            url: '{{ route('client.restore') }}',
+                            params: {
+                              '_method': 'PUT',
+                              '_token': '{{ csrf_token() }}',
+                              data: Ext.encode(recs)
+                            },
+                            success: me.storeLoad
+                          });
+                        } else Ext.msg.warning('Please select data!');
+                      }
+                    },
+                  @endif
+
+                  @if ($user->hasRoute('client.forcedelete'))
+                    {
+                      text: 'Forever Remove',
+                      iconCls: 'icon-remove',
+                      handler: function() {
+                        let recs = me.getValues();
+                        if (recs.length) {
+                          Ext.Msg.confirm('Confirm',
+                            'Are you sure you want to permanently remove the selected clients?',
+                            function(btn) {
+                              if (btn === 'yes') {
+                                Ext.Ajax.request({
+                                  url: '{{ route('client.forcedelete') }}',
+                                  method: 'DELETE',
+                                  params: {
+                                    '_method': 'DELETE',
+                                    '_token': '{{ csrf_token() }}',
+                                    data: Ext.encode(recs)
+                                  },
+                                  success: function(response) {
+                                    me.storeLoad();
+                                    Ext.Msg.alert('Success',
+                                      'The selected clients has been permanently removed.');
+                                  },
+                                  failure: function(response) {
+                                    console.log(response.responseText);
+
+                                    let errorMessage =
+                                      'An error occurred while deleting the records. Please try again.';
+
+                                    if (response.status === 400) {
+                                      try {
+                                        let responseData = JSON.parse(response.responseText);
+                                        if (responseData.message) {
+                                          errorMessage = responseData.message;
+                                        } else if (responseData.error) {
+                                          errorMessage = responseData.error;
+                                        }
+                                      } catch (e) {
+                                        console.log('Failed to parse response text.');
+                                      }
+                                    }
+
+                                    Ext.Msg.alert('Error', errorMessage);
+                                  }
+                                });
+                              }
+                            });
+                        } else {
+                          Ext.Msg.alert('Warning', 'Please select data!');
+                        }
+                      }
+                    }
+                  @endif
+
+                ]
               }
             },
           @endif
@@ -202,9 +294,27 @@
             flex: 1
           },
         ],
-        bbar: me.bbar([]),
+        bbar: me.bbar([{
+          id: 'trash',
+          name: 'Trash',
+          param: 'trash',
+          iconCls: 'icon-trash',
+          items: [{
+              id: 1,
+              name: 'ACTIVE',
+              checked: true
+            },
+            {
+              id: 2,
+              name: 'TRASH'
+            }
+          ]
+        }, ]),
         viewConfig: {
           stripeRows: false,
+          getRowClass: function(rec) {
+            if (rec.get('deleted_at')) return 'disabled';
+          },
           listeners: {
             itemcontextmenu: function(obj, rec, node, index, e) {
               e.stopEvent();
