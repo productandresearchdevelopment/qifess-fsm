@@ -203,7 +203,7 @@
 
           @if ($user->hasRoute('service.export.excel'))
             {
-              text: 'Export Excel',
+              text: 'Export Data',
               iconCls: 'icon-excel',
               handler: function() {
                 let filters = me.store.proxy.extraParams;

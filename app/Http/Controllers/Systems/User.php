@@ -228,40 +228,61 @@ class User extends Controller
         $title = [];
 
         $title[] = ['User Manager', 'h2'];
+
+        if ($request->input('trash') !== null && $request->input('trash') !== 'null') {
+            if ($request->input('trash') == 1) {
+                $title[] = ['DATA : Active', 'h5'];
+            } elseif ($request->input('trash') == 2) {
+                $title[] = ['DATA : Deleted', 'h5'];
+            }
+        } else {
+            $title[] = ['DATA : All ( Active + Deleted )', 'h5'];
+        }
+
         if ($request->input('role') !== null && $request->input('role') !== 'null') {
             $role = Role::find($request->input('role'));
             if ($role) {
-                $title[] = ['Role: ' . $role->name, 'h4'];
+                $title[] = ['ROLE : ' . $role->name, 'h5'];
             }
+        } else {
+            $title[] = ['ROLE : All', 'h5'];
         }
 
         if ($request->input('client') !== null && $request->input('client') !== 'null') {
             $client = Client::find($request->input('client'));
             if ($client) {
-                $title[] = ['Client: ' . $client->name, 'h4'];
+                $title[] = ['CLIENT : ' . $client->name, 'h5'];
             }
+        } else {
+            $title[] = ['CLIENT : All', 'h5'];
         }
 
         if ($request->input('vendor') !== null && $request->input('vendor') !== 'null') {
             $vendor = Vendor::find($request->input('vendor'));
             if ($vendor) {
-                $title[] = ['Area: ' . $vendor->name, 'h4'];
+                $title[] = ['AREA : ' . $vendor->name, 'h5'];
             }
+        } else {
+            $title[] = ['AREA : All', 'h5'];
         }
-        // if ($request->input('vendor' !== null && $request->input('vendor') !== 'null')) {
-        //     $vendor = Vendor::find($request->input('vendor'));
-        //     if ($vendor) {
-        //         $title[] = ['Area: ' . $vendor->name, 'h4'];
-        //     }
-        // }
-        // if ($request->input('vendor' !== null && $request->input('vendor') !== 'null')) {
-        //     $vendor = Vendor::find($request->input('vendor'));
-        //     if ($vendor) {
-        //         $title[] = ['Area: ' . $vendor->name, 'h4'];
-        //     }
-        // }
 
-        // dd($title, $request->all());
+        if ($request->input('activities') !== null && $request->input('activities') !== 'null') {
+            $activities = Activity::find($request->input('activities'));
+            if ($activities) {
+                $title[] = ['ACTIVITIES : ' . $activities->name, 'h5'];
+            }
+        } else {
+            $title[] = ['ACTIVITIES : All', 'h5'];
+        }
+
+        if ($request->input('owners') !== null && $request->input('owners') !== 'null') {
+            $owners = Owner::find($request->input('owners'));
+            if ($owners) {
+                $title[] = ['OWNERS : ' . $owners->name, 'h5'];
+            }
+        } else {
+            $title[] = ['OWNER : All', 'h5'];
+        }
 
 
         $data = $this->data($request, false);
