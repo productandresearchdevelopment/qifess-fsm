@@ -64,7 +64,7 @@ class Site extends Controller
         }
 
 
-        $trash = $request->input("filter-trash");
+        $trash = $request->input("trash");
         if ($trash < 1) $query->withTrashed();
         else if ($trash > 1) $query->onlyTrashed();
 
@@ -152,23 +152,38 @@ class Site extends Controller
         $title = [];
 
         $title[] = ['Site', 'h2'];
-        if ($request->input('filter-trash') !== null && $request->input('filter-trash') !== 'null') {
-            $title[] = ['Data: ' . ($request->input('filter-trash') == 1 ? 'Data Active' : 'Data Deleted'), 'h4'];
+        if ($request->input('trash') !== null && $request->input('trash') !== 'null') {
+            if ($request->input('trash') == 1) {
+                $title[] = ['DATA : Active', 'h5'];
+            } elseif ($request->input('trash') == 2) {
+                $title[] = ['DATA : Deleted', 'h5'];
+            }
+        } else {
+            $title[] = ['DATA : All ( Active + Deleted )', 'h5'];
         }
+
+
         if ($request->input('filter-client') !== null && $request->input('filter-client') !== 'null') {
             $client = Client::find($request->input('filter-client'));
             if ($client) {
-                $title[] = ['Client: ' . $client->name, 'h4'];
+                $title[] = ['CLIENT : ' . $client->name, 'h5'];
             }
+        } else {
+            $title[] = ['CLIENT : All', 'h5'];
         }
+
         if ($request->input('filter-service') !== null && $request->input('filter-service') !== 'null') {
             $service = Service::find($request->input('filter-service'));
             if ($service) {
-                $title[] = ['Service: ' . $service->name, 'h4'];
+                $title[] = ['SERVICE : ' . $service->name, 'h5'];
             }
+        } else {
+            $title[] = ['SERVICE : All', 'h5'];
         }
         if ($request->input('filter-status') !== null && $request->input('filter-status') !== 'null') {
-            $title[] = ['Status: ' . ($request->input('filter-status') == 1 ? 'Active' : 'Inactive'), 'h4'];
+            $title[] = ['STATUS : ' . ($request->input('filter-status') == 1 ? 'Active' : 'Inactive'), 'h5'];
+        } else {
+            $title[] = ['STATUS : All', 'h5'];
         }
 
 

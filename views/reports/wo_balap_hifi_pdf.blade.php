@@ -1,4 +1,4 @@
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <style>
     @font-face {
         font-family: 'sans-serif';
@@ -14,33 +14,65 @@
         font-weight: bold;
     }
 
-    body, table, td, div {font-family: sans-serif;}
-    table{
+    body,
+    table,
+    td,
+    div {
+        font-family: sans-serif;
+    }
+
+    table {
         width: 100%;
         border-spacing: 0;
         border-collapse: collapse;
     }
 
 
-    .page-break {page-break-after: always;}
-    header {position: fixed; top: -10px; left: 80%; right: 0px;height: 30px; }
-    footer {position: fixed; bottom: -60px; left: 70%; right: 0px; height: 50px; }
+    .page-break {
+        page-break-after: always;
+    }
+
+    header {
+        position: fixed;
+        top: -10px;
+        left: 80%;
+        right: 0px;
+        height: 30px;
+    }
+
+    footer {
+        position: fixed;
+        bottom: -60px;
+        left: 70%;
+        right: 0px;
+        height: 50px;
+    }
 
 
-    .tableheadertitle{
+    .tableheadertitle {
         background: #444444;
         color: #FFFFFF;
         font-size: 10px;
     }
-    .tableheadertitle td{
+
+    .tableheadertitle td {
         width: 50%;
         padding: 3px;
         text-align: center;
     }
-    .divsquare{border: 1px solid #444444; border-radius: 5px; padding: 3px 5px; margin-right: 20px;}
 
-    .tableborder td{border: 1px solid #666666; height: 20px; padding: 3px 5px;}
+    .divsquare {
+        border: 1px solid #444444;
+        border-radius: 5px;
+        padding: 3px 5px;
+        margin-right: 20px;
+    }
 
+    .tableborder td {
+        border: 1px solid #666666;
+        height: 20px;
+        padding: 3px 5px;
+    }
 </style>
 
 <body>
@@ -50,10 +82,12 @@
                 <img src="{{ public_path('images/logo_hifi.jpg') }}" style="height: 80px">
             </td>
             <td width="400" align="left">
-                <div style="background: #444444; text-align: center; padding: 5px 30px; color: #FFFFFF; border-bottom-left-radius: 10px;border-top-left-radius: 10px;">
+                <div
+                    style="background: #444444; text-align: center; padding: 5px 30px; color: #FFFFFF; border-bottom-left-radius: 10px;border-top-left-radius: 10px;">
                     <b>BERITA ACARA LAPANGAN</b> / FIELD REPORT
                 </div>
-                <div style="margin: 20px 0px 0px 150px; text-align: left; border: 1px solid #333333; padding: 5px 10px; font-size: 10px;">
+                <div
+                    style="margin: 20px 0px 0px 150px; text-align: left; border: 1px solid #333333; padding: 5px 10px; font-size: 10px;">
                     <b>NOMOR SERI FORM</b> / FORM SERIAL NUMBER : {{ $data->id }}
                 </div>
             </td>
@@ -74,51 +108,64 @@
     <table style="font-size: 10px;">
         <tr>
             <td width="50%">
-               <table>
-                   <tr>
-                       <td width="150"> <b>Nomor</b> <br> <i>Number</i> </td>
-                       <td width="10">:</td>
-                       <td> <div class="divsquare">{{ $data->no_wo ?: '-' }}</div> </td>
-                   </tr>
-                   <tr>
-                       <td> <b>Tanggal</b> <br> <i>Date</i> </td>
-                       <td>:</td>
-                       <td> <div class="divsquare">{{ $data->close_date ? date('d/m/Y', strtotime($data->close_date)) : '-' }}</div> </td>
-                   </tr>
-                   <tr>
-                       <td> <b>Vendor</b> <br> <i>Company</i> </td>
-                       <td>:</td>
-                       <td> <div class="divsquare">{{ $data->fieldtech->vendor_name ?: '-' }}</div> </td>
-                   </tr>
-                   <tr>
-                       <td> <b>Teknisi</b> <br> <i>Technician</i> </td>
-                       <td>:</td>
-                       <td> <div class="divsquare">{{ $data->fieldtech->name ?: '-' }}</div> </td>
-                   </tr>
-                   <tr>
-                       <td> <b>Waktu Mulai dan Selesai</b> <br> <i>Start and End Time</i> </td>
-                       <td>:</td>
-                       <td>
-                           <div class="divsquare">
-                               {{ $time_start ? date('d/m/Y H:i', strtotime($time_start)) : '-' }}
-                               &nbsp; <b>To</b> &nbsp;
-                               {{ $time_finish ? date('d/m/Y H:i', strtotime($time_finish)) : '-' }}
-                           </div>
-                       </td>
-                   </tr>
-               </table>
+                <table>
+                    <tr>
+                        <td width="150"> <b>Nomor</b> <br> <i>Number</i> </td>
+                        <td width="10">:</td>
+                        <td>
+                            <div class="divsquare">{{ $data->no_wo ?: '-' }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> <b>Tanggal</b> <br> <i>Date</i> </td>
+                        <td>:</td>
+                        <td>
+                            <div class="divsquare">
+                                {{ $data->close_date ? date('d/m/Y', strtotime($data->close_date)) : '-' }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> <b>Vendor</b> <br> <i>Company</i> </td>
+                        <td>:</td>
+                        <td>
+                            <div class="divsquare">{{ $data->fieldtech->vendor_name ?: '-' }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> <b>Teknisi</b> <br> <i>Technician</i> </td>
+                        <td>:</td>
+                        <td>
+                            <div class="divsquare">{{ $data->fieldtech->name ?: '-' }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> <b>Waktu Mulai dan Selesai</b> <br> <i>Start and End Time</i> </td>
+                        <td>:</td>
+                        <td>
+                            <div class="divsquare">
+                                {{ $time_start ? date('d/m/Y H:i', strtotime($time_start)) : '-' }}
+                                &nbsp; <b>To</b> &nbsp;
+                                {{ $time_finish ? date('d/m/Y H:i', strtotime($time_finish)) : '-' }}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </td>
             <td>
                 <table>
                     <tr>
                         <td width="150"> <b>ID Pelanggan</b> <br> <i>Customer ID</i> </td>
                         <td width="10">:</td>
-                        <td> <div class="divsquare">{{ $data->site ? $data->site->link_id : '-' }}</div> </td>
+                        <td>
+                            <div class="divsquare">{{ $data->site ? $data->site->link_id : '-' }}</div>
+                        </td>
                     </tr>
                     <tr>
                         <td> <b>Nama</b> <br> <i>Name</i> </td>
                         <td>:</td>
-                        <td> <div class="divsquare">{{ $data->site ? $data->site->name : '-' }}</div> </td>
+                        <td>
+                            <div class="divsquare">{{ $data->site ? $data->site->name : '-' }}</div>
+                        </td>
                     </tr>
                     <tr>
                         <td> <b>Alamat</b> <br> <i>Address</i> </td>
@@ -126,7 +173,7 @@
                         <td rowspan="2">
                             <div class="divsquare" style="height: 40px">
                                 {{ $data->site ? substr($data->site->address, 0, 130) : '-' }}
-                                {{ ($data->site && (strlen($data->site->address) > 130)) ? '...' : '' }}
+                                {{ $data->site && strlen($data->site->address) > 130 ? '...' : '' }}
                             </div>
                         </td>
                     </tr>
@@ -137,7 +184,9 @@
                     <tr>
                         <td> <b>Nomor Kontak</b> <br> <i>Contact Number</i> </td>
                         <td>:</td>
-                        <td>  <div class="divsquare">{{ $data->site ? $data->site->pic_phone : '-' }}</div> </td>
+                        <td>
+                            <div class="divsquare">{{ $data->site ? $data->site->pic_phone : '-' }}</div>
+                        </td>
                     </tr>
                 </table>
             </td>
@@ -161,30 +210,30 @@
                 <table>
                     <tr>
                         <td width="20">
-                            @if(in_array($data->activity_id, [1,9]))
-                                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                            @if (in_array($data->activity_id, [1, 9]))
+                                <img style="height: 16px;" src="{{ public_path('images/check.jpg') }}">
                             @else
-                                <img style="height: 16px;" src="{{ public_path("images/uncheck.jpg") }}">
+                                <img style="height: 16px;" src="{{ public_path('images/uncheck.jpg') }}">
                             @endif
                         </td>
                         <td><b>Pasang Baru</b> <br> <i>New Installation</i></td>
                     </tr>
                     <tr>
                         <td width="20">
-                            @if(in_array($data->activity_id, [2]))
-                                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                            @if (in_array($data->activity_id, [2]))
+                                <img style="height: 16px;" src="{{ public_path('images/check.jpg') }}">
                             @else
-                                <img style="height: 16px;" src="{{ public_path("images/uncheck.jpg") }}">
+                                <img style="height: 16px;" src="{{ public_path('images/uncheck.jpg') }}">
                             @endif
                         </td>
                         <td><b>Ganti Layanan</b> <br> <i>Service Exchange</i></td>
                     </tr>
                     <tr>
                         <td width="20">
-                            @if(in_array($data->activity_id, []))
-                                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                            @if (in_array($data->activity_id, []))
+                                <img style="height: 16px;" src="{{ public_path('images/check.jpg') }}">
                             @else
-                                <img style="height: 16px;" src="{{ public_path("images/uncheck.jpg") }}">
+                                <img style="height: 16px;" src="{{ public_path('images/uncheck.jpg') }}">
                             @endif
                         </td>
                         <td><b>Tambahan Layanan</b> <br> <i>Service Addition</i></td>
@@ -195,20 +244,20 @@
                 <table>
                     <tr>
                         <td width="20">
-                            @if(in_array($data->activity_id, [4]))
-                                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                            @if (in_array($data->activity_id, [4]))
+                                <img style="height: 16px;" src="{{ public_path('images/check.jpg') }}">
                             @else
-                                <img style="height: 16px;" src="{{ public_path("images/uncheck.jpg") }}">
+                                <img style="height: 16px;" src="{{ public_path('images/uncheck.jpg') }}">
                             @endif
                         </td>
                         <td><b>Pindah Logasi (Relokasi</b> <br> <i>Relocation)</i></td>
                     </tr>
                     <tr>
                         <td>
-                            @if(in_array($data->activity_id, [5]))
-                                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                            @if (in_array($data->activity_id, [5]))
+                                <img style="height: 16px;" src="{{ public_path('images/check.jpg') }}">
                             @else
-                                <img style="height: 16px;" src="{{ public_path("images/uncheck.jpg") }}">
+                                <img style="height: 16px;" src="{{ public_path('images/uncheck.jpg') }}">
                             @endif
                         </td>
                         <td><b>Pemutusan Layanan</b> <br> <i>Service Cancelation</i></td>
@@ -225,17 +274,23 @@
                     <tr>
                         <td> <b>Internet</b> <br> <i>Internet</i> </td>
                         <td>:</td>
-                        <td> <div class="divsquare"> {{ $internet ?: '-' }} </div> </td>
+                        <td>
+                            <div class="divsquare"> {{ $internet ?: '-' }} </div>
+                        </td>
                     </tr>
                     <tr>
                         <td> <b>Telepon</b> <br> <i>Phone</i> </td>
                         <td>:</td>
-                        <td><div class="divsquare">&nbsp;</div></td>
+                        <td>
+                            <div class="divsquare">&nbsp;</div>
+                        </td>
                     </tr>
                     <tr>
                         <td> <b>Televisi</b> <br> <i>Television</i> </td>
                         <td>:</td>
-                        <td><div class="divsquare"> {{ $totalStb ?: '-' }} </div></td>
+                        <td>
+                            <div class="divsquare"> {{ $totalStb ?: '-' }} </div>
+                        </td>
                     </tr>
 
                 </table>
@@ -259,27 +314,27 @@
             <td><b>Instalasi Kabel FO</b> <br> <i>FO Cable Installation</i> </td>
             <td width="100" align="right">Baik / Good</td>
             <td width="20" align="right">
-                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                <img style="height: 16px;" src="{{ public_path('images/check.jpg') }}">
             </td>
 
             <td width="100" align="right">Buruk / Bad</td>
             <td width="20" align="right">
-                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                <img style="height: 16px;" src="{{ public_path('images/check.jpg') }}">
             </td>
 
             <td width="100" align="right">PING</td>
             <td width="20" align="right">
-                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                <img style="height: 16px;" src="{{ public_path('images/check.jpg') }}">
             </td>
 
             <td width="100" align="right">STREAMING</td>
             <td width="20" align="right">
-                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                <img style="height: 16px;" src="{{ public_path('images/check.jpg') }}">
             </td>
 
             <td width="100" align="right">TEST CALL</td>
             <td width="20" align="right">
-                <img style="height: 16px;" src="{{ public_path("images/uncheck.jpg") }}">
+                <img style="height: 16px;" src="{{ public_path('images/uncheck.jpg') }}">
             </td>
             <td width="50" align="right">&nbsp;</td>
         </tr>
@@ -287,27 +342,28 @@
             <td><b>Instalasi Perangkat</b> <br> <i>Device Installation</i> </td>
             <td align="right">Baik / Good</td>
             <td align="right">
-                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                <img style="height: 16px;" src="{{ public_path('images/check.jpg') }}">
             </td>
 
             <td align="right">Buruk / Bad</td>
             <td align="right">
-                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                <img style="height: 16px;" src="{{ public_path('images/check.jpg') }}">
             </td>
 
             <td align="right">BROWSING</td>
             <td align="right">
-                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                <img style="height: 16px;" src="{{ public_path('images/check.jpg') }}">
             </td>
 
             <td align="right">SPEED TEST</td>
             <td align="right">
-                <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
+                <img style="height: 16px;" src="{{ public_path('images/check.jpg') }}">
             </td>
 
             <td align="right">VIDEO / TV</td>
             <td align="right">
-                <img style="height: 16px;" src="{{ public_path($totalStb ? "images/check.jpg" : "images/uncheck.jpg") }}">
+                <img style="height: 16px;"
+                    src="{{ public_path($totalStb ? 'images/check.jpg' : 'images/uncheck.jpg') }}">
             </td>
             <td align="right">&nbsp;</td>
         </tr>
@@ -327,7 +383,8 @@
         <tr>
             <td width="50%">
                 <b>Mohon isi apabila terdapat pergantian perangkat pada perubahan layanan pelanggan.</b> <br>
-                <i>Please fill in the installation notes if there is a device replacement during the service type exchange.</i>
+                <i>Please fill in the installation notes if there is a device replacement during the service type
+                    exchange.</i>
             </td>
             <td width="10">&nbsp;</td>
             <td>
@@ -421,7 +478,8 @@
 
     {{-- SECTION 6  --}}
 
-    <div style="border: 2px solid #c90668; border-radius: 5px; padding: 5px; text-align: center; margin-top: 10px; font-size: 10px;">
+    <div
+        style="border: 2px solid #c90668; border-radius: 5px; padding: 5px; text-align: center; margin-top: 10px; font-size: 10px;">
         <b>
             MOHON UNTUK TIDAK MEMBERIKAN UANG TUNAI KEPADA TIM DI LAPANGAN DENGAN ALASAN APA PUN. <br>
             INDOSAT OOREDOO HUTCHISON TIDAK BERTANGGUNG JAWAB ATAS KERUGIAN YANG TERJADI DARI PENIPUAN YANG DIALAMI.
@@ -433,74 +491,103 @@
         </i>
     </div>
 
-    <table style="font-size: 11px;margin-top: 50px">
+    <table style="font-size: 10px; margin-top: 24px;">
         <tr>
-            <td width="33%">
-                <div style="height: 120px"></div>
-                <div style="padding: 10px 20px; border-top: 1px solid #333333; text-align: center; margin: 1px 60px;">
-                    <b>Admin Lapangan</b> / Field Admin
-                </div>
+            <td width="20%">
+                <table class="tableborder">
+                    <tr>
+                        <td style="height: 110px">
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height: 16px; text-align: center;">
+                            <b>Admin Lapangan</b> / Field Admin
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height: 110px">
+                            @if ($ttdFieldtech)
+                                <img style="height: 100px; margin-top: 15px; margin-left: 30px"
+                                    src="{{ storage_path('app/public/uploads/' . $ttdFieldtech->filename) }}">
+                                <div style="height: 20px; padding: 0px; text-align: center">{{ $ttdFieldtechName }}
+                                </div>
+                            @else
+                                <div style="height: 110px"></div>
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height: 16px; text-align: center;">
+                            <b>Teknisi</b> / Technician
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height: 110px">
+                            @if ($ttdCustomerName)
+                                <img style="height: 100px; margin-top: 15px; margin-left: 30px"
+                                    src="{{ storage_path('app/public/uploads/' . $ttdFieldtech->filename) }}">
+                                <div style="height: 20px; padding: 0px; text-align: center">{{ $ttdCustomerName }}
+                                </div>
+                            @else
+                                <div style="height: 110px"></div>
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height: 16px; text-align: center;">
+                            <b>Pelanggan</b> / Customer
+                        </td>
+                    </tr>
+                </table>
             </td>
-            <td width="33%" align="center">
-                @if($ttdFieldtech)
-                <img style="height: 100px;" src="{{ storage_path("app/public/uploads/".$ttdFieldtech->filename) }}">
-                <div style="height: 20px; padding: 0px">{{ $ttdFieldtechName }}</div>
-                @else
-                    <div style="height: 120px"></div>
-                @endif
-                <div style="padding: 10px 20px; border-top: 1px solid #333333; text-align: center; margin: 1px 60px;">
-                    <b>Teknisi</b> / Technician
+            <td width="24">&nbsp;</td>
+            <td style="height: 330px; vertical-align: top;">
+                <div style="font-size: 20px; margin-bottom: 20px;">
+                    <b>Syarat dan Ketentuan</b> <i>/ Terms and Conditions</i>
                 </div>
+                <ol
+                    style="font-size: 14px; padding-left: 20px; text-align: justify;">
+                    <li style="margin-bottom: 20px;">
+                        <b>Formulir Berita Acara Lapangan ini tunduk pada Syarat dan Ketentuan Layanan Indosat HiFi yang
+                        merupakan satu kesatuan yang tidak terpisahkan.</b>
+                        <br>
+                        <i>This Field Report is subject to and can not be separated from the Indosat HiFi Service Terms
+                            and Conditions.</i>
+                    </li>
+                    <li style="margin-bottom: 20px;">
+                        <b>Indosat Ooredoo Hutchison hanya akan menanggung biaya penarikan kabel fiber dengan panjang kabel
+                        maksimal 200 meter dan kabel UTP LAN sepanjang 1,5 meter.</b>
+                        <br>
+                        <i>Indosat Ooredoo Hutchison will only bear the cost of pulling fiber cables with a maximum
+                            cable length of 200 meters and UTP LAN cable by up to 1.5 meter.</i>
+                    </li>
+                    <li style="margin-bottom: 20px;">
+                        <b>Apabila panjang kabel melebihi yang ditentukan, Pelanggan akan menanggung biaya kelebihan
+                        penarikan kabel dengan harga Rp8.000,- per meter untuk kabel fiber dan Rp10.000,- per meter
+                        untuk kabel UTP LAN.</b>
+                        <br>
+                        <i>If the cable exceeds the specified length, the Customer will bear the cost of excess cable
+                            pulling at a price of IDR 8,000 per meter for fiber cable and IDR 10,000 per meter for UTP
+                            LAN cable.</i>
+                    </li>
+                    <li style="margin-bottom: 20px;">
+                        <b>Pelanggan setuju untuk membayar biaya tambahan material yang akan ditagihkan pada bulan
+                        berikutnya.</b>
+                        <br>
+                        <i>Customer agrees to pay additional material costs billed the following month.</i>
+                    </li>
+                    <li>
+                        <b>Dengan menandatangani Formulir Berita Acara Lapangan ini, Pelanggan menerima hasil pekerjaan
+                        yang dilakukan oleh personel Indosat Ooredoo Hutchison dengan hasil sebagaimana
+                        tercantum dalam informasi yang disebutkan di atas.</b>
+                        <br>
+                        <i>By signing this Field Report, the Customer accepts the work of Indosat Ooredoo Hutchison’s
+                            team with the results as stated in the information table above.</i>
+                    </li>
+                </ol>
             </td>
-            <td width="33%" align="center">
-                @if($ttdCustomer)
-                    <img style="height: 100px;" src="{{ storage_path("app/public/uploads/".$ttdCustomer->filename) }}">
-                    <div>{{ $ttdCustomerName }}</div>
-                @else
-                    <div style="height: 120px"></div>
-                @endif
-                <div style="padding: 10px 20px; border-top: 1px solid #333333; text-align: center; margin: 1px 60px;">
-                    <b>Pelanggan</b> / Customer
-                </div>
-            </td>
+
         </tr>
     </table>
-
-    <div style="font-size: 11px; margin-top: 50px;"><b>Syarat dan Ketentuan</b> / Terms and Conditions</div>
-    <ol style="font-size: 11px; line-height: 18px; margin-top: 0px">
-        <li>
-            Formulir Berita Acara Lapangan ini tunduk pada Syarat dan Ketentuan Layanan Indosat HiFi yang merupakan satu kesatuan yang tidak terpisahkan.
-            <br>
-            <i>This Field Report is subject to and can not be separated from the Indosat HiFi Service Terms and Conditions.</i>
-        </li>
-        <li>
-            Indosat Ooredoo Hutchison hanya akan menanggung biaya penarikan kabel fiber dengan panjang kabel maksimal 200 meter dan kabel UTP LAN sepanjang 1,5 meter.
-            <br>
-            <i>Indosat Ooredoo Hutchison will only bear the cost of pulling fiber cables with a maximum cable length of 200 meters and UTP LAN cable by up to 1.5 meter.</i>
-
-        </li>
-        <li>
-            Apabila panjang kabel melebihi yang ditentukan, Pelanggan akan menanggung biaya kelebihan penarikan kabel dengan harga Rp8.000,- per meter untuk kabel fiber dan Rp10.000,- per meter
-            untuk kabel UTP LAN.
-            <br>
-            <i>
-                If the cable exceeds the specified length, the Customer will bear the cost of excess cable pulling at a price of IDR 8,000 per meter for fiber cable and IDR 10,000 per meter for UTP LAN cable.
-            </i>
-        </li>
-        <li>
-            Pelanggan setuju untuk membayar biaya tambahan material yang akan ditagihkan pada bulan berikutnya.
-            <br>
-            <i>
-                Customer agrees to pay additional material costs billed the following month.
-            </i>
-        </li>
-        <li>
-            Dengan menandatangani Formulir Berita Acara Lapangan ini, Pelanggan menerima hasil pekerjaan yang dilakukan oleh personel Indosat Ooredoo Hutchison dengan hasil sebagaimana
-            tercantum dalam informasi yang disebutkan di atas.
-            <br>
-            <i>
-                By signing this Field Report, the Customer accepts the work of Indosat Ooredoo Hutchison’s team with the results as stated in the information table above.
-            </i>
-        </li>
-    </ol>
 </body>
