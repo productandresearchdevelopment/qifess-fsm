@@ -418,16 +418,17 @@
         ],
         bbar: me.bbar([{
             id: 'trash',
-            name: 'Data',
+            name: 'Trash',
             iconCls: 'icon-trash',
+            param: 'trash',
             items: [{
                 id: 1,
-                name: 'Data Active',
+                name: 'ACTIVE',
                 checked: true
               },
               {
                 id: 2,
-                name: 'Data Deleted'
+                name: 'TRASH'
               }
             ]
           },
