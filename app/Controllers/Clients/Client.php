@@ -42,6 +42,10 @@ class Client extends Controller
         $query->withCount(['workorders']);
         $query->withCount(['sites']);
         if ($user->client_id) $query = $query->where('id', $user->client_id);
+
+        if (!$request->trash) $query->withTrashed();
+        if ($request->trash == 2) $query->onlyTrashed();
+
         return Query::open($query, $search, $counter);
     }
 
@@ -96,6 +100,16 @@ class Client extends Controller
         $title = [
             ['CLIENT', 'h2']
         ];
+
+        if ($request->input('trash') !== null && $request->input('trash') !== 'null') {
+            if ($request->input('trash') == 1) {
+                $title[] = ['DATA : Active', 'h5'];
+            } elseif ($request->input('trash') == 2) {
+                $title[] = ['DATA : Deleted', 'h5'];
+            }
+        } else {
+            $title[] = ['DATA : All ( Active + Deleted )', 'h5'];
+        }
 
         $data = $this->data($request, false);
 
@@ -183,6 +197,33 @@ class Client extends Controller
             return ['success' => true, 'message' => $importExcel->logs()];
         }
         return ['success' => false, 'message' => 'The data you uploaded was not found'];
+    }
+
+    public function restore(Request $request)
+    {
+        if ($data = json_decode($request->data)) {
+            Mod::withTrashed()->whereIn('id', $data)->restore();
+            return ['success' => true, 'message' => 'Success!'];
+        }
+        return ['success' => false, 'message' => 'No Data!'];
+    }
+
+    public function forceDelete(Request $request)
+    {
+        try {
+            if ($data = json_decode($request->data)) {
+                Mod::withTrashed()->whereIn('id', $data)->forcedelete();
+                return response()->json(['success' => true, 'message' => 'Success!']);
+            }
+            return response()->json(['success' => false, 'message' => 'No Data!']);
+        } catch (QueryException $e) {
+            if ($e->getCode() === '23000') {
+                return response()->json(['success' => false, 'message' => 'Cannot delete records because there are related entries. Please remove or reassign the related data first.'], 400);
+            }
+            return response()->json(['success' => false, 'message' => 'An error occurred while deleting the records.'], 500);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'An unexpected error occurred.'], 500);
+        }
     }
 
     public function delete(Request $request)
