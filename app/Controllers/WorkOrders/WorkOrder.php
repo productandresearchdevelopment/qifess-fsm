@@ -532,27 +532,42 @@ class WorkOrder extends Controller
 
         if($action->status->name == 'POST ACTIVATION'){
             $bastURL = route('wo.export.balap', $wo->id);
-            foreach ($wo->actions as $act) {
-                if(strtoupper($act->status->name) == 'ACTIVATION') {
-                    foreach ($act->details as $extra) {
-                        if (strtolower($extra->detail->name) == 'sn ont') $ont['serialNumber'] = $extra->value;
-                        else if (strtolower($extra->detail->name) == 'mac address ont') $ont['macaddressont'] = $extra->value;
-                        else if (strtolower($extra->detail->name) == 'tipe stb 1') $stb1['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
-                        else if (strtolower($extra->detail->name) == 'sn stb 1') $stb1['serialNumber'] = $extra->value;
-                        else if (strtolower($extra->detail->name) == 'mac address stb 1') $stb1['macAddressstb'] = $extra->value;
-                        else if (strtolower($extra->detail->name) == 'tipe stb 2') $stb2['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
-                        else if (strtolower($extra->detail->name) == 'sn stb 2') $stb2['serialNumber'] = $extra->value;
-                        else if (strtolower($extra->detail->name) == 'mac address stb 2') $stb2['macAddressstb'] = $extra->value;
-                        else if (strtolower($extra->detail->name) == 'tipe stb 3') $stb3['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
-                        else if (strtolower($extra->detail->name) == 'sn stb 3') $stb3['serialNumber'] = $extra->value;
-                        else if (strtolower($extra->detail->name) == 'mac address stb 3') $stb3['macAddressstb'] = $extra->value;
-                    }
-                }
-            }
-            
-            $cpe = [$ont, $stb1, $stb2, $stb3];
         }
 
+        foreach ($wo->actions as $act) {
+            if(strtoupper($act->status->name) == 'ACTIVATION') {
+                foreach ($act->details as $extra) {
+                    if (strtolower($extra->detail->name) == 'sn ont') $ont['serialNumber'] = $extra->value;
+                    else if (strtolower($extra->detail->name) == 'mac address ont') $ont['macaddressont'] = $extra->value;
+                    else if (strtolower($extra->detail->name) == 'tipe stb 1') $stb1['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
+                    else if (strtolower($extra->detail->name) == 'sn stb 1') $stb1['serialNumber'] = $extra->value;
+                    else if (strtolower($extra->detail->name) == 'mac address stb 1') $stb1['macAddressstb'] = $extra->value;
+                    else if (strtolower($extra->detail->name) == 'tipe stb 2') $stb2['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
+                    else if (strtolower($extra->detail->name) == 'sn stb 2') $stb2['serialNumber'] = $extra->value;
+                    else if (strtolower($extra->detail->name) == 'mac address stb 2') $stb2['macAddressstb'] = $extra->value;
+                    else if (strtolower($extra->detail->name) == 'tipe stb 3') $stb3['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
+                    else if (strtolower($extra->detail->name) == 'sn stb 3') $stb3['serialNumber'] = $extra->value;
+                    else if (strtolower($extra->detail->name) == 'mac address stb 3') $stb3['macAddressstb'] = $extra->value;
+
+                    else if (strtolower($extra->detail->name) == 'serial number registration') $serialNumber = $extra->value;
+                    else if (strtolower($extra->detail->name) == 'serial number registration') $serialNumber = $extra->value;
+                }
+            }
+            else if(strtoupper($act->status->name)  == 'DE-ACTIVATION'){
+                if (strtolower($extra->detail->name) == 'serial number unregistration') $serialNumber = $extra->value;
+            }
+            else if(strtoupper($act->status->name)  == 'PREPARATION'){
+                if (strtolower($extra->detail->name) == 'ont serial number') $serialNumber = $extra->value;
+            }
+            else if(strtoupper($act->status->name)  == 'POST ACTIVATION'){
+                if (strtolower($extra->detail->name) == 'excess material - drop wire') $additionalDropCable = $extra->value;
+                else if (strtolower($extra->detail->name) == 'excess material - utp') $additionalUTP = $extra->value;
+            }
+        }
+
+        $cpe = [$ont, $stb1, $stb2, $stb3];
+
+        /*
         foreach (json_decode($details) AS $extra){
             if($extra && isset($extra->id)) {
                 if ($detail = Master\StatusDetail::find($extra->id)) {
@@ -560,6 +575,7 @@ class WorkOrder extends Controller
                         if (strtolower($detail->name) == 'ont serial number') $serialNumber = $extra->value;
                         else if (strtolower($detail->name) == 'serial number registration') $serialNumber = $extra->value;
                         else if (strtolower($detail->name) == 'serial number unregistration') $serialNumber = $extra->value;
+
                         else if (strtolower($detail->name) == 'excess material - drop wire') $additionalDropCable = $extra->value;
                         else if (strtolower($detail->name) == 'excess material - utp') $additionalUTP = $extra->value;
 
@@ -591,10 +607,8 @@ class WorkOrder extends Controller
                 }
             }
         }
+        */
 
-        if($action->status->name == "ACTIVATION") {
-            $cpe = [$ont, $stb1, $stb2, $stb3];
-        }
 
         /*
             if($action->status->name == "PREPARATION") $status = 'PREPARED';
