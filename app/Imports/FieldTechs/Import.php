@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Imports\Fieldtechs;
+namespace App\Imports\FieldTechs;
 
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
