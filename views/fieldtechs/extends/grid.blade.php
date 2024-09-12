@@ -285,7 +285,8 @@
           {
             text: "NIK",
             dataIndex: 'nik',
-            width: 200
+            width: 200,
+            hidden: true
           },
           {
             text: "NAME",
@@ -310,22 +311,26 @@
             text: "ADDRESS",
             dataIndex: 'address',
             minWidth: 250,
-            flex: 1
+            flex: 1,
+            hidden: true
           },
           {
             text: "EMAIL",
             dataIndex: 'email',
-            minWidth: 200
+            minWidth: 200,
+            hidden: true
           },
           {
             text: "FIELDTECH 1",
             dataIndex: 'fieldtech1',
-            minWidth: 200
+            minWidth: 200,
+            hidden: true
           },
           {
             text: "FIELDTECH 2",
             dataIndex: 'fieldtech2',
-            minWidth: 200
+            minWidth: 200,
+            hidden: true
           },
           {
             text: "VENDOR NAME",

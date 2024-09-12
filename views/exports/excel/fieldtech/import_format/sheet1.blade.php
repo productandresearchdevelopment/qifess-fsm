@@ -7,12 +7,12 @@
 <table>
   <tr>
     <td align="center" valign="center" height="30" colspan="2" bgcolor="#EEEEEE" style="border: 1px solid #666">
-      <b>AREA</b>
+      <b>AREA</b>&nbsp;&nbsp;<span style="color: #FF0000;">(*)</span>
     </td>
     <td align="center" valign="center" height="30" width="15" rowspan="2" bgcolor="#EEEEEE"
       style="border: 1px solid #666"><b>NIK</b></td>
     <td align="center" valign="center" height="30" width="15" rowspan="2" bgcolor="#EEEEEE"
-      style="border: 1px solid #666"><b>NAME</b></td>
+      style="border: 1px solid #666"><b>NAME</b>&nbsp;&nbsp;<span style="color: #FF0000;">(*)</span></td>
     <td align="center" valign="center" height="30" width="30" rowspan="2" bgcolor="#EEEEEE"
       style="border: 1px solid #666"><b>ADDRESS</b></td>
     <td align="center" valign="center" height="30" width="30" rowspan="2" bgcolor="#EEEEEE"
@@ -22,7 +22,7 @@
     </td>
     <td align="center" valign="center" height="30" rowspan="2" width="30" bgcolor="#EEEEEE"
       style="border: 1px solid #666">
-      <b>VENDOR NAME</b>
+      <b>VENDOR NAME </b>&nbsp;&nbsp;<span style="color: #FF0000;">(*)</span>
     </td>
     <td align="center" valign="center" height="30" width="30" rowspan="2" bgcolor="#EEEEEE"
       style="border: 1px solid #666"><b>PHONE</b></td>

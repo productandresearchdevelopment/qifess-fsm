@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Imports\Fieldtechs;
+namespace App\Imports\FieldTechs;
 
 use App\Models\Fieldteches\Fieldtech;
 use App\Models\Vendors\Vendor;
