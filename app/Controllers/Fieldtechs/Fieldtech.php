@@ -75,6 +75,7 @@ class Fieldtech extends Controller
                 'address' => $request->input('address'),
                 'email' => $request->input('email'),
                 'vendor_id' => $request->input('vendor_id'),
+                'vendor_name' => $request->input('vendor_name'),
             ];
 
             if ($id) {
