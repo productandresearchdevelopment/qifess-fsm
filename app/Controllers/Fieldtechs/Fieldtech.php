@@ -2,7 +2,7 @@
 
 namespace App\Controllers\Fieldtechs;
 
-use App\Exports\FieldTechs\ImportFormat\Format;
+use App\Exports\Fieldtechs\ImportFormat\Format;
 use App\Imports\FieldTechs\Import;
 use App\Http\Controllers\Controller;
 use App\Libraries\ExportExcel;
