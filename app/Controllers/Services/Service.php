@@ -49,6 +49,7 @@ class Service extends Controller
         if ($search = $request->input("query")) {
             $query->where(function ($query) use ($search) {
                 $query->orwhere("name", "LIKE", "%$search%");
+                $query->orwhere("alias", "LIKE", "%$search%");
                 $query->orwhere("description", "LIKE", "%$search%");
             });
         }
