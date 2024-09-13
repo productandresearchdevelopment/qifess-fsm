@@ -521,9 +521,7 @@ class WorkOrder extends Controller
         $additionalUTP = null;
         $additionalDropCable = null;
         $fatPort = "";
-        $cpe = [];
         $bastURL = null;
-
 
         $ont  = ["type" => 'ont', "serialNumber" => "", "macaddressont" => ""];
         $stb1 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
@@ -535,8 +533,8 @@ class WorkOrder extends Controller
         }
 
         foreach ($wo->actions as $act) {
-            if(strtoupper($act->status->name) == 'ACTIVATION') {
-                foreach ($act->details as $extra) {
+            foreach ($act->details as $extra) {
+                if (strtoupper($act->status->name) == 'ACTIVATION') {
                     if (strtolower($extra->detail->name) == 'sn ont') $ont['serialNumber'] = $extra->value;
                     else if (strtolower($extra->detail->name) == 'mac address ont') $ont['macaddressont'] = $extra->value;
                     else if (strtolower($extra->detail->name) == 'tipe stb 1') $stb1['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
@@ -551,17 +549,15 @@ class WorkOrder extends Controller
 
                     else if (strtolower($extra->detail->name) == 'serial number registration') $serialNumber = $extra->value;
                     else if (strtolower($extra->detail->name) == 'serial number registration') $serialNumber = $extra->value;
+
+                } else if (strtoupper($act->status->name) == 'DE-ACTIVATION') {
+                    if (strtolower($extra->detail->name) == 'serial number unregistration') $serialNumber = $extra->value;
+                } else if (strtoupper($act->status->name) == 'PREPARATION') {
+                    if (strtolower($extra->detail->name) == 'ont serial number') $serialNumber = $extra->value;
+                } else if (strtoupper($act->status->name) == 'POST ACTIVATION') {
+                    if (strtolower($extra->detail->name) == 'excess material - drop wire') $additionalDropCable = $extra->value;
+                    else if (strtolower($extra->detail->name) == 'excess material - utp') $additionalUTP = $extra->value;
                 }
-            }
-            else if(strtoupper($act->status->name)  == 'DE-ACTIVATION'){
-                if (strtolower($extra->detail->name) == 'serial number unregistration') $serialNumber = $extra->value;
-            }
-            else if(strtoupper($act->status->name)  == 'PREPARATION'){
-                if (strtolower($extra->detail->name) == 'ont serial number') $serialNumber = $extra->value;
-            }
-            else if(strtoupper($act->status->name)  == 'POST ACTIVATION'){
-                if (strtolower($extra->detail->name) == 'excess material - drop wire') $additionalDropCable = $extra->value;
-                else if (strtolower($extra->detail->name) == 'excess material - utp') $additionalUTP = $extra->value;
             }
         }
 
@@ -1209,10 +1205,16 @@ class WorkOrder extends Controller
             $params['ttdFieldtechName'] = null;
             $params['ttdCustomerName'] = null;
             $params['lastNote'] = null;
+            $params['ispCustomerId'] = null;
 
             if ($data) {
                 foreach ($data->actions as $action) {
                     if (str_contains(strtoupper($action->status->name), 'INSTALLATION')) {
+                        foreach ($action->details as $detail) {
+                            if (strtoupper($detail->detail->name) == 'ONT TYPE') {
+                                $params['ontType'] = $detail->valueOption->option;
+                            }
+                        }
                         $params['time_start'] = $action->created_at;
                     } else if (str_contains(strtoupper($action->status->name), 'POST ACTIVATION')) {
                         $params['lastNote'] = $action->note;
@@ -1230,10 +1232,13 @@ class WorkOrder extends Controller
                                 $params['ttdCustomerName'] = $detail->value;
                             } else if (strtoupper($detail->detail->name) == 'TECHNICIAN NAME') {
                                 $params['ttdFieldtechName'] = $detail->value;
+                            } else if (strtoupper($detail->detail->name) == 'ISP CUSTOMER ID') {
+                                $params['ispCustomerId'] = $detail->value;
                             }
                         }
                     } else if (str_contains(strtoupper($action->status->name), 'ACTIVATION')) {
                         foreach ($action->details as $detail) {
+
                             if (strtoupper($detail->detail->name) == 'QOS REGISTRATION') {
                                 $params['internet'] = $detail->valueOption ? $detail->valueOption->option : null;
                             }
@@ -1243,15 +1248,19 @@ class WorkOrder extends Controller
                             else if (strtoupper($detail->detail->name) == 'MAC ADDRESS ONT') {
                                 $params['ontMac'] = $detail->value;
                             }
+
+                            else if (strtoupper($detail->detail->name) == 'TIPE STB 1') {
+                                $params['stbType1'] = $detail->valueOption ? $detail->valueOption->option : null;
+                            }
                         }
                     } else if (str_contains(strtoupper($action->status->name), 'PREPARATION')) {
                         foreach ($action->details as $detail) {
                             if ($detail->detail->type != 'file' && (strtoupper($detail->detail->name) == 'ONT TYPE')) {
-                                $params['ontType'] = $detail->valueOption ? $detail->valueOption->option : null;
+                                $params['*ontType'] = $detail->valueOption ? $detail->valueOption->option : null;
                             } else if ($detail->detail->type != 'file' && (strtoupper($detail->detail->name) == 'ONT SERIAL NUMBER')) {
                                 $params['ontSN'] = $detail->value;
                             } else if (strtoupper($detail->detail->name) == 'TYPE STB 1') {
-                                $params['stbType1'] = $detail->valueOption ? $detail->valueOption->option : null;
+                                $params['*stbType1'] = $detail->valueOption ? $detail->valueOption->option : null;
                             } else if (strtoupper($detail->detail->name) == 'SN STB 1') {
                                 $params['stbSN1'] = $detail->value;
                             } else if (strtoupper($detail->detail->name) == 'TYPE STB 2') {
@@ -1273,6 +1282,7 @@ class WorkOrder extends Controller
             else if (in_array($data->client_id, [5])) $view = 'reports.wo_balap_relab_pdf';
             else if (in_array($data->client_id, [2])) $view = 'reports.wo_balap_dankom_pdf';
             else if (in_array($data->client_id, [0])) $view = 'reports.wo_balap_viberlink_pdf';
+
 
             $html = view($view, $params);
             $pdf = PDF::loadHtml($html);
