@@ -521,9 +521,7 @@ class WorkOrder extends Controller
         $additionalUTP = null;
         $additionalDropCable = null;
         $fatPort = "";
-        $cpe = [];
         $bastURL = null;
-
 
         $ont  = ["type" => 'ont', "serialNumber" => "", "macaddressont" => ""];
         $stb1 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
@@ -535,8 +533,8 @@ class WorkOrder extends Controller
         }
 
         foreach ($wo->actions as $act) {
-            if(strtoupper($act->status->name) == 'ACTIVATION') {
-                foreach ($act->details as $extra) {
+            foreach ($act->details as $extra) {
+                if (strtoupper($act->status->name) == 'ACTIVATION') {
                     if (strtolower($extra->detail->name) == 'sn ont') $ont['serialNumber'] = $extra->value;
                     else if (strtolower($extra->detail->name) == 'mac address ont') $ont['macaddressont'] = $extra->value;
                     else if (strtolower($extra->detail->name) == 'tipe stb 1') $stb1['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
@@ -551,17 +549,15 @@ class WorkOrder extends Controller
 
                     else if (strtolower($extra->detail->name) == 'serial number registration') $serialNumber = $extra->value;
                     else if (strtolower($extra->detail->name) == 'serial number registration') $serialNumber = $extra->value;
+
+                } else if (strtoupper($act->status->name) == 'DE-ACTIVATION') {
+                    if (strtolower($extra->detail->name) == 'serial number unregistration') $serialNumber = $extra->value;
+                } else if (strtoupper($act->status->name) == 'PREPARATION') {
+                    if (strtolower($extra->detail->name) == 'ont serial number') $serialNumber = $extra->value;
+                } else if (strtoupper($act->status->name) == 'POST ACTIVATION') {
+                    if (strtolower($extra->detail->name) == 'excess material - drop wire') $additionalDropCable = $extra->value;
+                    else if (strtolower($extra->detail->name) == 'excess material - utp') $additionalUTP = $extra->value;
                 }
-            }
-            else if(strtoupper($act->status->name)  == 'DE-ACTIVATION'){
-                if (strtolower($extra->detail->name) == 'serial number unregistration') $serialNumber = $extra->value;
-            }
-            else if(strtoupper($act->status->name)  == 'PREPARATION'){
-                if (strtolower($extra->detail->name) == 'ont serial number') $serialNumber = $extra->value;
-            }
-            else if(strtoupper($act->status->name)  == 'POST ACTIVATION'){
-                if (strtolower($extra->detail->name) == 'excess material - drop wire') $additionalDropCable = $extra->value;
-                else if (strtolower($extra->detail->name) == 'excess material - utp') $additionalUTP = $extra->value;
             }
         }
 

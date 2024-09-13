@@ -7,12 +7,12 @@
 <table>
   <tr>
     <td align="center" valign="center" height="30" colspan="2" bgcolor="#EEEEEE" style="border: 1px solid #666">
-      <b>ROLE</b>
+      <b>ROLE</b>&nbsp;&nbsp;<span style="color: #FF0000;">(*)</span>
     </td>
     <td align="center" valign="center" height="30" width="30" rowspan="2" bgcolor="#EEEEEE"
-      style="border: 1px solid #666"><b>USERNAME</b></td>
+      style="border: 1px solid #666"><b>USERNAME</b>&nbsp;&nbsp;<span style="color: #FF0000;">(*)</span></td>
     <td align="center" valign="center" height="30" width="30" rowspan="2" bgcolor="#EEEEEE"
-      style="border: 1px solid #666"><b>NAME</b></td>
+      style="border: 1px solid #666"><b>NAME</b>&nbsp;&nbsp;<span style="color: #FF0000;">(*)</span></td>
     <td align="center" valign="center" height="30" colspan="2" bgcolor="#EEEEEE" style="border: 1px solid #666">
       <b>AREA</b>
     </td>
@@ -29,7 +29,7 @@
     <td align="center" valign="center" height="30" width="20" rowspan="2" bgcolor="#EEEEEE"
       style="border: 1px solid #666"><b>EMAIL</b></td>
     <td align="center" valign="center" height="30" width="30" rowspan="2" bgcolor="#EEEEEE"
-      style="border: 1px solid #666"><b>PASSWORD</b></td>
+      style="border: 1px solid #666"><b>PASSWORD</b>&nbsp;&nbsp;<span style="color: #FF0000;">(*)</span></td>
     <td align="center" valign="center" height="30" width="30" rowspan="2" bgcolor="#EEEEEE"
       style="border: 1px solid #666"><b>PHONE</b></td>
     <td align="center" valign="center" height="30" width="30" rowspan="2" bgcolor="#EEEEEE"
