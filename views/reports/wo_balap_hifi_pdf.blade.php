@@ -157,7 +157,7 @@
                         <td width="150"> <b>ID Pelanggan</b> <br> <i>Customer ID</i> </td>
                         <td width="10">:</td>
                         <td>
-                            <div class="divsquare">{{ $data->site ? $data->site->link_id : '-' }}</div>
+                            <div class="divsquare">{{ $ispCustomerId ? : '-' }}</div>
                         </td>
                     </tr>
                     <tr>
@@ -508,7 +508,7 @@
                     <tr>
                         <td style="height: 110px">
                             @if ($ttdFieldtech)
-                                <img style="height: 100px; margin-top: 15px; margin-left: 30px"
+                                <img style="height: 100px; margin-top: 15px;"
                                     src="{{ storage_path('app/public/uploads/' . $ttdFieldtech->filename) }}">
                                 <div style="height: 20px; padding: 0px; text-align: center">{{ $ttdFieldtechName }}
                                 </div>
@@ -525,8 +525,8 @@
                     <tr>
                         <td style="height: 110px">
                             @if ($ttdCustomerName)
-                                <img style="height: 100px; margin-top: 15px; margin-left: 30px"
-                                    src="{{ storage_path('app/public/uploads/' . $ttdFieldtech->filename) }}">
+                                <img style="height: 100px; margin-top: 15px;"
+                                    src="{{ storage_path('app/public/uploads/' . $ttdCustomer->filename) }}">
                                 <div style="height: 20px; padding: 0px; text-align: center">{{ $ttdCustomerName }}
                                 </div>
                             @else
