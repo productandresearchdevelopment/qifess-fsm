@@ -360,7 +360,7 @@ class WorkOrder extends Controller
                             if ($pushapi = $this->pushApi($wo, $action, $details)) {
                                 if ($pushapi->success) DB::commit();
                                 else DB::rollback();
-                                return (array)$pushapi;
+                                return (array) $pushapi;
                             }
                             DB::rollback();
                             return ['success' => false, 'message' => 'API ERROR'];
@@ -512,7 +512,7 @@ class WorkOrder extends Controller
             }
             else {
                 $result->message = "ERROR API LOGIN (".$login->status.") ". ($login->content ? json_encode($login->content) : '');
-                return (array) $result;
+                return $result;
             }
         }
 
@@ -646,7 +646,6 @@ class WorkOrder extends Controller
                         $result->message = "Success";
                     }
                     else if($response->status == 206){
-                        $result->success = false;
                         $result->message = "Hold, waiting from partner acknowledgement";
                     }
                     else {
