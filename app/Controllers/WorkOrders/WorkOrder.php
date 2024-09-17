@@ -549,12 +549,19 @@ class WorkOrder extends Controller
 
                     else if (strtolower($extra->detail->name) == 'serial number registration') $serialNumber = $extra->value;
                     else if (strtolower($extra->detail->name) == 'serial number registration') $serialNumber = $extra->value;
-
-                } else if (strtoupper($act->status->name) == 'DE-ACTIVATION') {
+                }
+                else if (strtoupper($act->status->name) == 'INSTALLATION') {
+                    if (strtolower($extra->detail->name) == 'fat port') {
+                        $fatPort = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
+                    }
+                }
+                else if (strtoupper($act->status->name) == 'DE-ACTIVATION') {
                     if (strtolower($extra->detail->name) == 'serial number unregistration') $serialNumber = $extra->value;
-                } else if (strtoupper($act->status->name) == 'PREPARATION') {
+                }
+                else if (strtoupper($act->status->name) == 'PREPARATION') {
                     if (strtolower($extra->detail->name) == 'ont serial number') $serialNumber = $extra->value;
-                } else if (strtoupper($act->status->name) == 'POST ACTIVATION') {
+                }
+                else if (strtoupper($act->status->name) == 'POST ACTIVATION') {
                     if (strtolower($extra->detail->name) == 'excess material - drop wire') $additionalDropCable = $extra->value;
                     else if (strtolower($extra->detail->name) == 'excess material - utp') $additionalUTP = $extra->value;
                 }
