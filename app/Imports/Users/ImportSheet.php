@@ -60,9 +60,6 @@ class ImportSheet implements ToCollection, WithChunkReading
                 ];
 
                 if (!Role::find($role_id)->first()) $error = "Undefined Role ID ($role_id)";
-                else if (!Vendor::find($data->vendor_id)) $error = "Undefined Area ($data->vendor_id)";
-                else if (!Client::find($data->client_id)) $error = "Undefined Client ($data->client_id)";
-                else if (!Fieldtech::find($data->fieldtech_id)) $error = "Undefined Fieldtech ($data->fieldtech_id)";
                 else {
                     DB::beginTransaction();
                     try {
