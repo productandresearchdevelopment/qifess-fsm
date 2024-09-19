@@ -315,7 +315,7 @@ class User extends Controller
                 }
             ],
             [
-                'text' => 'FIELDTECH',
+                'text' => 'TEAM',
                 'dataIndex' => 'fieldtech',
                 'width' => 200,
                 'renderer' => function ($e) {

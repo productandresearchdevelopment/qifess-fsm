@@ -33,63 +33,73 @@ class ImportSheet implements ToCollection, WithChunkReading
         $log = [];
 
         for ($i = $startLine; $i < count($rows); $i++) {
-            if ($role_id = $rows[$i][0]) {
-                $error = null;
-                $data = (object) [
-                    'role_id' => $role_id,
-                    'username' => $rows[$i][2],
-                    'name' => $rows[$i][3],
-                    'vendor_id' => $rows[$i][4] ?? null,
-                    'fieldtech_id' => $rows[$i][6] ?? null,
-                    'activities' => $rows[$i][8] ?? null,
-                    'owners' => $rows[$i][9] ?? null,
-                    'client_id' => $rows[$i][10] ?? null,
-                    'email' => $rows[$i][12] ?? null,
-                    'password' => Hash::make($rows[$i][13]),
-                    'token_fcm' => null,
-                    'token_api' => null,
-                    'token_api_expired_at' => null,
-                    'phone' => $rows[$i][14] ?? null,
-                    'photo' => null,
-                    'description' => $rows[$i][15] ?? null,
-                    'remember_token' => null,
-                    'last_ip' => null,
-                    'last_module' => null,
-                    'last_url' => null,
-                    'last_active' => null,
+            $role_id = $rows[$i][0];
+
+            if (empty($role_id)) {
+                $log[] = [
+                    'row' => ($i + 1),
+                    'success' => false,
+                    'message' => "Undefined Role ID (empty)"
                 ];
-
-                if (!Role::find($role_id)->first()) $error = "Undefined Role ID ($role_id)";
-                else {
-                    DB::beginTransaction();
-                    try {
-                        $user = User::create((array) $data);
-
-                        if ($user) {
-                            DB::commit();
-                            $totalSuccess++;
-                        } else {
-                            $error = "Error on Create User";
-                            DB::rollback();
-                        }
-                    } catch (QueryException $e) {
-                        DB::rollback();
-                        $error = $e->getMessage();
-                    }
-                }
-
-
-                if ($error) {
-                    $log[] = [
-                        'row' => ($i + 1),
-                        'success' => false,
-                        'message' => $error
-                    ];
-                    $totalError++;
-                }
-
+                $totalError++;
                 $totalRow++;
+                continue;
             }
+
+            $error = null;
+            $data = (object) [
+                'role_id' => $role_id,
+                'username' => $rows[$i][2],
+                'name' => $rows[$i][3],
+                'vendor_id' => $rows[$i][4] ?? null,
+                'fieldtech_id' => $rows[$i][6] ?? null,
+                'activities' => $rows[$i][8] ?? null,
+                'owners' => $rows[$i][9] ?? null,
+                'client_id' => $rows[$i][10] ?? null,
+                'email' => $rows[$i][12] ?? null,
+                'password' => Hash::make($rows[$i][13]),
+                'token_fcm' => null,
+                'token_api' => null,
+                'token_api_expired_at' => null,
+                'phone' => $rows[$i][14] ?? null,
+                'photo' => null,
+                'description' => $rows[$i][15] ?? null,
+                'remember_token' => null,
+                'last_ip' => null,
+                'last_module' => null,
+                'last_url' => null,
+                'last_active' => null,
+            ];
+
+            if (!Role::find($role_id)) {
+                $error = "Undefined Role ID ($role_id)";
+            } else {
+                DB::beginTransaction();
+                try {
+                    $user = User::create((array) $data);
+                    if ($user) {
+                        DB::commit();
+                        $totalSuccess++;
+                    } else {
+                        $error = "Error on Create User";
+                        DB::rollback();
+                    }
+                } catch (QueryException $e) {
+                    DB::rollback();
+                    $error = $e->getMessage();
+                }
+            }
+
+            if ($error) {
+                $log[] = [
+                    'row' => ($i + 1),
+                    'success' => false,
+                    'message' => $error
+                ];
+                $totalError++;
+            }
+
+            $totalRow++;
         }
 
         $this->logs = [
@@ -99,6 +109,7 @@ class ImportSheet implements ToCollection, WithChunkReading
             'errorLog' => $log
         ];
     }
+
 
     public function chunkSize(): int
     {

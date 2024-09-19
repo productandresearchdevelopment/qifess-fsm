@@ -17,7 +17,7 @@
       <b>AREA</b>
     </td>
     <td align="center" valign="center" height="30" colspan="2" bgcolor="#EEEEEE" style="border: 1px solid #666">
-      <b>FIELDTECH</b>
+      <b>TEAM</b>
     </td>
     <td align="center" valign="center" height="30" width="15" rowspan="2" bgcolor="#EEEEEE"
       style="border: 1px solid #666"><b>ACTIVITIES</b></td>
@@ -42,7 +42,8 @@
     <td align="center" valign="center" height="30" width="30" bgcolor="#EEEEEE" style="border: 1px solid #666">
       <b>NAME</b>
     </td>
-    <td align="center" valign="center" height="30" width="13" bgcolor="#EEEEEE" style="border: 1px solid #666">
+    <td align="center" valign="center" height="30" width="13" bgcolor="#EEEEEE"
+      style="border: 1px solid #666">
       <b>ID</b>
     </td>
     <td align="center" valign="center" height="30" width="30" bgcolor="#EEEEEE"
@@ -68,7 +69,7 @@
       <td></td>
       <td>=VLOOKUP(E{{ $i + 5 }},AREA!$A$3:$B${{ $vendors->count() + 3 }}, 2, FALSE)</td>
       <td></td>
-      <td>=VLOOKUP(G{{ $i + 5 }},FIELDTECH!$A$3:$B${{ $fieldtech->count() + 3 }}, 2, FALSE)</td>
+      <td>=VLOOKUP(G{{ $i + 5 }},TEAM!$A$3:$B${{ $fieldtech->count() + 3 }}, 2, FALSE)</td>
       <td></td>
       <td></td>
       <td></td>
