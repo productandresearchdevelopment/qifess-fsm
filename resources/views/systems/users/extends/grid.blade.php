@@ -379,7 +379,7 @@
             }
           },
           {
-            text: "FIELDTECH",
+            text: "TEAM",
             dataIndex: 'fieldtech',
             width: 200,
             renderer: function(val, meta) {
