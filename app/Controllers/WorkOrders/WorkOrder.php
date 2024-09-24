@@ -522,6 +522,7 @@ class WorkOrder extends Controller
         $additionalDropCable = null;
         $fatPort = "";
         $bastURL = null;
+        $evidenceURL = null;
 
         $ont  = ["type" => 'ont', "serialNumber" => "", "macaddressont" => ""];
         $stb1 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
@@ -530,6 +531,7 @@ class WorkOrder extends Controller
 
         if($action->status->name == 'POST ACTIVATION'){
             $bastURL = route('wo.export.balap', $wo->id);
+            $evidenceURL = route('wo.export.pdf', $wo->id);
         }
 
         foreach ($wo->actions as $act) {
@@ -638,6 +640,7 @@ class WorkOrder extends Controller
             'additionalUTP' => (float) $additionalUTP,
             'additionalDropCable' => (float) $additionalDropCable,
             'bastURL' => $bastURL,
+            'evidenceURL' => $evidenceURL,
             'fatport' => (string) $fatPort,
             'cpe' => $cpe
         ];
