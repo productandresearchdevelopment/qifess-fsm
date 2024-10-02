@@ -1243,7 +1243,7 @@ class WorkOrder extends Controller
                                 $params['ttdFieldtechName'] = $detail->value;
                             } else if (strtoupper($detail->detail->name) == 'ISP CUSTOMER ID') {
                                 $params['ispCustomerId'] = $detail->value;
-                            }
+                            } 
                         }
                     } else if (str_contains(strtoupper($action->status->name), 'ACTIVATION')) {
                         foreach ($action->details as $detail) {

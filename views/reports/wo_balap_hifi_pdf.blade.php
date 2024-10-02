@@ -121,7 +121,8 @@
                         <td>:</td>
                         <td>
                             <div class="divsquare">
-                                {{ $data->close_date ? date('d/m/Y', strtotime($data->close_date)) : '-' }}</div>
+
+                                {{ $time_finish ? date('d/m/Y', strtotime($time_finish)) : '-' }}</div>
                         </td>
                     </tr>
                     <tr>
