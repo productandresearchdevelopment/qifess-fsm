@@ -525,14 +525,10 @@
                     </tr>
                     <tr>
                         <td style="height: 110px">
-                            @if ($ttdCustomerName)
                                 <img style="height: 100px; margin-top: 15px;"
                                     src="{{ storage_path('app/public/uploads/' . $ttdCustomer->filename) }}">
                                 <div style="height: 20px; padding: 0px; text-align: center">{{ $ttdCustomerName }}
                                 </div>
-                            @else
-                                <div style="height: 110px"></div>
-                            @endif
                         </td>
                     </tr>
                     <tr>
