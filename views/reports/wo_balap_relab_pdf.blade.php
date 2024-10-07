@@ -246,7 +246,7 @@
             <td width="33%" align="center">
                 @if($ttdCustomer)
                     <img style="height: 100px;" src="{{ storage_path("app/public/uploads/".$ttdCustomer->filename) }}">
-                    <div>{{ $ttdCustomerName }}</div>
+                    <div>{{ $ttdCustomerName ?: $data->site->name }}</div>
                 @else
                     <div style="height: 120px"></div>
                 @endif
