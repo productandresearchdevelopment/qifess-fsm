@@ -68,7 +68,7 @@
             <td width="20%">Nomor / Number</td>
             <td width="20%">: {{ $data->no_wo }}</td>
             <td width="20%">Customer ID</td>
-            <td width="40%">: {{ $data->site->link_id }}</td>
+            <td width="40%">: {{ $ispCustomerId ?: '-' }}</td>
         </tr>
         <tr>
             <td>BAL Date / Tgl BAL</td>
@@ -391,7 +391,7 @@
             <td width="33%" align="center">
                 @if($ttdCustomer)
                     <img style="height: 100px;" src="{{ storage_path("app/public/uploads/".$ttdCustomer->filename) }}">
-                    <div>{{ $ttdCustomerName }}</div>
+                    <div>{{ $ttdCustomerName ?: $data->site->name }}</div>
                 @else
                     <div style="height: 120px"></div>
                 @endif

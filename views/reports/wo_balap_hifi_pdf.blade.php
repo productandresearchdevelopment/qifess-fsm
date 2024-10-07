@@ -527,7 +527,7 @@
                         <td style="height: 110px">
                                 <img style="height: 100px; margin-top: 15px;"
                                     src="{{ storage_path('app/public/uploads/' . $ttdCustomer->filename) }}">
-                                <div style="height: 20px; padding: 0px; text-align: center">{{ $ttdCustomerName }}
+                                <div style="height: 20px; padding: 0px; text-align: center">{{ $ttdCustomerName ?: $data->site->name }}
                                 </div>
                         </td>
                     </tr>
