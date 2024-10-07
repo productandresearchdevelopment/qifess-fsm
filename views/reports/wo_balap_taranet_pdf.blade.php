@@ -67,11 +67,11 @@
             <td width="20%">Number</td>
             <td width="20%">: {{ $data->no_wo }}</td>
             <td width="20%">Customer ID</td>
-            <td width="40%">: {{ $data->site->link_id }}</td>
+            <td width="40%">: {{ $ispCustomerId }}</td>
         </tr>
         <tr>
             <td>Date</td>
-            <td>: {{ $data->closed_at ? date('d/m/Y', strtotime($data->closed_at)) : '-' }}</td>
+            <td>: {{ $time_finish ? date('d/m/Y', strtotime($time_finish)) : '-' }}</td>
             <td>Name</td>
             <td>: {{ $data->site->name }}</td>
         </tr>
@@ -255,7 +255,7 @@
                 @endif
                 <div style="padding: 10px 20px; border-top: 1px solid #333333; text-align: center; margin: 1px 60px;">Technician</div>
             </td>
-            
+
             <td width="33%" align="center">
                 @if($ttdCustomer)
                     <img style="height: 100px;" src="{{ storage_path("app/public/uploads/".$ttdCustomer->filename) }}">

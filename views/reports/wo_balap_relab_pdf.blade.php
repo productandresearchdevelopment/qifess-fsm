@@ -66,7 +66,7 @@
             <td></td>
             <td>ID Customer</td>
             <td>:</td>
-            <td align="right">{{ $data->site->link_id ?: '-' }}</td>
+            <td align="right">{{ $ispCustomerId ?: '-' }}</td>
         </tr>
     </table>
 
@@ -137,24 +137,24 @@
                     <table style="line-height: 30px;">
                         <tr>
                             <td width="33%">
-                                [ &nbsp; ] &nbsp; Wirehome 30
+                                [ @if(in_array($data->service_id, [6])) X @else &nbsp; @endif ] &nbsp; Wirehome 30
                             </td>
                             <td width="33%">
-                                [ &nbsp; ] &nbsp; Wirehome 100
+                                [ @if(in_array($data->service_id, [8])) X @else &nbsp; @endif ] &nbsp; Wirehome 100
                             </td>
                             <td width="33%">
-                                [ &nbsp; ] &nbsp; AirWire Home 20
+                                [ @if(in_array($data->service_id, [14])) X @else &nbsp; @endif ] &nbsp; AirWire Home 20
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                [ &nbsp; ] &nbsp; Wirehome 50
+                                [ @if(in_array($data->service_id, [7])) X @else &nbsp; @endif ] &nbsp; Wirehome 50
                             </td>
                             <td>
-                                [ &nbsp; ] &nbsp; Wirehome 200
+                                [ @if(in_array($data->service_id, [11])) X @else &nbsp; @endif ] &nbsp; Wirehome 200
                             </td>
                             <td>
-                                [ &nbsp; ] &nbsp; AirWire Home 30
+                                [ @if(in_array($data->service_id, [6])) X @else &nbsp; @endif ] &nbsp; AirWire Home 30
                             </td>
                         </tr>
                         <tr>
@@ -215,13 +215,13 @@
         </table>
 
         <br>
-        Catatan : 
+        Catatan :
         <br> {{ $lastNote ?: '-'}}
 
     <br><br>
         * Hasil Tes : &nbsp; &nbsp;
-        [X] Youtube &nbsp; &nbsp;  &nbsp; 
-        [X] Speedtest Upload ……… &nbsp; &nbsp;  &nbsp; 
+        [X] Youtube &nbsp; &nbsp;  &nbsp;
+        [X] Speedtest Upload ……… &nbsp; &nbsp;  &nbsp;
         [X] Speedtest Download ……….
 
     </p>
@@ -242,7 +242,7 @@
                 <div style="height: 120px"></div>
                 <div style="padding: 10px 20px; border-top: 1px solid #333333; text-align: center; margin: 1px 60px;">Petugas Admin</div>
             </td>
-            
+
             <td width="33%" align="center">
                 @if($ttdCustomer)
                     <img style="height: 100px;" src="{{ storage_path("app/public/uploads/".$ttdCustomer->filename) }}">
