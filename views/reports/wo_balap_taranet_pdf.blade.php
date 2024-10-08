@@ -157,7 +157,7 @@
             </td>
         </tr>
         <tr>
-            <td>OLT</td>
+            <td>ODP</td>
             <td>: -</td>
             <td align="center">STREAMING</td>
             <td>
@@ -165,7 +165,7 @@
             </td>
         </tr>
         <tr>
-            <td>ODF</td>
+            <td>Spliter</td>
             <td>: -</td>
             <td align="center">BROWSING</td>
             <td>
@@ -173,24 +173,21 @@
             </td>
         </tr>
         <tr>
-            <td>ODP</td>
-            <td>: -</td>
+            <td>MAC Address</td>
+            <td>: {{ $ontMac ?: '-' }}</td>
             <td align="center">SPEEDTEST</td>
             <td>
                 <img style="height: 16px;" src="{{ public_path("images/check.jpg") }}">
             </td>
         </tr>
         <tr>
-            <td>Spliter</td>
-            <td>: -</td>
+            <td colspan="2" rowspan="2"></td>
             <td align="center">TEST CALL</td>
             <td>
                 <img style="height: 16px;" src="{{ public_path("images/uncheck.jpg") }}">
             </td>
         </tr>
         <tr>
-            <td>MAC Address</td>
-            <td>: {{ $ontMac ?: '-' }}</td>
             <td align="center">VIDEO/TV</td>
             <td>
                 <img style="height: 16px;" src="{{ public_path("images/uncheck.jpg") }}">
@@ -205,13 +202,13 @@
             <td colspan="4" align="center"><b>Installation Notes</b></td>
         </tr>
         <tr>
-            <td colspan="4" style="height: 100px"> {{ $OntSN ?: '-'}} </td>
+            <td colspan="4" style="height: 100px"></td>
         </tr>
     </table>
 
     <table class="tableborder" style="font-size: 11px">
         <tr>
-            <td colspan="5" align="center"><b>Installation Material</b></td>
+            <td colspan="5" align="center"><b>Installation Material & Equipment</b></td>
         </tr>
         <tr>
             <td align="center">Catalog Information</td>
@@ -225,7 +222,7 @@
             <td>{{ $ontType ?: '-' }}</td>
             <td></td>
             <td></td>
-            <td></td>
+            <td> {{ $OntSN ?: '-'}} </td>
         </tr>
         <tr>
             <td>Drop Cable</td>

@@ -143,7 +143,7 @@
                                 [ @if(in_array($data->service_id, [8])) X @else &nbsp; @endif ] &nbsp; Wirehome 100
                             </td>
                             <td width="33%">
-                                [ @if(in_array($data->service_id, [14])) X @else &nbsp; @endif ] &nbsp; AirWire Home 20
+                                [ &nbsp; ] &nbsp; Paket Lainnya
                             </td>
                         </tr>
                         <tr>
@@ -154,14 +154,14 @@
                                 [ @if(in_array($data->service_id, [11])) X @else &nbsp; @endif ] &nbsp; Wirehome 200
                             </td>
                             <td>
-                                [ @if(in_array($data->service_id, [6])) X @else &nbsp; @endif ] &nbsp; AirWire Home 30
+                                _______________________________
                             </td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <td colspan="3">
-                                [ &nbsp; ] &nbsp; Paket Lainnya _______________________________________________
+                                [ &nbsp; ] &nbsp; Paket Lainnya ________________________________________
                             </td>
-                        </tr>
+                        </tr> -->
                     </table>
                 </td>
             </tr>

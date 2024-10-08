@@ -320,7 +320,7 @@
 
             <td width="100" align="right">Buruk / Bad</td>
             <td width="20" align="right">
-                <img style="height: 16px;" src="{{ public_path('images/check.jpg') }}">
+                <img style="height: 16px;" src="{{ public_path('images/uncheck.jpg') }}">
             </td>
 
             <td width="100" align="right">PING</td>
@@ -348,7 +348,7 @@
 
             <td align="right">Buruk / Bad</td>
             <td align="right">
-                <img style="height: 16px;" src="{{ public_path('images/check.jpg') }}">
+                <img style="height: 16px;" src="{{ public_path('images/uncheck.jpg') }}">
             </td>
 
             <td align="right">BROWSING</td>
@@ -363,8 +363,13 @@
 
             <td align="right">VIDEO / TV</td>
             <td align="right">
+                @if ($totalStb)
+                <img style="height: 16px;"
+                    src="{{ public_path($totalStb ? 'images/check.jpg' : 'images/check.jpg') }}">
+                @else
                 <img style="height: 16px;"
                     src="{{ public_path($totalStb ? 'images/check.jpg' : 'images/uncheck.jpg') }}">
+                @endif
             </td>
             <td align="right">&nbsp;</td>
         </tr>
