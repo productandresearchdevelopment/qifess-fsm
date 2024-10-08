@@ -192,10 +192,10 @@
             </td>
         </tr>
         <tr>
-            <td>OLT</td>
+            <td>ODP</td>
             <td>: -</td>
             <td>
-                <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/check.jpg") }}">
+                <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/uncheck.jpg") }}">
                 <span style="vertical-align: middle;">TEST CALL</span>
             </td>
             <td>
@@ -204,25 +204,16 @@
             </td>
         </tr>
         <tr>
-            <td>ODF</td>
+            <td>Spliter</td>
             <td>: -</td>
             <td>
                 <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/check.jpg") }}">
                 <span style="vertical-align: middle;">SPEED TEST</span>
             </td>
             <td>
-                <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/check.jpg") }}">
+                <img style="height: 16px; vertical-align: middle;" src="{{ public_path("images/uncheck.jpg") }}">
                 <span style="vertical-align: middle;">VIDEO / TV</span>
             </td>
-        </tr>
-        <tr>
-            <td>ODP</td>
-            <td>: -</td>
-            <td colspan="2" rowspan="2"></td>
-        </tr>
-        <tr>
-            <td>Spliter</td>
-            <td>: -</td>
         </tr>
 
         {{-- SECTION 4  --}}
@@ -241,7 +232,7 @@
                 <img style="height: 16px; vertical-align: middle; margin-left: 20px;" src="{{ public_path("images/uncheck.jpg") }}">
                 <span style="vertical-align: middle;">NOT</span>
             </td>
-            <td colspan="2" rowspan="5"style="height: 100px"> {{ $OntSN ?: '-'}} </td>
+            <td colspan="2" rowspan="5"style="height: 100px"> </td>
         </tr>
         <tr>
             <td>EQUIPMENT INSTALLATION</td>
@@ -297,27 +288,20 @@
         </tr>
         <tr>
             <td align="center">1</td>
-            <td>ONT</td>
-            <td>{{ $ontType ?: '-' }}</td>
-            <td>1 Unit</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td align="center">2</td>
             <td>DROP CABLE</td>
             <td></td>
             <td>{{ $emWire ?: 0 }} Meter</td>
             <td></td>
         </tr>
         <tr>
-            <td align="center">3</td>
+            <td align="center">2</td>
             <td>CABLE DUCT</td>
             <td></td>
             <td></td>
             <td></td>
         </tr>
         <tr>
-            <td align="center">4</td>
+            <td align="center">3</td>
             <td>CONNECTOR</td>
             <td></td>
             <td></td>
@@ -363,9 +347,9 @@
             <td align="center">Quantity</td>
         </tr>
         <tr>
-            <td  style="height: 100px"  ></td>
-            <td></td>
-            <td></td>
+            <td  style="height: 100px"  >1</td>
+            <td>{{ $ontType }}</td>
+            <td>{{ $OntSN }}</td>
             <td></td>
             <td></td>
         </tr>
