@@ -548,8 +548,6 @@ class WorkOrder extends Controller
                     else if (strtolower($extra->detail->name) == 'tipe stb 3') $stb3['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
                     else if (strtolower($extra->detail->name) == 'sn stb 3') $stb3['serialNumber'] = $extra->value;
                     else if (strtolower($extra->detail->name) == 'mac address stb 3') $stb3['macAddressstb'] = $extra->value;
-
-                    else if (strtolower($extra->detail->name) == 'serial number registration') $serialNumber = $extra->value;
                     else if (strtolower($extra->detail->name) == 'serial number registration') $serialNumber = $extra->value;
                 }
                 else if (strtoupper($act->status->name) == 'INSTALLATION') {
@@ -564,8 +562,8 @@ class WorkOrder extends Controller
                     if (strtolower($extra->detail->name) == 'ont serial number') $serialNumber = $extra->value;
                 }
                 else if (strtoupper($act->status->name) == 'POST ACTIVATION') {
-                    if (strtolower($extra->detail->name) == 'excess material - drop wire') $additionalDropCable = $extra->value;
-                    else if (strtolower($extra->detail->name) == 'excess material - utp') $additionalUTP = $extra->value;
+                    if (strtolower($extra->detail->name) == 'kelebihan kabel dw') $additionalDropCable = $extra->value;
+                    else if (strtolower($extra->detail->name) == 'kelebihan kabel utp') $additionalUTP = $extra->value;
                 }
             }
         }

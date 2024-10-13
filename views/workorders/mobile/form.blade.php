@@ -141,7 +141,7 @@
                     });
                 },
                 number: function(detail){
-                        let tpl = '<label>{label}</label><ons-input id="{id}" class="{inputnumber}" modifier="material underbar" value="{value}"></ons-input>';
+                        let tpl = '<label>{label}</label><ons-input id="{id}" type="number" modifier="material underbar" value="{value}"></ons-input>';
                         return String.format(tpl, {
                             id: prefixId+detail.id,
                             label: detail.name,
