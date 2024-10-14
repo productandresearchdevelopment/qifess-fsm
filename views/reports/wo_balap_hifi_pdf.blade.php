@@ -421,7 +421,7 @@
         </tr>
         <tr>
             <td>1</td>
-            <td>Excess Material - UTP</td>
+            <td><b>Kelebihan Kabel UTP</b> / <i>Excess Material - UTP</i></td>
             <td>{{ $emUtp ?: 0 }}</td>
             <td>Meter</td>
             <td>&nbsp;</td>
@@ -430,7 +430,7 @@
         </tr>
         <tr>
             <td>2</td>
-            <td>Excess Material - Drop Wire</td>
+            <td><b>Kelebihan Kabel DW</b> / <i>Excess Material - Drop Wire</i></td>
             <td> {{ $emWire ?: 0 }} </td>
             <td>Meter</td>
             <td>&nbsp;</td>
