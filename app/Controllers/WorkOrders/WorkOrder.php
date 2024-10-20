@@ -147,7 +147,7 @@ class WorkOrder extends Controller
                     $query->where('name', 'LIKE', "%$search%");
                 });
                 $query->orWhere('id', 'LIKE', "%$search");
-                $query->orWhere('no_wo', 'LIKE', "%$search");
+                $query->orWhere('no_wo', 'LIKE', "%$search%");
                 $query->orWhere('description', 'LIKE', "%$search%");
             });
         }
