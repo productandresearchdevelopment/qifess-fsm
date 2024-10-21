@@ -363,12 +363,12 @@
 
             <td align="right">VIDEO / TV</td>
             <td align="right">
-                @if ($totalStb)
+                @if ($totalStb == 352 || $totalStb == NULL)
                 <img style="height: 16px;"
-                    src="{{ public_path($totalStb ? 'images/check.jpg' : 'images/check.jpg') }}">
+                    src="{{ public_path('images/uncheck.jpg') }}">
                 @else
                 <img style="height: 16px;"
-                    src="{{ public_path($totalStb ? 'images/check.jpg' : 'images/uncheck.jpg') }}">
+                    src="{{ public_path('images/check.jpg') }}">
                 @endif
             </td>
             <td align="right">&nbsp;</td>

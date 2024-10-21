@@ -137,7 +137,7 @@
                     <table style="line-height: 30px;">
                         <tr>
                             <td width="33%">
-                                [ @if(in_array($data->service_id, [6])) X @else &nbsp; @endif ] &nbsp; Wirehome 30
+                                [ @if(in_array($data->service_id, [6]) || in_array($data->site->service_id, [6])) X @else &nbsp; @endif ] &nbsp; Wirehome 30
                             </td>
                             <td width="33%">
                                 [ @if(in_array($data->service_id, [8])) X @else &nbsp; @endif ] &nbsp; Wirehome 100
