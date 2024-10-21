@@ -65,7 +65,8 @@
           },
           {
             name: 'vendor_name',
-            fieldLabel: 'Vendor Name'
+            fieldLabel: 'Vendor Name',
+              allowBlank: false
           },
         ],
         buttons: [{
