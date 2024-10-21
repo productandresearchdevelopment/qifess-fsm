@@ -147,7 +147,7 @@ class WorkOrder extends Controller
                     $query->where('name', 'LIKE', "%$search%");
                 });
                 $query->orWhere('id', 'LIKE', "%$search");
-                $query->orWhere('no_wo', 'LIKE', "%$search");
+                $query->orWhere('no_wo', 'LIKE', "%$search%");
                 $query->orWhere('description', 'LIKE', "%$search%");
             });
         }
@@ -299,7 +299,7 @@ class WorkOrder extends Controller
         if($date && $fieldtech && $slot){
             $rec = Wo::where('fieldtech_id', $fieldtech)
                     ->where('start_date', $date)
-                    ->where('activity_id', 1)
+                    ->where('activity_id', 0)
                     ->where('slot_id', $slot);
             if($id) $rec->where('id', '<>', $id);
             return $rec->first();
@@ -537,7 +537,10 @@ class WorkOrder extends Controller
         foreach ($wo->actions as $act) {
             foreach ($act->details as $extra) {
                 if (strtoupper($act->status->name) == 'ACTIVATION') {
-                    if (strtolower($extra->detail->name) == 'sn ont') $ont['serialNumber'] = $extra->value;
+                    if (strtolower($extra->detail->name) == 'sn ont') {
+                        $ont['serialNumber'] = $extra->value;
+                        $serialNumber = $extra->value;
+                    }
                     else if (strtolower($extra->detail->name) == 'mac address ont') $ont['macaddressont'] = $extra->value;
                     else if (strtolower($extra->detail->name) == 'tipe stb 1') $stb1['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
                     else if (strtolower($extra->detail->name) == 'sn stb 1') $stb1['serialNumber'] = $extra->value;
