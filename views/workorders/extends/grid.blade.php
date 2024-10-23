@@ -288,7 +288,7 @@
                                     return data ? data.name : '';
                                 }
                             },
-                            {text: "DATE", dataIndex: 'created_at', align: 'center', width: 100, renderer: Ext.util.Format.dateRenderer('d/m/Y')},
+                            {text: "DATE", dataIndex: 'created_at', align: 'center', width: 100, sortable: true, renderer: Ext.util.Format.dateRenderer('d/m/Y')},
                         ]
                     },
 
