@@ -22,6 +22,7 @@
                 {name: 'start_date', type: 'date'},
                 {name: 'expire_date', type: 'date'},
                 {name: 'slot_id', type: 'int'},
+                {name: 'is_hold', type: 'int'},
                 {name: 'close_date', type: 'date'},
                 {name: 'last_action', type: 'int'},
                 {name: 'created_at', type: 'date'},
@@ -155,7 +156,21 @@
                 {id: 'client', name: 'Client', items: clients},
                 @endif
 
-
+                @if (!$archive)
+                {
+                    id: 'hold',
+                    name: 'Status',
+                    items: [{
+                        id: 1,
+                        name: 'ACTIVE',
+                    },
+                    {
+                        id: 2,
+                        name: 'HOLD'
+                    }
+                    ],
+                },
+                @endif
             ]
 
             me.grid  = Ext.create('Ext.grid.Panel', {
@@ -206,6 +221,16 @@
                         renderer: function(val, meta){
                             let data = find(activities, val);
                             return data ? me.renderBox(data.alias, data.color, data.name, meta) : '';
+                        }
+                    },
+                    {
+                        text: "Hold",
+                        dataIndex: 'is_hold',
+                        width: 80,
+                        align: 'center',
+                        renderer: function(val, meta) {
+                            console.log(val === 1, 'val', meta, 'meta');
+                            return val === 1? me.renderBox('HLD', 'f00', 'Hold', meta) : '';
                         }
                     },
 
@@ -288,7 +313,7 @@
                                     return data ? data.name : '';
                                 }
                             },
-                            {text: "DATE", dataIndex: 'created_at', align: 'center', width: 100, renderer: Ext.util.Format.dateRenderer('d/m/Y')},
+                            {text: "DATE", dataIndex: 'created_at', align: 'center', width: 100, sortable: true, renderer: Ext.util.Format.dateRenderer('d/m/Y')},
                         ]
                     },
 
@@ -340,35 +365,38 @@
         }
 
         me.beforeShowMenu = function(obj) {
-            Ext.getCmp('separator-1').hide();
+        Ext.getCmp('separator-1').hide();
 
-            let resultShow = false;
-            let recs = me.getRecs(true);
-            let items = obj.items.items;
-            items.forEach(function (item) {
-                if(item.id.substr(0,11) == 'status-menu'){
-                    item.hide();
-                    if(recs.length == 1){
-                        let rec = recs[0];
-                        let activity = rec.activity_id;
-                        let status = rec.last_action.status_id;
-                        let menu = item.value;
-                        if(menu.show_on.indexOf(status) >= 0){
-                            if(menu.activities.indexOf(activity) >= 0){
-                                resultShow = true;
-                                item.show();
+        let resultShow = false;
+        let recs = me.getRecs(true);
+        let items = obj.items.items;
 
-                                @if(($user->hasRoute(['wo.create','wo.edit','wo.delete']) && !$archive))
-                                Ext.getCmp('separator-1').show();
-                                @endif
-                            }
-                        }
-                    }
+        items.forEach(function(item) {
+            if (item.id.substr(0, 11) == 'status-menu') {
+            item.hide();
+            if (recs.length == 1) {
+                let rec = recs[0];
+                let activity = rec.activity_id;
+                let status = rec.last_action.status_id;
+                let isHold = rec.is_hold;
+                let menu = item.value;
+                if ((isHold != 1) && menu.show_on.indexOf(status) >= 0) {
+                if (menu.activities.indexOf(activity) >= 0) {
+                    resultShow = true;
+                    item.show();
+
+                    @if ($user->hasRoute(['wo.create', 'wo.edit', 'wo.delete']) && !$archive)
+                    Ext.getCmp('separator-1').show();
+                    @endif
                 }
-            })
-            @if(!$user->hasRoute(['wo.create','wo.edit','wo.delete']))
-                return resultShow;
-            @endif
-        }
+                }
+            }
+            }
+        });
+
+        @if (!$user->hasRoute(['wo.create', 'wo.edit', 'wo.delete']))
+            return resultShow;
+        @endif
+        }
     }
 </script>

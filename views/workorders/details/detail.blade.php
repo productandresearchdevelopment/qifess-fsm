@@ -303,6 +303,25 @@
       dataTpl.link_pdf = '{{ route('wo.export.pdf') }}/' + data.id;
       dataTpl.link_balap = '{{ route('wo.export.balap') }}/' + data.id;
 
+      dataTpl.element_reload = dataTpl.is_hold == 1 ? String.format(
+        `<form id="dataForm" style="display:inline;">
+        @csrf
+        <input type="hidden" name="start_date" value="${dataTpl.start_date || ''}"/>
+        <input type="hidden" name="fieldtech_id" value="${dataTpl.fieldtech_id || ''}"/>
+        <input type="hidden" name="slot_id" value="${dataTpl.slot_id || ''}"/>
+        <input type="hidden" name="activity_id" value="${dataTpl.activity_id || ''}"/>
+        <input type="hidden" name="site_id" value="${dataTpl.site_id || ''}"/>
+        <input type="hidden" name="remove_site_id" value="${dataTpl.remove_site_id || ''}"/>
+        <input type="hidden" name="client_id" value="${dataTpl.client_id || ''}"/>
+        <input type="hidden" name="service_id" value="${dataTpl.service_id || ''}"/>
+        <input type="hidden" name="owner_id" value="${dataTpl.owner_id || ''}"/>
+        <input type="hidden" name="description" value="${dataTpl.description || ''}"/>
+        <input type="hidden" name="no_wo" value="${dataTpl.no_wo || ''}"/>
+        <input type="hidden" name="expire_date" value="${dataTpl.expire_date || ''}"/>
+        <button type="button" class="btn" id="reload" style="background: #ff8400;width: 100%; border: none; margin: 0;">RELOAD</button>
+    </form>`
+      ) : null;
+
       // ACTIONS TPL ------------------------------------------------
       let actionTpl = [];
       dataTpl.actions.forEach(function(action) {
@@ -510,6 +529,33 @@
           };
 
           $(me.dom_id).html(dataTpl);
+          $('#reload').click(function() {
+            var formData = $('#dataForm').serialize();
+
+            $.ajax({
+                url: `{{ route('wo.push.api', ['id' => '']) }}/${data.id}`,
+                method: 'POST',
+                data: formData,
+                success: function(response) {
+                    console.log(response, 'clicked reload');
+
+                    if (response.status == 206) {
+                        Ext.example.msg('<span style="color: red">Hold!</span>', response.message);
+                    } else if (response.status == 200) {
+                        Ext.msg.success(response.message);
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000); // Tunggu 2 detik sebelum reload
+                    } else {
+                        Ext.example.msg('<span style="color: red">Failed!</span>', response.message);
+                    }
+                },
+                error: function(xhr) {
+                    Ext.example.msg('<span style="color: red">Failed!</span>', 'Request failed: ' + xhr.status + ' ' + xhr.statusText);
+                }
+            });
+        });
+
 
           $('.dropdown-detail').click(function() {
             let id = this.id.substr((this.id.length - 36), 36);

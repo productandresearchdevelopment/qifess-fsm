@@ -82,10 +82,12 @@
         </div>
     </div>
 
+    {element_reload}
+
     <a href="{link_pdf}" target="_blank" style="text-decoration: none">
         <div class="btn" id="download-pdf" style="background: #CC0000">DOWNLOAD PDF</div>
     </a>
-    
+
     <a href="{link_balap}" target="_blank" style="text-decoration: none">
         <div class="btn" id="download-pdf" style="background: #0066cc">DOWNLOAD BALAP</div>
     </a>

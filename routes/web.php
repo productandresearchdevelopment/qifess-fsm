@@ -126,6 +126,7 @@ Route::group(['middleware' => ['auth', 'roles']], function () {
         Route::get('/data/fieldtech', 'WorkOrders\WorkOrder@dataFieldtech')->name('wo.data.fieldtech');
         Route::get('/form/{id?}', 'WorkOrders\WorkOrder@form')->name('wo.form');
         Route::post('/push/wo', 'WorkOrders\WorkOrder@push')->name('wo.create');
+        Route::post('/push/wo/api/{id?}', 'WorkOrders\WorkOrder@reloadTicket')->name('wo.push.api');
         Route::post('/push/wo/{id?}', 'WorkOrders\WorkOrder@push')->name('wo.edit');
         Route::post('/push/action/{wo?}/{status?}', 'WorkOrders\WorkOrder@pushAction')->name('wo.push.action');
         Route::post('/push/part/{id?}', 'WorkOrders\WorkOrder@pushPart')->name('wo.push.part');

@@ -23,6 +23,7 @@
         var vendors = @json($vendors);
         var slots = @json($slots);
         var statusAction = @json($status);
+        var user = @json($user);
 
         var grids = new Grids();
         var forms = new Forms();

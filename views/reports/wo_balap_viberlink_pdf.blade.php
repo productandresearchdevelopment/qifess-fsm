@@ -66,7 +66,7 @@
         </tr>
         <tr>
             <td width="20%">Nomor / Number</td>
-            <td width="20%">: {{ $data->no_wo }}</td>
+            <td width="20%">: {{ $data->no_wo ?? '-' }}</td>
             <td width="20%">Customer ID</td>
             <td width="40%">: {{ $ispCustomerId ?: '-' }}</td>
         </tr>
@@ -74,7 +74,7 @@
             <td>BAL Date / Tgl BAL</td>
             <td>: {{ $time_finish ? date('d/m/Y', strtotime($time_finish)) : '-' }}</td>
             <td>Name</td>
-            <td>: {{ $data->site->name }}</td>
+            <td>: {{ $data->site->name ?? '-' }}</td>
         </tr>
         <tr>
             <td>Vendor / Company</td>
@@ -348,8 +348,8 @@
         </tr>
         <tr>
             <td  style="height: 100px"  >1</td>
-            <td>{{ $ontType }}</td>
-            <td>{{ $OntSN }}</td>
+            <td>{{ $ontType ?? '-' }}</td>
+            <td>{{ $OntSN ?? '-' }}</td>
             <td></td>
             <td></td>
         </tr>

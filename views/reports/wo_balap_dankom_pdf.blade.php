@@ -66,15 +66,15 @@
         </tr>
         <tr>
             <td width="20%">Nomor / Number</td>
-            <td width="20%">: {{ $data->no_wo }}</td>
+            <td width="20%">: {{ $data->no_wo ?: '-' }}</td>
             <td width="20%">Customer ID</td>
-            <td width="40%">: {{ $data->site->link_id }}</td>
+            <td width="40%">: {{ $data->site->link_id ?: '-' }}</td>
         </tr>
         <tr>
             <td>BAL Date / Tgl BAL</td>
             <td>: {{ $time_finish ? date('d/m/Y', strtotime($time_finish)) : '-' }}</td>
             <td>Name</td>
-            <td>: {{ $data->site->name }}</td>
+            <td>: {{ $data->site->name ?: '-' }}</td>
         </tr>
         <tr>
             <td>Vendor / Company</td>

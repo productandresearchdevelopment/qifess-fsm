@@ -88,7 +88,7 @@
                 </div>
                 <div
                     style="margin: 20px 0px 0px 150px; text-align: left; border: 1px solid #333333; padding: 5px 10px; font-size: 10px;">
-                    <b>NOMOR SERI FORM</b> / FORM SERIAL NUMBER : {{ $data->id }}
+                    <b>NOMOR SERI FORM</b> / FORM SERIAL NUMBER : {{ $data->id ?: '-' }}
                 </div>
             </td>
         </tr>
@@ -363,7 +363,7 @@
 
             <td align="right">VIDEO / TV</td>
             <td align="right">
-                @if ($totalStb == 352 || $totalStb == NULL)
+                @if ($totalStb == 194)
                 <img style="height: 16px;"
                     src="{{ public_path('images/uncheck.jpg') }}">
                 @else
@@ -513,13 +513,16 @@
                     </tr>
                     <tr>
                         <td style="height: 110px">
-                            @if ($ttdFieldtech)
+                            @if (!empty($ttdFieldtech) && file_exists(storage_path('app/public/uploads/' . $ttdFieldtech->filename)))
                                 <img style="height: 100px; margin-top: 15px;"
                                     src="{{ storage_path('app/public/uploads/' . $ttdFieldtech->filename) }}">
-                                <div style="height: 20px; padding: 0px; text-align: center">{{ $ttdFieldtechName }}
+                                <div style="height: 20px; padding: 0px; text-align: center">
+                                    {{ $ttdFieldtechName ?: '-' }}
                                 </div>
                             @else
-                                <div style="height: 110px"></div>
+                                <div style="height: 110px; text-align: center;">
+                                    <span>-</span>
+                                </div>
                             @endif
                         </td>
                     </tr>
@@ -530,12 +533,20 @@
                     </tr>
                     <tr>
                         <td style="height: 110px">
+                            @if (!empty($ttdCustomer) && file_exists(storage_path('app/public/uploads/' . $ttdCustomer->filename)))
                                 <img style="height: 100px; margin-top: 15px;"
                                     src="{{ storage_path('app/public/uploads/' . $ttdCustomer->filename) }}">
-                                <div style="height: 20px; padding: 0px; text-align: center">{{ $ttdCustomerName ?: $data->site->name }}
+                                <div style="height: 20px; padding: 0px; text-align: center">
+                                    {{ $ttdCustomerName ?: $data->site->name }}
                                 </div>
+                            @else
+                                <div style="height: 110px; text-align: center;">
+                                    <span>-</span>
+                                </div>
+                            @endif
                         </td>
                     </tr>
+
                     <tr>
                         <td style="height: 16px; text-align: center;">
                             <b>Pelanggan</b> / Customer
