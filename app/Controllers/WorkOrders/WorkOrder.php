@@ -136,6 +136,15 @@ class WorkOrder extends Controller
             $month = date('Y-m', strtotime("$ftr 00:00:00")).'%';
             $query->where('start_date', 'LIKE', $month);
         }
+        if ($ftr = $request->input('filter-hold')) {
+     if ($ftr == 1) {
+        $query->whereNull('is_hold'); // Perbaikan: gunakan whereNull untuk mencari nilai NULL
+    } else if ($ftr == 2) {
+        $query->where('is_hold', 1); // Cari data dengan is_hold bernilai 1
+    }
+}
+
+
 
         // SEARCH ------------------------------------------------------------------------------------------------------
         if($search) {
@@ -207,6 +216,135 @@ class WorkOrder extends Controller
         }]);
         return Query::open($query, null, false);
     }
+
+    public function reloadTicket($woId) {
+        DB::beginTransaction();
+        try {
+            $wo = Wo::find($woId);
+
+            if (!$wo) {
+                return response()->json(['success' => false, 'message' => 'Work Order not found']);
+            }
+
+            // Cek apakah status tiket adalah HOLD (is_hold = 1)
+            if (!$wo->is_hold) {
+                return response()->json(['success' => false, 'message' => 'Ticket is not on hold']);
+            }
+
+            // Ambil action terakhir dari WO
+            $action = $wo->actions()->latest()->first();
+            if (!$action) {
+                return response()->json(['success' => false, 'message' => 'No action found for this Work Order']);
+            }
+
+            // Persiapkan data untuk API berdasarkan action dan WO
+            $details = $this->getActionDetails($action); // Ambil details dari action terakhir
+            $apiResult = $this->hitExternalApi($wo, $action, $details);
+
+            // Jika response dari API sukses (200), lanjutkan status dan update is_hold
+            if ($apiResult->success && $apiResult->status == 200) {
+                $wo->update(['is_hold' => null]); // Set is_hold menjadi null
+                DB::commit();
+                return response()->json(['success' => true, 'message' => 'Ticket successfully continued', 'status' => 200]);
+            }
+            elseif ($apiResult->status == 206) {
+                // Jika masih dalam status hold (206), tetap commit agar tidak rollback
+                DB::commit();
+                return response()->json(['success' => true, 'message' => 'Hold, waiting from partner acknowledgement', 'status' => 206]);
+            }
+            else {
+                DB::rollback();
+                return response()->json(['success' => false, 'message' => 'API Error: ' . $apiResult->message]);
+            }
+        }
+        catch (QueryException $error) {
+            DB::rollback();
+            return response()->json(['success' => false, 'message' => '500 (Retry Hold Ticket) ' . $error->getMessage()]);
+        }
+    }
+
+    private function getActionDetails($action) {
+        $details = [];
+
+        // Iterasi details dari action terakhir
+        foreach ($action->details as $extra) {
+            $details[] = [
+                'name' => strtolower($extra->detail->name),
+                'value' => $extra->value,
+            ];
+        }
+
+        return $details;
+    }
+
+    private function hitExternalApi($wo, $action, $details) {
+        $result = (object) ['success' => false];
+
+        $baseUrl = config('site.asianet_api_url');
+        $email = config('site.asianet_api_user');
+        $password = config('site.asianet_api_password');
+
+        $urlLogin = $baseUrl . '/amt/1.1/atm/generateToken';
+        $urlPush = $baseUrl . '/amt/1.1/eda/engineerStatus';
+
+        // Ambil token dari cache atau login jika tidak ada
+        $token = Cache::get('woaccesstoken', function () use ($urlLogin, $email, $password) {
+            $login = Curl::to($urlLogin)
+                ->withData(['email' => $email, 'password' => $password])
+                ->asJson()
+                ->returnResponseObject()
+                ->post();
+
+            if (isset($login->content->body->accessToken)) {
+                $token = $login->content->body->accessToken;
+                Cache::put('woaccesstoken', $token, 10);
+                return $token;
+            }
+
+            return null;
+        });
+
+        if (!$token) {
+            $result->message = 'Failed to generate API token';
+            return $result;
+        }
+
+        // Siapkan data untuk dikirim ke API
+        $data = [
+            'activityName' => $wo->activity->name,
+            'orderNumber' => $wo->no_wo,
+            'workFlowNumber' => $wo->id,
+            'orderStatus' => $action->status->name,
+            'teamID' => $wo->fieldtech_id,
+            'longitude' => (float) $action->long,
+            'latitude' => (float) $action->lat,
+            'cpe' => $details,
+        ];
+
+        // Hit API
+        $response = Curl::to($urlPush)
+            ->withData($data)
+            ->withBearer($token)
+            ->asJson()
+            ->returnResponseObject()
+            ->post();
+
+        if ($response->status == 200) {
+            $result->success = true;
+            $result->status = 200;
+        }
+        elseif ($response->status == 206) {
+            $result->success = true;
+            $result->status = 206;
+            $result->message = 'Hold, waiting from partner acknowledgement';
+        }
+        else {
+            $result->message = 'API Error: ' . json_encode($response);
+        }
+
+        return $result;
+    }
+
 
     public function push(Request $request, $id = null){
         DB::beginTransaction();
@@ -356,9 +494,14 @@ class WorkOrder extends Controller
 
                 if(strtoupper(substr($wo->no_wo, 0, 2)) == 'OH') {
                     if (in_array($wo->activity->name, ['INSTALLATION', 'SERVICE UPDATE', 'RELOCATION', 'DEVICE MOVING', 'TERMINATION'])) {
-                        if (in_array($action->status->name, ['PREPARATION', 'IN PROGRESS', 'ARRIVED', 'INSTALLATION', 'ACTIVATION', 'POST ACTIVATION', 'DE-INSTALLATION', 'DE-ACTIVATION'])) {
+                        if (in_array($action->status->name, ['PREPARATION', 'IN PROGRESS', 'ARRIVED', 'INSTALLATION', 'ACTIVATION', 'POST ACTIVATION', 'DE-INSTALLATION', 'DE-ACTIVATION', 'TESTING'])) {
                             if ($pushapi = $this->pushApi($wo, $action, $details)) {
-                                if ($pushapi->success) DB::commit();
+                                if ($pushapi->success && $pushapi->status == 200) {
+                                    DB::commit();
+                                } else if ($pushapi->status == 206) {
+                                    $wo->update(['is_hold' => 1]);
+                                    DB::commit();
+                                }
                                 else DB::rollback();
                                 return (array) $pushapi;
                             }
@@ -654,9 +797,12 @@ class WorkOrder extends Controller
                 if(isset($content->statusCode)){
                     if($response->status == 200){
                         $result->success = true;
+                        $result->status = 200;
                         $result->message = "Success";
                     }
                     else if($response->status == 206){
+                        $result->success = true;
+                        $result->status = 206;
                         $result->message = "Hold, waiting from partner acknowledgement";
                     }
                     else {
