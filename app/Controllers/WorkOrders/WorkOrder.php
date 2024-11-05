@@ -607,12 +607,23 @@ class WorkOrder extends Controller
                     if (in_array($wo->activity->name, ['INSTALLATION', 'SERVICE UPDATE', 'RELOCATION', 'DEVICE MOVING', 'TERMINATION'])) {
                         if (in_array($action->status->name, ['PREPARATION', 'IN PROGRESS', 'ARRIVED', 'INSTALLATION','ACTIVATION', 'POST ACTIVATION', 'TESTING'])) {
                             if ($pushapi = $this->pushApi($wo, $action, $details)) {
-                                if ($pushapi->success && ($pushapi->status == 200 || ($pushapi->status == 206 && $action->status->name !== 'ACTIVATION'))) {
+                                if($pushapi->success && ($pushapi->status == 200 || $pushapi->status == 206)){
+                                    if($pushapi->status == 206 && $action->status->name == 'ACTIVATION'){
+                                        $wo->update(['is_hold' => 1]);
+                                    }
+
                                     DB::commit();
-                                } else if ($pushapi->status == 206 && $action->status->name == 'ACTIVATION') {
-                                    $wo->update(['is_hold' => 1]);
-                                    DB::commit();
-                                } else DB::rollback();
+                                }
+
+                                // if($pushapi->success && ($pushapi->status == 200 || ($pushapi->status == 206 && $action->status->name !== 'ACTIVATION'))) {
+                                //     DB::commit();
+                                // } 
+                                // else if ($pushapi->status == 206 && $action->status->name == 'ACTIVATION') {
+                                //     $wo->update(['is_hold' => 1]);
+                                //     DB::commit();
+                                // } 
+                                // else DB::rollback();
+
                                 return (array) $pushapi;
                             }
                             DB::rollback();
