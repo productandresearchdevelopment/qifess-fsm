@@ -611,6 +611,9 @@ class WorkOrder extends Controller
                                     if($pushapi->status == 206 && $action->status->name == 'ACTIVATION'){
                                         $wo->update(['is_hold' => 1]);
                                     }
+                                    else {
+                                        $wo->update(['is_hold' => 0]);
+                                    }
 
                                     DB::commit();
                                     return (array) $pushapi;
