@@ -597,6 +597,8 @@ class WorkOrder extends Controller
                     return $pushdetail;
                 }
 
+                $wo->update(['is_hold' => 0]);
+
 
                 // SET CLOSING WO -------------------------------------------
                 if ($action->status->type > 1) {
