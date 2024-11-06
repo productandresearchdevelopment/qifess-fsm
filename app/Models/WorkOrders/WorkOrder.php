@@ -26,7 +26,7 @@ class WorkOrder extends Model
     public $paternId = 'prefix';
 
     public function actions(){
-        return $this->hasMany(Action::class, 'wo_id', 'id')->orderBy('created_at');
+        return $this->hasMany(Action::class, 'wo_id', 'id')->orderBy('updated_at');
     }
 
     public function parts(){
