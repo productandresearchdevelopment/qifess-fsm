@@ -480,6 +480,10 @@ class WorkOrder extends Controller
                 }
             }
 
+            if ($startDate && strtotime($startDate) < strtotime('1970-01-01')) {
+                $startDate = null;
+            }
+
             $input = [
                 'site_id' => $request->input('site_id'),
                 'remove_site_id' => $request->input('remove_site_id'),

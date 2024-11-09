@@ -84,4 +84,13 @@ class WorkOrder extends Model
     public function deletedBy(){
         return $this->hasOne(User::class, 'id', 'deleted_by');
     }
+
+    public function setStartDateAttribute($value)
+    {
+        if (!$value || strtotime($value) < strtotime('1970-01-01')) {
+            $this->attributes['start_date'] = null;
+        } else {
+            $this->attributes['start_date'] = $value;
+        }
+    }
 }
