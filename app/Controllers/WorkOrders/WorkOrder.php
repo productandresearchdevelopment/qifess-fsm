@@ -1256,31 +1256,72 @@ class WorkOrder extends Controller
         return ['success' => false, 'message' => 'Undefined WO ID!'];
     }
 
+    // public function cancel(Request $request, $id = null)
+    // {
+    //     if ($wo = Wo::find($id)) {
+    //         $laststs = $wo->lastAction->status_id;
+    //         $status = Master\Status::whereIn('id', [1910, 2910, 3910, 4910, 5910, 6910, 7910])->get();
+    //         foreach ($status as $sts) {
+    //             foreach ($sts->show_on as $sid) {
+    //                 if ($sid == $laststs) {
+    //                     if (!$notes = $request->input('notes')) return ['success' => false, 'message' => 'notes is empty'];
+    //                     $action = Action::create([
+    //                         'wo_id' => $wo->id,
+    //                         'status_id' => $sts->id,
+    //                         'note' => $notes,
+    //                     ]);
+
+    //                     $wo->update([
+    //                         'last_action' => $action->id,
+    //                     ]);
+
+    //                     return ['success' => true, 'message' => 'Success!'];
+    //                 }
+    //             }
+    //         }
+    //         return ['success' => false, 'message' => 'Cancel not permitted!'];
+    //     }
+    //     return ['success' => false, 'message' => 'Undefined WO ID!'];
+    // }
+
     public function cancel(Request $request, $id = null)
     {
+        $user = auth()->user();
+
         if ($wo = Wo::find($id)) {
             $laststs = $wo->lastAction->status_id;
-            $status = Master\Status::whereIn('id', [1910, 2910, 3910, 4910, 5910, 6910, 7910])->get();
-            foreach ($status as $sts) {
-                foreach ($sts->show_on as $sid) {
-                    if ($sid == $laststs) {
-                        if (!$notes = $request->input('notes')) return ['success' => false, 'message' => 'notes is empty'];
-                        $action = Action::create([
-                            'wo_id' => $wo->id,
-                            'status_id' => $sts->id,
-                            'note' => $notes,
-                        ]);
 
-                        $wo->update([
-                            'last_action' => $action->id,
-                        ]);
+            if ($user->role_id == 20) {
+                $allowedStatus = Master\Status::whereIn('id', [1910, 2910, 3910, 4910, 5910, 6910, 7910])->get();
+            } elseif ($user->role_id == 10) {
+                $allowedStatus = Master\Status::whereIn('id', [1914, 2914, 3914, 4914, 5914, 6914, 7914])->get();
+            } else {
+                return ['success' => false, 'message' => 'Unauthorized role'];
+            }
 
-                        return ['success' => true, 'message' => 'Success!'];
+            foreach ($allowedStatus as $sts) {
+                if (in_array($laststs, $sts->show_on)) {
+                    if (!$notes = $request->input('notes')) {
+                        return ['success' => false, 'message' => 'Notes is empty'];
                     }
+
+                    $action = Action::create([
+                        'wo_id' => $wo->id,
+                        'status_id' => $sts->id,
+                        'note' => $notes,
+                    ]);
+
+                    $wo->update([
+                        'last_action' => $action->id,
+                    ]);
+
+                    return ['success' => true, 'message' => 'Success!'];
                 }
             }
+
             return ['success' => false, 'message' => 'Cancel not permitted!'];
         }
+
         return ['success' => false, 'message' => 'Undefined WO ID!'];
     }
 
