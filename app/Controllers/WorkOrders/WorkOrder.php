@@ -1564,6 +1564,27 @@ class WorkOrder extends Controller
                                 $params['ispCustomerId'] = $detail->value;
                             }
                         }
+                    }else if (str_contains(strtoupper($action->status->name), 'DE-ACTIVATION')) {
+                        foreach ($action->details as $detail) {
+
+                            if (strtoupper($detail->detail->name) == 'ONT TYPE') {
+                                $params['ontType'] = $detail->valueOption->option;
+                            } else if (strtoupper($detail->detail->name) == 'SN ONT') {
+                                $params['ontSN'] = $detail->value;
+                            } else if (strtoupper($detail->detail->name) == 'SN STB 1') {
+                                $params['stbSN1'] = $detail->value;
+                            } else if (strtoupper($detail->detail->name) == 'TIPE STB 1') {
+                                $params['stbType1'] = $detail->valueOption ? $detail->valueOption->option : null;
+                            } else if (strtoupper($detail->detail->name) == 'SN STB 2') {
+                                $params['stbSN2'] = $detail->value;
+                            } else if (strtoupper($detail->detail->name) == 'TIPE STB 2') {
+                                $params['stbType2'] = $detail->valueOption ? $detail->valueOption->option : null;
+                            } else if (strtoupper($detail->detail->name) == 'SN STB 3') {
+                                $params['stbSN3'] = $detail->value;
+                            } else if (strtoupper($detail->detail->name) == 'TIPE STB 3') {
+                                $params['stbType3'] = $detail->valueOption ? $detail->valueOption->option : null;
+                            }
+                        }
                     } else if (str_contains(strtoupper($action->status->name), 'ACTIVATION')) {
                         foreach ($action->details as $detail) {
 
@@ -1586,7 +1607,7 @@ class WorkOrder extends Controller
                             } else if (strtoupper($detail->detail->name) == 'SN STB 3') {
                                 $params['stbSN3'] = $detail->value;
                             } else if (strtoupper($detail->detail->name) == 'SN ONT') {
-                                $params['OntSN'] = $detail->value;
+                                $params['ontSN'] = $detail->value;
                             }
                         }
                     } else if (str_contains(strtoupper($action->status->name), 'PREPARATION')) {
