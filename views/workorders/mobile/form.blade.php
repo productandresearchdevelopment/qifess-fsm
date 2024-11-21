@@ -344,6 +344,23 @@
                 $('#forms-submit').click(me.save)
             });
         }
+        me.checkNumber = function(details) {
+
+            if (me.status && me.status.details) {
+            for (let i = 0; i < me.status.details.length; i++) {
+                let rec = me.status.details[i];
+
+                let message = rec.name + ' harus diisi dengan angka.';
+                if (rec.group === "ADDITIONAL MATERIAL") {
+                    let detail = find(details, rec.id);
+                        if (detail && (isNaN(detail.value) || detail.value.trim() === "")) {
+                            return message
+                        }
+                    }
+                }
+            }
+            return null;
+        }
 
         me.checkRequired = function(details){
             if(me.status && me.status.details) {
@@ -376,9 +393,13 @@
                         navigator.geolocation.getCurrentPosition(function (position) {
                             let details = me.getDetails();
                             let errorMessage = me.checkRequired(details);
+                            let numberErrorMessage = me.checkNumber(details);
                             if(errorMessage) {
                                 mask.hide();
                                 ons.notification.alert(errorMessage);
+                            }else if (numberErrorMessage) {
+                                mask.hide();
+                                ons.notification.alert(numberErrorMessage);
                             }
                             else {
                                 $.ajax({

@@ -651,6 +651,26 @@
             Ext.getCmp('form-title').setText(text);
         }
 
+        me.checkNumber = function(details) {
+
+            if (me.actionStatus && me.actionStatus.details) {
+                for (let i = 0; i < me.actionStatus.details.length; i++) {
+                    let rec = me.actionStatus.details[i];
+
+                    let message = rec.name + ' harus diisi dengan angka.';
+                    if (rec.group === "ADDITIONAL MATERIAL") {
+                        let detail = find(details, rec.id);
+
+                        if (detail && (isNaN(detail.value) || detail.value.trim() === "")) {
+                            return message
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+
         me.checkRequired = function(details){
             if(me.actionStatus && me.actionStatus.details) {
                 for (let i = 0; i < me.actionStatus.details.length; i++) {
@@ -679,6 +699,7 @@
             let errorMessage = null;
             let details = me.detailProperty.get();
             errorMessage = me.checkRequired(details);
+            numberErrorMessage = me.checkNumber(details);
 
             let hideDetails = grep(me.actionStatus.details, {type: 'hide'});
             hideDetails.forEach(function (rec) {
@@ -712,6 +733,7 @@
             });
 
             if(errorMessage) Ext.msg.failed(errorMessage);
+            else if (numberErrorMessage) Ext.msg.failed(numberErrorMessage);
             else {
                 me.submit(me.form.url, {
                     params: {details: Ext.encode(details)},
