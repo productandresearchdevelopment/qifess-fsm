@@ -1339,6 +1339,31 @@ class WorkOrder extends Controller
         return ['success' => false, 'message' => 'No Data!'];
     }
 
+    public function deleteAction(Request $request, $id)
+    {
+
+        $action = Action::find($id);
+
+        if ($action = Action::find($id)) {
+            DB::beginTransaction();
+
+            try {
+
+                Action::where('wo_id', $action->wo_id)->where('created_at', '>=', $action->created_at)->orderBy('created_at')->delete();
+
+                // UPDATE LAST ACTION ------------------------------------------------------------------------------
+                Wo::find($action->wo_id)->updateLastAction();
+
+                DB::commit();
+                return ['success' => true, 'message' => 'Success!'];
+            } catch (Exception $error) {
+                DB::rollback();
+                return ['success' => false, 'message' => '500 ' . $error->getMessage()];
+            }
+        }
+        return ['success' => false, 'message' => 'Undefined Action ID'];
+    }
+
     public function deletePart(Request $request)
     {
         if ($id = $request->input('id')) {

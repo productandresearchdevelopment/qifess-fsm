@@ -93,4 +93,13 @@ class WorkOrder extends Model
             $this->attributes['start_date'] = $value;
         }
     }
+
+    public function updateLastAction()
+    {
+        $lastAction = Action::where('wo_id', $this->id)->orderBy('created_at', 'DESC')->first();
+
+        $this->update([
+            'last_action' => $lastAction ? $lastAction->id : null,
+        ]);
+    }
 }

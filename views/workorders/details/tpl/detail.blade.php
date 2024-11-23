@@ -55,10 +55,26 @@
         </div>
 
         <div class="container info-container">
-        <span>Created By</span>
-        {created_by.name} <br>
-        <i style="font-size: 10px">{created_at}</i>
-    </div>
+            <span>Created By</span>
+            {created_by.name} <br>
+            <i style="font-size: 10px">{created_at}</i>
+        </div>
+
+        <div class="container info-container">
+        <span>Last Action (Status)</span>
+        <table width="100%" style="margin-top: 0px" cellpadding="0" cellspacing="0">
+            <tr>
+            <td style="padding: 0px 10px 0px 0px">
+                <div style="font-size: 15px; color: #{last_action_status.color}">{last_action_status.name}</div>
+                <div style="font-size: 11px">
+                <i>{last_action.by} ({last_action.date})</i>
+                </div>
+            </td>
+            {last_action.form_delete}
+            </tr>
+        </table>
+        </div>
+
     </div>
 
     <div class="header-title" style="margin-top: 20px">History Status</div>

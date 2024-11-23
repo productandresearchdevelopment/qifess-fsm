@@ -291,6 +291,8 @@
 
       // LAST STATUS ------------------------------------------------
       dataTpl.last_action_status = find(statusAction, dataTpl.last_action.status_id);
+
+      dataTpl.last_action.id = dataTpl.last_action.id;
       dataTpl.last_action.date = dates.format(dataTpl.last_action.created_at);
       dataTpl.last_action.by = dataTpl.last_action.created_by ? dataTpl.last_action.created_by.name : '';
       dataTpl.last_action.duration = dates.diffServer(startDate).day;
@@ -298,6 +300,16 @@
         .last_action.created_at).day;
       dataTpl.last_action.duration_color = (dataTpl.duration_target < dataTpl.last_action.duration) ? 'DD0000' :
         '333333'
+
+      dataTpl.last_action.form_delete = dataTpl.last_action_status.type !== 0 ? String.format(
+        `<td width="10" style="padding-left: 10px; color: ${dataTpl.last_action.duration_color};">
+          @if ($user->hasRoute('wo.delete.action'))
+              <div type="btn" style="background:#CC0000; padding:4px 10px; color:#fff; font-weight:500; cursor:pointer; border-radius: 4px;" class="delete-last-action" id="delete-last-action-${dataTpl.last_action.id}">
+                  DELETE
+              </div>
+          @endif
+        </td>`
+      ) : '<td></td>';
 
       dataTpl.link_bast = '{{ route('report.bast.pdf') }}/' + data.id;
       dataTpl.link_pdf = '{{ route('wo.export.pdf') }}/' + data.id;
@@ -554,8 +566,27 @@
                     Ext.example.msg('<span style="color: red">Failed!</span>', 'Request failed: ' + xhr.status + ' ' + xhr.statusText);
                 }
             });
-        });
+          });
 
+          $('.delete-last-action').click(function(e) {
+            let id = e.target.id.replace('delete-last-action-', '');
+            if (id) {
+              Ext.ajaxConfirm('Delete Status Action', {
+                mask: me.panel,
+                url: '{{ route('wo.delete.action') }}/' + id,
+                params: {
+                  '_method': 'DELETE',
+                  '_token': '{{ csrf_token() }}'
+                },
+                success: function() {
+                  setTimeout(function() {
+                    location.reload();
+                  }, 2000);
+                },
+                failure: function() {}
+              });
+            }
+          });
 
           $('.dropdown-detail').click(function() {
             let id = this.id.substr((this.id.length - 36), 36);

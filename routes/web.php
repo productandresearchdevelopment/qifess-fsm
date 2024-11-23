@@ -132,7 +132,7 @@ Route::group(['middleware' => ['auth', 'roles']], function () {
         Route::post('/push/part/{id?}', 'WorkOrders\WorkOrder@pushPart')->name('wo.push.part');
         Route::delete('/delete', 'WorkOrders\WorkOrder@delete')->name('wo.delete');
         Route::delete('/delete/part', 'WorkOrders\WorkOrder@deletePart')->name('wo.delete.part');
-
+        Route::delete('/delete/action/{id?}', 'WorkOrders\WorkOrder@deleteAction')->name('wo.delete.action');
         Route::get('/export/excel', 'WorkOrders\WorkOrder@exportExcel')->name('wo.export.excel');
         Route::get('/export/pdf/{id?}', 'WorkOrders\WorkOrder@exportPdf')->name('wo.export.pdf');
         Route::get('/export/balap/{id?}', 'WorkOrders\WorkOrder@exportBalapPdf')->name('wo.export.balap');
