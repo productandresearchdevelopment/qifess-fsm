@@ -316,6 +316,25 @@
                             {text: "DATE", dataIndex: 'created_at', align: 'center', width: 100, sortable: true, renderer: Ext.util.Format.dateRenderer('d/m/Y')},
                         ]
                     },
+                    {
+                        text: "TOTAL STB",
+                        dataIndex: 'actions',
+                        align: 'center',
+                        width: 110,
+                        renderer: function(val, meta, rec) {
+                            let totalSTB = null;
+
+                            val.forEach(function(action) {
+                                action.details.forEach(function(detail) {
+                                if (detail.detail.name === 'Total STB' && detail.detail_id === 281827) {
+                                    totalSTB = detail.value;
+                                }
+                                });
+                            });
+
+                            return totalSTB && totalSTB !== 0 ? totalSTB : '-';
+                        }
+                    },
 
                 ],
                 bbar: me.bbar(me.bbarFilter,[
