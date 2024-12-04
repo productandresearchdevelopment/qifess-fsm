@@ -78,6 +78,7 @@ Route::group(['middleware' => ['auth.api'] ], function(){
             });
             Route::get('/area/data', 'Vendors\Vendor@data');
             Route::get('/team/data', 'Fieldtechs\Fieldtech@data');
+            Route::get('/team/data/{id?}', 'Fieldtechs\Fieldtech@showdetail')
             Route::get('/service/data', 'Services\Service@data');
             Route::get('/client/data', 'Clients\Client@data');
             Route::get('/site/data', 'Sites\Site@data');

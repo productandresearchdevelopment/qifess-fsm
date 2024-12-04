@@ -62,6 +62,29 @@ class Fieldtech extends Controller
         return Query::open($query, $search, $counter);
     }
 
+    public function showdetail(Request $request, $id)
+    {
+        $fieldtech = Mod::with(['vendor', 'users'])
+            ->withCount('workorders')
+            ->find($id);
+
+        if (!$fieldtech) {
+            return response()->json([
+                'message' => 'Fieldtech not found',
+            ], 404);
+        }
+
+        $data = [
+            'id' => $fieldtech->id,
+            'name' => $fieldtech->name,
+            'vendor_name' => $fieldtech->vendor,
+            'users' => $fieldtech->users,
+            'workorders_count' => $fieldtech->workorders_count,
+        ];
+
+        return response()->json($data);
+    }
+
     public function push(Request $request, $id = null)
     {
         DB::beginTransaction();
