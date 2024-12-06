@@ -24,6 +24,7 @@ use App\Models\Sites\Site;
 use App\Models\Clients\Client;
 use App\Models\Vendors\Vendor;
 use App\Models\WorkOrders\Masters as Master;
+use Illuminate\Support\Facades\Log;
 
 class WorkOrder extends Controller
 {
