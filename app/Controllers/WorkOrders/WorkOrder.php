@@ -458,6 +458,14 @@ class WorkOrder extends Controller
 
         // dd($result);
 
+        $result->data = [
+            'url' => $urlPush,
+            'dataPush' => $data,
+            'response' => isset($content) ? ((array) $content) : null,
+        ];
+
+        Log::info('Response dari API Reload:', $result->data);
+
         return $result;
     }
 
