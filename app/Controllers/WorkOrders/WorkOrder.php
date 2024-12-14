@@ -267,6 +267,9 @@ class WorkOrder extends Controller
                     DB::commit();
                     return response()->json(['success' => true, 'message' => 'Hold, waiting for partner acknowledgment', 'status' => 206]);
                 }
+                else {
+                    return response()->json(['success' => false, 'message' => 'Unknown status ', 'status' => $apiResult->status]);
+                }
             } else {
                 DB::rollback();
                 return response()->json(['success' => false, 'message' => 'API Error: ' . $apiResult->message]);
