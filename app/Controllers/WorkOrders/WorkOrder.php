@@ -578,6 +578,10 @@ class WorkOrder extends Controller
         $wo = Wo::find($wo);
         $status = Master\Status::find($status);
 
+        if ($wo->is_hold) {
+            return ['success' => false, 'message' => "ticket is hold"];
+        }
+
         if (!$error = $this->actionValid($wo, $status, $user)) {
             $input = [
                 "status_id" => $status->id,
