@@ -963,14 +963,13 @@ class WorkOrder extends Controller
                 $result->message = "Error: API response is null";
                 $result->status = $response->status ?? 500;
             }
-        } else {
+        } 
+        else {
             // Only return the error message if available
-            $responseContent =
-                json_encode($response);
+            $responseContent = json_encode($response);
             $responseArray = json_decode($responseContent, true);
 
-            $returnMessage
-                = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
+            $returnMessage = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
 
             $result->message = $returnMessage;
             $result->status = $response->status ?? 500;
@@ -979,10 +978,9 @@ class WorkOrder extends Controller
         $result->data = [
             'url' => $urlPush,
             'dataPush' => $data,
+            'responseStatus' => ($response && isset($response->status)) ? $response->status : 'null',
             'response' => isset($content) ? ((array) $content) : null,
         ];
-
-        // dd($result);
 
         Log::info('Response dari API:', $result->data);
 
