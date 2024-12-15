@@ -581,7 +581,7 @@ class WorkOrder extends Controller
         $wo = Wo::find($wo);
         $status = Master\Status::find($status);
 
-        if($wo->action->status->name == 'ACTIVATION' && $wo->is_hold == 1){
+        if($wo->lastAction->status->name == 'ACTIVATION' && $wo->is_hold == 1){
             return [
                 'success' => false, 
                 'message' => "Hold, waiting from partner acknowledgements"
