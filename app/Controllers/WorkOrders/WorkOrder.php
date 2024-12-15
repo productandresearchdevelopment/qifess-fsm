@@ -970,8 +970,10 @@ class WorkOrder extends Controller
             $responseContent = json_encode($response);
             $responseArray = json_decode($responseContent, true);
 
-            $returnMessage = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
-
+            $returnMessage = 'Unknown error';
+            if($responseArray && is_array($responseArray)){
+                $returnMessage = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
+            }
             $result->message = $returnMessage;
             $result->status = $response->status ?? 500;
         }
