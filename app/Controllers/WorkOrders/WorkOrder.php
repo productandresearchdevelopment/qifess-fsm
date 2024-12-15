@@ -972,7 +972,9 @@ class WorkOrder extends Controller
 
             $returnMessage = 'Unknown error';
             if($responseArray && is_array($responseArray)){
-                $returnMessage = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
+                if(isset($responseArray['content']['returnMessage']) && isset($responseArray['content']['statusCode'])){
+                    $returnMessage = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
+                }
             }
             $result->message = $returnMessage;
             $result->status = $response->status ?? 500;
