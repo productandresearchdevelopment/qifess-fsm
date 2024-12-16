@@ -461,18 +461,18 @@ class WorkOrder extends Controller
                     $returnMessage = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
                 }
                 else {
-                    Log::info("Cek Response Status Return Message: " . 
+                    Log::info("Cek Response Status Return Message (RELOAD): " . 
                     (isset($responseArray['content']['returnMessage']) 
                         ? $responseArray['content']['returnMessage'] 
                         : 'returnMessage not found'));
-                    Log::info("Cek Response Status Status Code: " . 
+                    Log::info("Cek Response Status Status Code (RELOAD): " . 
                     (isset($responseArray['content']['statusCode']) 
                         ? $responseArray['content']['statusCode'] 
                         : 'statusCode not found'));
                 }
             }
             else {
-                Log::info("Cek Response" . json_encode($responseArray));
+                Log::info("Cek Response RELOAD" . json_encode($responseArray));
             }
             
             
