@@ -32,7 +32,7 @@ class WorkOrder extends Controller
     {
         set_time_limit(120); // Set time limit to 2 minutes
     }
-    
+
     public function index(Request $request, $archive = false)
     {
         $user   = $request->user();
@@ -319,6 +319,7 @@ class WorkOrder extends Controller
                 ->withData(['email' => $email, 'password' => $password])
                 ->asJson()
                 ->returnResponseObject()
+                ->timeout(120)
                 ->post();
 
             if (isset($login->content->body->accessToken)) {
@@ -409,7 +410,7 @@ class WorkOrder extends Controller
         ];
 
         // Hit API
-        $response = Curl::to($urlPush)->withData($data)->withBearer($token)->asJson()->returnResponseObject()->post();
+        $response = Curl::to($urlPush)->withData($data)->withBearer($token)->asJson()->returnResponseObject()->timeout(120)->post();
 
        
 
@@ -751,6 +752,7 @@ class WorkOrder extends Controller
                 ->withData(['email' => $email, 'password' => $password])
                 ->asJson()
                 ->returnResponseObject()
+                ->timeout(120)
                 ->post();
 
             if (isset($login->content) && isset($login->content->body->accessToken)) {
@@ -807,7 +809,7 @@ class WorkOrder extends Controller
 
         // PUSH API ----------------------------------------------------------------------------------------------------
 
-        $response = Curl::to($urlPush)->withData($data)->withBearer($token)->asJson()->returnResponseObject()->post();
+        $response = Curl::to($urlPush)->withData($data)->withBearer($token)->asJson()->returnResponseObject()->timeout(120)->post();
         if ($response->status == 200 || $response->status == 400) {
             if ($content = $response->content) {
                 if (isset($content->statusCode)) {
@@ -851,6 +853,7 @@ class WorkOrder extends Controller
                 ->withData(['email' => $email, 'password' => $password])
                 ->asJson()
                 ->returnResponseObject()
+                ->timeout(120)
                 ->post();
 
             if (isset($login->content) && isset($login->content->body->accessToken)) {
@@ -993,7 +996,7 @@ class WorkOrder extends Controller
 
         // PUSH API ----------------------------------------------------------------------------------------------------
 
-        $response = Curl::to($urlPush)->withData($data)->withBearer($token)->asJson()->returnResponseObject()->post();
+        $response = Curl::to($urlPush)->withData($data)->withBearer($token)->asJson()->returnResponseObject()->timeout(120)->post();
 
         
         if ($response->status === 0) {
@@ -1117,6 +1120,7 @@ class WorkOrder extends Controller
                 ->withData(['email' => $email, 'password' => $password])
                 ->asJson()
                 ->returnResponseObject()
+                ->timeout(120)
                 ->post();
             if (isset($login->content) && isset($login->content->accessToken)) {
                 $token = $login->content->accessToken;
@@ -1178,7 +1182,7 @@ class WorkOrder extends Controller
 
         // PUSH API ----------------------------------------------------------------------------------------------------
 
-        $response = Curl::to($urlPush)->withData($data)->withBearer($token)->asJson()->returnResponseObject()->post();
+        $response = Curl::to($urlPush)->withData($data)->withBearer($token)->asJson()->returnResponseObject()->timeout(120)->post();
         if ($response->status == 200 || $response->status == 400) {
             if ($content = $response->content) {
                 if (isset($content->statusCode)) {
