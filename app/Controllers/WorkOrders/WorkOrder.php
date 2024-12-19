@@ -1512,6 +1512,8 @@ class WorkOrder extends Controller
         if ($request->input('archive')) {
             $query[] = "(A.close_date IS NOT NULL)";
             array_push($titles, ['Archive Data', 'h4']);
+        }elseif ($request->input('filter-hold') === "2") {
+            array_push($titles, ['Data Is Hold', 'h4']);
         } else {
             $mindate = date('Y-m-d', strtotime('-0 days'));
             $query[] = "(A.close_date IS NULL OR A.close_date >= '$mindate')";
@@ -1532,6 +1534,13 @@ class WorkOrder extends Controller
         if ($filter = $request->input('filter-vendor')) $query[] = "(A.vendor_id = '$filter')";
         if ($filter = $request->input('filter-client')) $query[] = "(A.client_id = '$filter')";
         if ($filter = $request->input('filter-owner')) $query[] = "(A.owner_id = '$filter')";
+        if ($filter = $request->input('filter-hold')) {
+            if ($filter === "2") {
+                $query[] = "(A.is_hold = '1')";
+            } else {
+                $query[] = "(A.is_hold = '0')";
+            }
+        }
 
         // FILTER BY USER AUTH -----------------------------------------------------------------------------------------
         if ($ftr = $user->owners) $query[] = "(A.owner_id = '$ftr') ";
