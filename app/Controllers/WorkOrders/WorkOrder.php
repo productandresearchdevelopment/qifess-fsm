@@ -146,9 +146,11 @@ class WorkOrder extends Controller
         }
         if ($ftr = $request->input('filter-hold')) {
             if ($ftr == 1) {
-                $query->whereNull('is_hold'); 
+                $query->where('is_hold',0); 
             } else if ($ftr == 2) {
-                $query->where('is_hold', 1); 
+                $query->where('is_hold',1); 
+            } else{
+                $query->whereNull('is_hold'); 
             }
         }
 
@@ -1537,7 +1539,7 @@ class WorkOrder extends Controller
         if ($filter = $request->input('filter-hold')) {
             if ($filter === "2") {
                 $query[] = "(A.is_hold = '1')";
-            } else {
+            } elseif ($filter === "1") {
                 $query[] = "(A.is_hold = '0')";
             }
         }
