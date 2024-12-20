@@ -248,7 +248,7 @@
                                 @foreach ($detail->files as $file)
                                     @if ($file->type == 'image')
                                         @php
-                                            $filePath = storage_path('app/public/uploads/' . $file->filename);
+                                            $filePath = route('upload.file', ['id' => $file->id]);
                                             \Log::info('Memeriksa file gambar.', ['path' => $filePath]);
 
                                             if (file_exists($filePath)) {
