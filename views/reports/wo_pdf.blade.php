@@ -224,6 +224,7 @@
                         <div style="font-size: 12px;">{{ $detail ? date('d/m/Y', strtotime($detail->value)) : '-' }}</div>
                         @elseif($statusDetail->triger == 'wo.slot')
                         <div style="font-size: 12px;">{{ $detail ? $detail->slot->name : '-' }}</div>
+                        
                         @elseif($statusDetail->type == 'file')
                         <!-- <div style="font-size: 12px;">
                             @if ($detail)
@@ -272,18 +273,22 @@
 
 
                         @elseif($statusDetail->type == 'signature')
-                        <!-- <div style="font-size: 12px;">
+                        <div style="font-size: 12px;">
                             @if ($detail)
-                            @if ($fsign = \App\SystemModels\Globals\Upload::find($detail->value))
+                            @php
+                                $fileUrl = route('upload.file', ['id' => $detail->value]);
+                            @endphp
+                            <img style="height: 200px; border: 1px solid #CCC; margin: 10px;" src="{{ $fileUrl }}">
+                            <!-- @if ($fsign = \App\SystemModels\Globals\Upload::find($detail->value))
                                 <img style="height: 200px; border: 1px solid #CCC; margin: 10px;"
                                 src="{{ storage_path('app/public/uploads/' . $fsign->filename) }}">
-                            @endif
+                            @endif -->
                             @else
                             'No signature'
                             @endif
-                        </div> -->
+                        </div>
 
-                        <div style="font-size: 12px;">
+                        <!-- <div style="font-size: 12px;">
                             @if ($detail)
                                 @php
                                     \Log::info('Detail ditemukan.', ['detail_id' => $detail->id]);
@@ -313,7 +318,7 @@
                                 @endphp
                                 'No signature'
                             @endif
-                        </div>
+                        </div> -->
 
 
                         @elseif($statusDetail->type == 'date')
