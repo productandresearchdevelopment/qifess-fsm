@@ -1060,9 +1060,11 @@ class WorkOrder extends Controller
                         else {
                             Log::info("Cek Response FC PushApi tidak ada respon array" . json_encode($responseArray));
                         }
-
                     
                         $result->message = 'Error API engineer status response failed: ' . $returnMessage;
+
+                        Log::info("Cek result Message : " . $result->message);
+                        Log::info("Cek Response Array : " . json_encode($responseArray));
 
                         $result->status = $response->status ?? 500;
                         $result->data = [
