@@ -1708,7 +1708,9 @@ class WorkOrder extends Controller
             ["text" => "ONT SERIALNUMBER", "dataIndex" => "ont_serial", "width" => 200],
             ["text" => "DESCRIPTION", "dataIndex" => "description", "width" => 500],
             ["text" => "ALAMAT INSTALASI", "dataIndex" => "alamat_instalasi", "width" => 500],
-
+            ["text" => "HOLD", "dataIndex" => "is_hold", "width" => 100, "align" => "center", "renderer" => function ($value) {
+                return $value == 1 ? 'HOLD' : '-';
+            }],
         ];
 
         $footers = ['Total Count: ' . count($data) . ' Row', ' ', 'Asianet', 'Downloaded (QFEST)` (' . date('d F Y H:i:s') . ')'];
