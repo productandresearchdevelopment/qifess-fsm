@@ -702,7 +702,7 @@ class WorkOrder extends Controller
                     return $pushdetail;
                 }
                 
-                if ($wo->is_hold == 0) {
+                if ($wo->is_hold != 1) {
                     $wo->update(['is_hold' => 0]);
                 }
 
