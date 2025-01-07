@@ -390,6 +390,8 @@
         let recs = me.getRecs(true);
         let items = obj.items.items;
 
+        const user = @json($user);
+
         items.forEach(function(item) {
             if (item.id.substr(0, 11) == 'status-menu') {
             item.hide();
@@ -410,7 +412,18 @@
                 }
                 }
             }
+            }else if (item.text === 'Edit') {
+                if (user.role_id === 1100) {
+                    if (recs.length === 1 && recs[0].last_action.status_id === 1110) {
+                    item.show();
+                    } else {
+                    item.hide();
+                    }
+                } else {
+                    item.show();
+                }
             }
+            
         });
 
         @if (!$user->hasRoute(['wo.create', 'wo.edit', 'wo.delete']))
