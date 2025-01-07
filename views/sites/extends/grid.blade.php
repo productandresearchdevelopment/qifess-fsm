@@ -127,9 +127,8 @@
               text: 'Create',
               iconCls: 'icon-add',
               handler: forms.create
-            }
+            },
           @endif
-
           @if ($user->hasRoute('site.edit'))
             {
               text: 'Edit',
@@ -137,7 +136,7 @@
               handler: function() {
                 forms.edit(me.getRec(true));
               }
-            }
+            },
           @endif
 
           @if ($user->hasRoute('site.delete'))
