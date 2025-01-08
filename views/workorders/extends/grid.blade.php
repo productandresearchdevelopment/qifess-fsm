@@ -383,52 +383,105 @@
             });
         }
 
+        // me.beforeShowMenu = function(obj) {
+        //     Ext.getCmp('separator-1').hide();
+
+        //     let resultShow = false;
+        //     let recs = me.getRecs(true);
+        //     let items = obj.items.items;
+
+        //     const user = @json($user);
+
+        //     items.forEach(function(item) {
+        //         if (item.id.substr(0, 11) == 'status-menu') {
+        //         item.hide();
+        //         if (recs.length == 1) {
+        //             let rec = recs[0];
+        //             let activity = rec.activity_id;
+        //             let status = rec.last_action.status_id;
+        //             let isHold = rec.is_hold;
+        //             let menu = item.value;
+        //             if ((isHold != 1) && menu.show_on.indexOf(status) >= 0) {
+        //             if (menu.activities.indexOf(activity) >= 0) {
+        //                 resultShow = true;
+        //                 item.show();
+
+        //                 @if ($user->hasRoute(['wo.create', 'wo.edit', 'wo.delete']) && !$archive)
+        //                 Ext.getCmp('separator-1').show();
+        //                 @endif
+        //             }
+        //             }
+        //         }
+        //         }else if (item.text === 'Edit') {
+        //             if (user.role_id === 1100) {
+        //                 if (recs.length === 1 && recs[0].last_action.status_id === 1110) {
+        //                 item.show();
+        //                 } else {
+        //                 item.hide();
+        //                 }
+        //             } else {
+        //                 item.show();
+        //             }
+        //         }
+                
+        //     });
+
+        //     @if (!$user->hasRoute(['wo.create', 'wo.edit', 'wo.delete']))
+        //         return resultShow;
+        //     @endif
+        // }
+
         me.beforeShowMenu = function(obj) {
-        Ext.getCmp('separator-1').hide();
+            Ext.getCmp('separator-1').hide();
 
-        let resultShow = false;
-        let recs = me.getRecs(true);
-        let items = obj.items.items;
+            let resultShow = false;
+            let recs = me.getRecs(true);
+            let items = obj.items.items;
+            const user = @json($user);
 
-        const user = @json($user);
-
-        items.forEach(function(item) {
-            if (item.id.substr(0, 11) == 'status-menu') {
-            item.hide();
-            if (recs.length == 1) {
-                let rec = recs[0];
-                let activity = rec.activity_id;
-                let status = rec.last_action.status_id;
-                let isHold = rec.is_hold;
-                let menu = item.value;
-                if ((isHold != 1) && menu.show_on.indexOf(status) >= 0) {
-                if (menu.activities.indexOf(activity) >= 0) {
-                    resultShow = true;
-                    item.show();
-
-                    @if ($user->hasRoute(['wo.create', 'wo.edit', 'wo.delete']) && !$archive)
-                    Ext.getCmp('separator-1').show();
-                    @endif
-                }
-                }
-            }
-            }else if (item.text === 'Edit') {
-                if (user.role_id === 1100) {
-                    if (recs.length === 1 && recs[0].last_action.status_id === 1110) {
-                    item.show();
-                    } else {
+            items.forEach(function(item) {
+                if (item.id.substr(0, 11) === 'status-menu') {
                     item.hide();
+                    if (recs.length === 1) {
+                        let rec = recs[0];
+                        let activity = rec.activity_id;
+                        let status = rec.last_action.status_id;
+                        let isHold = rec.is_hold;
+                        let menu = item.value;
+
+                        if ((isHold !== 1) && menu.show_on.indexOf(status) >= 0) {
+                            if (menu.activities.indexOf(activity) >= 0) {
+                                resultShow = true;
+                                item.show();
+                                @if ($user->hasRoute(['wo.create', 'wo.edit', 'wo.delete']) && !$archive)
+                                    Ext.getCmp('separator-1').show();
+                                @endif
+                            }
+                        }
+                    }
+                } else if (item.text === 'Edit') {
+                    if (user.role_id === 1100) {
+                        const allowedStatuses = [1110, 5110];
+                        if (recs.length === 1 && allowedStatuses.includes(recs[0].last_action.status_id)) {
+                            resultShow = true;
+                            item.show();
+                        } else {
+                            item.hide();
+                        }
+                    } else {
+                        resultShow = true;
+                        item.show();
                     }
                 } else {
                     item.show();
                 }
-            }
-            
-        });
+            });
 
-        @if (!$user->hasRoute(['wo.create', 'wo.edit', 'wo.delete']))
+            if (user.role_id === 1100 && !resultShow) {
+                obj.hide();
+            }
+
             return resultShow;
-        @endif
-        }
+        };
     }
 </script>
