@@ -15,7 +15,7 @@ class StatusDetail extends Model
     }
 
     public function options(){
-        return $this->hasMany(StatusDetailOption::class, 'detail_id', 'id');
+        return $this->hasMany(StatusDetailOption::class, 'detail_id', 'id')->orderBy('option');
     }
 
     public function actionDetails(){
