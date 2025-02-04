@@ -32,7 +32,7 @@ class Action extends Model
     }
 
     public function createdBy(){
-        return $this->hasOne(User::class, 'id', 'created_by');
+        return $this->hasOne(User::class, 'id', 'created_by')->withTrashed();
     }
 
     public function updatedBy(){
