@@ -30,7 +30,7 @@ class WorkOrder extends Controller
 {
      public function __construct()
     {
-        set_time_limit(300); // Set time limit to 5 minutes
+        set_time_limit(120); // Set time limit to 2 minutes
     }
 
     public function index(Request $request, $archive = false)
@@ -317,7 +317,7 @@ class WorkOrder extends Controller
         $token = Cache::get('woaccesstoken', function () use ($urlLogin, $email, $password) {
             $login = Curl::to($urlLogin)
                 ->withData(['email' => $email, 'password' => $password])
-                ->withTimeout(300)
+                ->withTimeout(120)
                 ->asJson()
                 ->returnResponseObject()
                 ->post();
@@ -412,7 +412,7 @@ class WorkOrder extends Controller
         // Hit API
         $response = Curl::to($urlPush)
         ->withData($data)
-        ->withTimeout(300)
+        ->withTimeout(120)
         ->withBearer($token)
         ->asJson()
         ->returnResponseObject()
@@ -760,7 +760,7 @@ class WorkOrder extends Controller
         else {
             $login = Curl::to($urlLogin)
                 ->withData(['email' => $email, 'password' => $password])
-                ->withTimeout(300)
+                ->withTimeout(120)
                 ->asJson()
                 ->returnResponseObject()
                 ->post();
@@ -821,7 +821,7 @@ class WorkOrder extends Controller
 
         $response = Curl::to($urlPush)
             ->withData($data)
-            ->withTimeout(300)
+            ->withTimeout(120)
             ->withBearer($token)
             ->asJson()
             ->returnResponseObject()
@@ -867,7 +867,7 @@ class WorkOrder extends Controller
         else {
             $login = Curl::to($urlLogin)
                 ->withData(['email' => $email, 'password' => $password])
-                ->withTimeout(300)
+                ->withTimeout(120)
                 ->asJson()
                 ->returnResponseObject()
                 ->post();
@@ -1014,7 +1014,7 @@ class WorkOrder extends Controller
 
         $response = Curl::to($urlPush)
             ->withData($data)
-            ->withTimeout(300)
+            ->withTimeout(120)
             ->withBearer($token)
             ->asJson()
             ->returnResponseObject()
@@ -1143,7 +1143,7 @@ class WorkOrder extends Controller
         else {
             $login = Curl::to($urlLogin)
                 ->withData(['email' => $email, 'password' => $password])
-                ->withTimeout(300)
+                ->withTimeout(120)
                 ->asJson()
                 ->returnResponseObject()
                 ->post();
@@ -1209,7 +1209,7 @@ class WorkOrder extends Controller
 
         $response = Curl::to($urlPush)
             ->withData($data)
-            ->withTimeout(300)
+            ->withTimeout(120)
             ->withBearer($token)
             ->asJson()
             ->returnResponseObject()
