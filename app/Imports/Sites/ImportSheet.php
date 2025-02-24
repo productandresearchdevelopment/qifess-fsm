@@ -35,6 +35,12 @@ class ImportSheet implements ToCollection, WithChunkReading
         $totalError = 0;
         $log = [];
 
+        $existingSites = Site::whereIn('link_id', $rows->pluck(0)->unique())->pluck('link_id')->toArray();
+
+        $existingVendors = Vendor::whereIn('id', $rows->pluck(1)->unique())->pluck('id')->toArray();
+        $existingClients = Client::whereIn('id', $rows->pluck(3)->unique())->pluck('id')->toArray();
+        $existingServices = Service::whereIn('id', $rows->pluck(5)->unique())->pluck('id')->toArray();
+
         for ($i = $startLine; $i < count($rows); $i++) {
             if($link_id = $rows[$i][0]) {
                 $error = null;
@@ -63,11 +69,11 @@ class ImportSheet implements ToCollection, WithChunkReading
                     'updated_by' =>$uid,
                 ];
 
-                if(Site::where('link_id', $link_id)->first()) $error = "Duplicate Link ID ($link_id)";
-                else if(!Vendor::find($data->vendor_id)) $error = "Undefined Area ($data->vendor_id)";
-                else if(!Client::find($data->client_id)) $error = "Undefined Client ($data->client_id)";
-                else if(!Service::find($data->service_id)) $error = "Undefined Service ($data->service_id)";
-                else if(!$data->name) $error = "Name Not Found";
+                if (in_array($link_id, $existingSites)) $error = "Duplicate Link ID ($link_id)";
+                else if (!in_array($data->vendor_id, $existingVendors)) $error = "Undefined Vendor ($data->vendor_id)";
+                else if (!in_array($data->client_id, $existingClients)) $error = "Undefined Client ($data->client_id)";
+                else if (!in_array($data->service_id, $existingServices)) $error = "Undefined Service ($data->service_id)";
+                else if (!$data->name) $error = "Name Not Found";
                 else{
                     DB::beginTransaction();
                     try {
@@ -171,6 +177,6 @@ class ImportSheet implements ToCollection, WithChunkReading
     }
 
     public function chunkSize(): int{
-        return 100;
+        return 1000;
     }
 }
