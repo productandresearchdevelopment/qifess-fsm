@@ -46,33 +46,33 @@
         title: 'Work Order',
         store: store,
         search: true,
-        topFilter: {
-          items: [{
-              id: "all",
-              text: "All",
-              handler: function() {
-                if (store) {
-                  let param = {};
-                  param["filter-client"] = "";
-                  store.extraParams(param);
-                  store.load();
-                }
-              }
-            },
-            ...uniqueClients.map(client => ({
-              id: `${client.id}`,
-              text: client.name,
-              handler: function() {
-                if (store) {
-                  let param = {};
-                  param["filter-client"] = client.id;
-                  store.extraParams(param);
-                  store.load();
-                }
-              }
-            }))
-          ]
-        },
+        // topFilter: {
+        //   items: [{
+        //       id: "all",
+        //       text: "All",
+        //       handler: function() {
+        //         if (store) {
+        //           let param = {};
+        //           param["filter-client"] = "";
+        //           store.extraParams(param);
+        //           store.load();
+        //         }
+        //       }
+        //     },
+        //     ...uniqueClients.map(client => ({
+        //       id: `${client.id}`,
+        //       text: client.name,
+        //       handler: function() {
+        //         if (store) {
+        //           let param = {};
+        //           param["filter-client"] = client.id;
+        //           store.extraParams(param);
+        //           store.load();
+        //         }
+        //       }
+        //     }))
+        //   ]
+        // },
         menu: {
           id: 'main-actionbar-menu',
           items: [{
