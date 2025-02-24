@@ -9,26 +9,37 @@ ai.ActionBar = function(option){
     me.search = null;
     me.menu = null;
     me.action = null;
-
+    me.topFilter = null;
 
     me.option = option;
 
     me.init = function(option){
-        if(!isNull(option) && (!isNull(option.renderTo) || !isNull(option.page))) {
+        if (!isNull(option) && (!isNull(option.renderTo) || !isNull(option.page))) {
             if (!isNull(option.id)) me.id = option.id;
             if (!isNull(option.store)) me.store = option.store;
             if (!isNull(option.title)) me.title = option.title;
             if (!isNull(option.menu)) me.menu = option.menu;
             if (!isNull(option.renderTo)) me.renderTo = option.renderTo;
             if (!isNull(option.page)) me.page = option.page;
+            if (!isNull(option.topFilter)) me.topFilter = option.topFilter;
 
-            let tpl = `<ons-toolbar  modifier="material" id="{0}" class="ai-actionbar">
-                            <div class="left"></div>
-                            <div class="center"> <div id="{0}-title" class="ai-actionbar-title"></div> </div>
-                            <div class="right"></div>
+            let topFilterTpl = `<div id="{0}-topFilterContainer" class="ai-topfilter-container"></div>`;
+
+            let toolbarTpl = `<ons-toolbar  modifier="material" id="{0}" class="ai-actionbar" style="height: 110px;">
+                            <div class="left" style="position: relative; top: 50px"></div>
+                            <div class="center" style="position: relative; top: 50px"> <div id="{0}-title" class="ai-actionbar-title"></div> </div>
+                            <div class="right" style="position: relative; top: 50px"></div>
                        </ons-toolbar>`;
 
-            $('#' + me.renderTo).prepend(String.format(tpl, me.id));
+            let container = $('#' + me.renderTo);
+            container.prepend(String.format(toolbarTpl, me.id));
+
+            setTimeout(() => {
+                let mainPage = $('#main-page');
+                mainPage.prepend(String.format(topFilterTpl, me.id));
+
+                if (me.topFilter) me.createTopFilter(me.topFilter);
+            }, 100);
 
             if (me.title) me.showTitle(me.title);
 
@@ -59,6 +70,68 @@ ai.ActionBar = function(option){
     me.hideTitle = function(){
         $('#'+me.id+'-title').hide();
     }
+
+    me.createTopFilter = function (topFilter) {
+        let container = $('#' + me.id + '-topFilterContainer');
+    
+    
+        container.css({
+            "white-space": "nowrap",
+            "overflow-x": "auto",
+            "display": "flex",
+            "gap": "5px",
+            "padding": "5px",
+            "scrollbar-width": "thin",
+            "-webkit-overflow-scrolling": "touch"
+        });
+    
+        container.empty();
+    
+        if (topFilter.items && Array.isArray(topFilter.items)) {
+            topFilter.items.forEach(function (filter) {
+                let btnId = me.id + '-filter-' + filter.id;
+                let isActive = filter.id === "all";
+    
+                let background = isActive ? '#0066cc' : '#dedede';
+                let textColor = isActive ? '#FFFFFF' : '#000000';
+    
+                let btn = `
+                    <ons-button id="${btnId}" modifier="quiet"
+                        class="ai-actionbar-filter-badge">
+                        ${filter.text}
+                    </ons-button>
+                `;
+                container.append(btn);
+    
+                $('#' + btnId).css({
+                    "background": background,
+                    "color": textColor,
+                    "border-radius": "8px",
+                    "font-size": "10px",
+                    "font-weight": "bold",
+                    "padding": "1px 8px",
+                    "width": "120px",
+                    "display": "inline-block",
+                    "margin": "2px",
+                    "white-space": "nowrap",
+                    "flex-shrink": "0"
+                });
+    
+                $(document).on('click', '#' + btnId, function () {
+                    $('.ai-actionbar-filter-badge').css({
+                        "background": "#dedede",
+                        "color": "#000000",
+                    });
+                    $(this).css({
+                        "background": "#0066cc",
+                        "color": "#FFFFFF",
+                    });
+    
+                    if (filter.handler) filter.handler(filter.id);
+                });
+            });
+        }
+    };
 
     me.actionButton = function(parent, option){
         let me = this;

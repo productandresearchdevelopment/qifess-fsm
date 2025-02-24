@@ -27,8 +27,13 @@
         var vendors = @json($vendors);
         var statusAction = @json($status);
         var slots = @json($slots);
+        var user = @json($user);
 
         var detailWo = null;
+
+        var uniqueClients = Array.from(
+            new Map(user?.fieldtech?.workorders?.map(wo => [wo.client?.id, wo.client]) || []).values()
+        ) || [];
 
         ai.require = '*';
         ai.ready(function(){
@@ -41,6 +46,33 @@
                 title: 'Work Order',
                 store: store,
                 search: true,
+                topFilter: {
+                    items: [{
+                        id: "all",
+                        text: "All",
+                        handler: function() {
+                            if (store) {
+                            let param = {};
+                            param["filter-client"] = "";
+                            store.extraParams(param);
+                            store.load();
+                            }
+                        }
+                        },
+                        ...uniqueClients.map(client => ({
+                        id: `${client.id}`,
+                        text: client.name,
+                        handler: function() {
+                            if (store) {
+                            let param = {};
+                            param["filter-client"] = client.id;
+                            store.extraParams(param);
+                            store.load();
+                            }
+                        }
+                        }))
+                    ]
+                    },
                 menu:{
                     id: 'main-actionbar-menu',
                     items: [
