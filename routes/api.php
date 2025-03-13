@@ -109,12 +109,15 @@ Route::group(['middleware' => ['auth.api'] ], function(){
                 }
                 return abort(404);
             });
+            Route::get('/onttype/data', 'WorkOrders\WorkOrder@getOntTypeOptions');
+            Route::get('/includestb/data', 'WorkOrders\WorkOrder@getIncludeStbOptions');
             Route::post('/wo/update/status/{wo?}/{status?}', 'WorkOrders\WorkOrder@pushAction');
             Route::post('/wo/rebooking/{wo?}', 'WorkOrders\WorkOrder@rebooking');
             Route::post('/wo/cancel/{wo?}', 'WorkOrders\WorkOrder@cancel');
             Route::post('/wo/delete', 'WorkOrders\WorkOrder@delete');
             Route::post('/wo/push', 'WorkOrders\WorkOrder@push');
             Route::post('/site/push/{id?}', 'Sites\Site@push');
+            Route::post('/wo/deactivation/{wo?}', 'WorkOrders\WorkOrder@deactivation');
         });
 
     });

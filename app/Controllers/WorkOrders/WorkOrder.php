@@ -1541,6 +1541,125 @@ class WorkOrder extends Controller
         return ['success' => false, 'message' => 'Undefined Action ID'];
     }
 
+    public function deactivation(Request $request, $id = null)
+    {
+        if ($wo = Wo::find($id)) {
+            if ($wo->activity_id !== 5) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Deactivation not permitted! Invalid termination activity.'
+                ], 403);
+            }
+
+            $laststs = $wo->lastAction->status_id ?? null;
+
+            if ($laststs !== 5110) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Deactivation not permitted! Invalid booking status phase."
+                ], 403);
+            }
+
+            $status = Master\Status::where('id', 5420)->first();
+
+            if ($status && is_array($status->show_on)) {
+                foreach ($status->show_on as $sid) {
+                    if ($sid == $laststs) {
+                        if (!$port_deactivation = $request->input('port_deactivation_in_olt')) return ['success' => false, 'message' => 'Port Deactivation In OLT is empty'];
+                        if (!$include_stb = $request->input('include_stb')) return ['success' => false, 'message' => 'Include STB is empty'];
+                        if (!$ont_type = $request->input('ont_type')) return ['success' => false, 'message' => 'ONT Type is empty'];
+                        if (!$sn_ont = $request->input('sn_ont')) return ['success' => false, 'message' => 'SN ONT is empty'];
+
+                        DB::beginTransaction();
+                        try {
+                            $action = Action::create([
+                                'wo_id' => $wo->id,
+                                'status_id' => $status->id,
+                            ]);
+
+                            foreach ($status->details as $detail) {
+                                $detailId = $detail->getAttribute('id');
+                                $value = null;
+
+                                if ($detailId == "281399") $value = $port_deactivation;
+                                else if ($detailId == "281815") $value = $include_stb;
+                                else if ($detailId == "281816") $value = $ont_type;
+                                else if ($detailId == "281817") $value = $sn_ont;
+
+
+                                ActionDetail::create([
+                                    'action_id' => $action->id,
+                                    'detail_id' => $detail->id,
+                                    'value' => $value,
+                                ]);
+                            }
+
+                            $wo->update([
+                                'last_action' => $action->id,
+                            ]);
+
+                            DB::commit();
+                            return ['success' => true, 'message' => 'Success!'];
+                        } catch (Exception $e) {
+                            DB::rollback();
+                            return ['success' => false, 'message' => '500 ' . $e->getMessage()];
+                        }
+                    }
+                }
+            }
+
+            return ['success' => false, 'message' => 'De-Activation not permitted!'];
+        }
+        return ['success' => false, 'message' => 'Undefined WO ID!'];
+    }
+
+    public function getOntTypeOptions()
+    {
+        $options = StatusDetailOption::where('detail_id', 281816)->get();
+
+        if ($options->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No data available for ONT Type.'
+            ], 404);
+        }
+
+        $data = $options->map(function ($option) {
+            return [
+                'id' => $option->id,
+                'name' => $option->option
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
+    public function getIncludeStbOptions()
+    {
+        $options = StatusDetailOption::where('detail_id', 281815)->get();
+
+        if ($options->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No data available for Include STB.'
+            ], 404);
+        }
+
+        $data = $options->map(function ($option) {
+            return [
+                'id' => $option->id,
+                'name' => $option->option
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
+
     public function deletePart(Request $request)
     {
         if ($id = $request->input('id')) {
