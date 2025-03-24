@@ -224,12 +224,12 @@
                         }
                     },
                     {
-                        text: "Hold",
+                        text: "HOLD",
                         dataIndex: 'is_hold',
                         width: 80,
                         align: 'center',
                         renderer: function(val, meta) {
-                            console.log(val === 1, 'val', meta, 'meta');
+                            // console.log(val === 1, 'val', meta, 'meta');
                             return val === 1? me.renderBox('HLD', 'f00', 'Hold', meta) : '';
                         }
                     },
