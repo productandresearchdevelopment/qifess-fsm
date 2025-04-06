@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use App\Models\WorkOrders\WorkOrderOngoing;
 
 class CleanWoOngoing extends Command
@@ -12,6 +13,8 @@ class CleanWoOngoing extends Command
 
     public function handle()
     {
+        Log::info('clean:woongoing dijalankan pada ' . now());
+
         $workOrders = WorkOrderOngoing::whereNotNull('close_date')->get();
 
         $count = $workOrders->count();
@@ -20,6 +23,7 @@ class CleanWoOngoing extends Command
             $wo->forceDelete();
         }
 
-        $this->info("data close_date not null telah dihapus secara permanen dari WoOngoing.");
+        $this->info("Data close_date not null sebanyak {$count} telah dihapus dari WoOngoing.");
+        Log::info("clean:woongoing menghapus {$count} data pada " . now());
     }
 }
