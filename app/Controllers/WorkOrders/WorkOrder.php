@@ -655,6 +655,10 @@ class WorkOrder extends Controller
             WoOngoing::where('no_wo', $wo->no_wo)->update(['last_action' => $wo->last_action]);
 
             DB::commit();
+
+            // ubah id menjadi string
+            $wo->id = (string) $wo->id;
+
             return ['success' => true, 'message' => 'Success...', 'data' => $wo];
         } catch (QueryException $error) {
             DB::rollback();
