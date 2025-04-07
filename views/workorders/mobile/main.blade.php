@@ -220,18 +220,19 @@
               render: function(rec) {
                 let tpl =
                   '<div class="small-text" style="color: #{color};"><i class="fa fa-hourglass-o"></i> {expire}</div>';
-                let day = dates.shortDay(rec.expire_date);
-                if (day.substr(0, 1) == '-') day = {
-                  expire: day.substr(1, day.length),
-                  color: 'FF0000'
-                }
-                else day = {
-                  expire: day,
-                  color: '0072ff'
-                }
-                return String.format(tpl, day);
+
+                let sla = dates.diffServer(rec.start_date);
+
+                const day = sla.day;
+
+                const data = {
+                  expire: day + ' Day',
+                  color: day < 0 ? 'FF0000' : '0072ff'
+                };
+
+                return String.format(tpl, data);
               }
-            },
+            }
           ],
         },
         loadMore: true,
