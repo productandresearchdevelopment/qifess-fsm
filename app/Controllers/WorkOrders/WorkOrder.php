@@ -1518,6 +1518,11 @@ class WorkOrder extends Controller
         if ($wo = Wo::find($id)) {
             $laststs = $wo->lastAction->status_id;
 
+            $closeStatus = [1610, 2610, 3610, 4610, 5610, 6610, 7430];
+            if (in_array($laststs, $closeStatus)) {
+                return ['success' => false, 'message' => 'Cancel not allowed for this status'];
+            }
+
             if ($user->role_id == 20) {
                 $allowedStatus = Master\Status::whereIn('id', [1914, 2910, 3910, 4910, 5910, 6910, 7910])->get();
             } elseif ($user->role_id == 10) {
