@@ -25,10 +25,6 @@ class WorkOrderOngoing extends Model
 
     public $paternId = 'prefix';
 
-     public $incrementing = false;
-
-     protected $primaryKey = null;
-
     public function actions(){
         return $this->hasMany(Action::class, 'wo_id', 'id')->orderBy('updated_at');
     }
