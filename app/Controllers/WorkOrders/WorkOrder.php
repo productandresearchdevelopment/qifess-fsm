@@ -615,7 +615,6 @@ class WorkOrder extends Controller
                     WoOngoing::where('wo_id', $wo->id)
                         ->update(array_merge($input, [
                             'last_action' => $lastAction,
-                            'id' => $wo->id
                         ]));
                 } else {
                     return ['success' => false, 'message' => "Undefined WorkOrder"];
@@ -627,7 +626,6 @@ class WorkOrder extends Controller
                 WoOngoing::create(array_merge($input, [
                     'last_action' => null,
                     'wo_id' => $wo->id,
-                    'id' => $wo->id
                 ]));
             }
 
