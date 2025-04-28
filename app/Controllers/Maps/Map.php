@@ -26,7 +26,7 @@ class Map extends Controller
     public function index(Request $request)
     {
         $vendors = Vendor::select('id', 'name')->get();
-        $activities = Activity::select('id', 'name')->get();
+        $activities = Activity::select('id', 'name', 'alias')->get();
         return view('map.main', [
             'vendors' => $vendors,
             'activities' => $activities,

@@ -186,7 +186,7 @@
   <select id="activitySelect" class="form-control select2">
     <option value="all">All Activities</option>
     @foreach ($activities as $activity)
-      <option value="{{ $activity['id'] }}">{{ $activity['name'] }}</option>
+      <option value="{{ $activity['id'] }}">{{ $activity['alias'] }}</option>
     @endforeach
   </select>
 
