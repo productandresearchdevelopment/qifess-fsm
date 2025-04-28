@@ -194,7 +194,7 @@ class Map extends Controller
                 if ($request->filled('start_date') && $request->filled('end_date')) {
                     $startDate = date('Y-m-d 00:00:00', strtotime($request->start_date));
                     $endDate = date('Y-m-d 23:59:59', strtotime($request->end_date));
-                    $query->whereBetween('created_at', [$startDate, $endDate]);
+                    $query->whereBetween('po_wo.created_at', [$startDate, $endDate]);
                 }
 
                 $summary = $query->get();
