@@ -101,7 +101,6 @@ class Map extends Controller
                     'id' => $site->id,
                     'name' => $site->name ?? 'N/A',
                     'vendor' => $site->vendor->name ?? 'N/A',
-                    'city' => $site->city ?? 'N/A',
                     'vendor_id' => $site->vendor_id ?? 'N/A',
                     'latitude' => $site->lat ?? null,
                     'longitude' => $site->long ?? null,
@@ -321,7 +320,36 @@ class Map extends Controller
             $query->where('activity_id', $request->activity_id);
         }
 
-        $workorders = $query->orderBy('updated_at', 'desc')->get();
+        $workorders = $query->orderBy('updated_at', 'asc')->get();
+
+        $specialStatusIds = [
+            1910,
+            1912,
+            1914,
+            2910,
+            2912,
+            2914,
+            3910,
+            3912,
+            3914,
+            4910,
+            4912,
+            4914,
+            5910,
+            5912,
+            5914,
+            6910,
+            6912,
+            6914,
+            7910,
+            7912,
+            7914
+        ];
+
+        $workorders = $workorders->sortBy(function ($wo) use ($specialStatusIds) {
+            $statusId = optional($wo->lastAction)->status_id;
+            return in_array($statusId, $specialStatusIds) ? 1 : 0;
+        })->values();
 
         $statusMap = [
             1 => ['start' => 1310, 'end' => 1432],

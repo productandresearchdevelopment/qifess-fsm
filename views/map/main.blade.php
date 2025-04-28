@@ -306,7 +306,7 @@
           let popupContent = `
             <div class="workorder-container">
               <b>Site Name : ${site.name}
-              <br>City : ${site.city}
+              <br>City : ${site.vendor}
               <br>Team : ${site.fieldtech_name}, Vendor : ${site.vendor_name}
               <br>Lat : ${site.latitude}, Long:  ${site.longitude} </b>
               <br>
