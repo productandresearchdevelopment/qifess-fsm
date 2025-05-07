@@ -23,65 +23,83 @@ class WorkOrderOngoing extends Model
     protected $table   = 'po_wo_ongoing';
     protected $guarded = ['id'];
 
+    public $incrementing = false;
+    protected $keyType = 'int';
+
     public $paternId = 'prefix';
 
-    public function actions(){
+    public function actions()
+    {
         return $this->hasMany(Action::class, 'wo_id', 'id')->orderBy('updated_at');
     }
 
-    public function parts(){
+    public function parts()
+    {
         return $this->hasMany(Part::class, 'wo_id', 'id')->orderBy('created_at');
     }
 
-    public function lastAction(){
+    public function lastAction()
+    {
         return $this->hasOne(Action::class, 'id', 'last_action');
     }
 
-    public function owner(){
+    public function owner()
+    {
         return $this->hasOne(Owner::class, 'id', 'owner_id');
     }
 
-    public function site(){
+    public function site()
+    {
         return $this->hasOne(Site::class, 'id', 'site_id')->withTrashed();
     }
 
-    public function removeSite(){
+    public function removeSite()
+    {
         return $this->hasOne(Site::class, 'id', 'remove_site_id')->withTrashed();
     }
 
-    public function activity(){
+    public function activity()
+    {
         return $this->hasOne(Activity::class, 'id', 'activity_id');
     }
 
-    public function service(){
+    public function service()
+    {
         return $this->hasOne(Service::class, 'id', 'service_id');
     }
 
-    public function client(){
+    public function client()
+    {
         return $this->hasOne(Client::class, 'id', 'client_id')->withTrashed();
     }
 
-    public function vendor(){
+    public function vendor()
+    {
         return $this->hasOne(Vendor::class, 'id', 'vendor_id')->withTrashed();
     }
 
-    public function slot(){
+    public function slot()
+    {
         return $this->hasOne(Slot::class, 'id', 'slot_id');
     }
 
-    public function fieldtech(){
+    public function fieldtech()
+    {
         return $this->hasOne(Fieldtech::class, 'id', 'fieldtech_id')->withTrashed();
     }
 
-    public function createdBy(){
+    public function createdBy()
+    {
         return $this->hasOne(User::class, 'id', 'created_by');
     }
 
-    public function updatedBy(){
+    public function updatedBy()
+    {
         return $this->hasOne(User::class, 'id', 'updated_by');
     }
 
-    public function deletedBy(){
+    public function deletedBy()
+    {
         return $this->hasOne(User::class, 'id', 'deleted_by');
     }
 

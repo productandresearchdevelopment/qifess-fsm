@@ -556,12 +556,36 @@ class WorkOrder extends Controller
             $fieldtechId = $request->input('fieldtech_id');
             $slotId = $request->input('slot_id');
             $activityId = $request->input('activity_id');
+            $noWo = $request->input('no_wo');
 
+            // Validasi input yang diperlukan
             if (!$request->input('remove_site_id') && !$request->input('site_id'))
                 return ['success' => false, 'message' => 'site_id OR remove_site_id Is Null'];
             if (!$request->input('activity_id')) return ['success' => false, 'message' => 'activity_id Is Null'];
             if (!$request->input('client_id')) return ['success' => false, 'message' => 'client_id Is Null'];
             if (!$request->input('description')) return ['success' => false, 'message' => 'description Is Null'];
+
+            if ($noWo) {
+                $existingWoQuery = Wo::where('no_wo', $noWo);
+                if ($id) {
+                    $existingWoQuery->where('id', '!=', $id);
+                }
+                $existingWo = $existingWoQuery->first();
+
+                if ($existingWo) {
+                    return ['success' => false, 'message' => 'Ticket Number already exists'];
+                }
+
+                $existingWoOngoingQuery = WoOngoing::where('no_wo', $noWo);
+                if ($id) {
+                    $existingWoOngoingQuery->where('wo_id', '!=', $id);
+                }
+                $existingWoOngoing = $existingWoOngoingQuery->first();
+
+                if ($existingWoOngoing) {
+                    return ['success' => false, 'message' => 'Ticket Number already exists'];
+                }
+            }
 
             if ($startDate && $fieldtechId && $slotId) {
                 if ($err = $this->fieldtechCheck($fieldtechId, $startDate, $slotId)) {
@@ -583,7 +607,7 @@ class WorkOrder extends Controller
                 'slot_id' => $slotId,
                 'owner_id' => $request->input('owner_id'),
                 'description' => $request->input('description'),
-                'no_wo' => $request->input('no_wo'),
+                'no_wo' => $noWo,
                 'start_date' => $startDate,
                 'fieldtech_id' => $fieldtechId,
                 'expire_date' => $request->input('expire_date'),
@@ -658,7 +682,7 @@ class WorkOrder extends Controller
 
             DB::commit();
 
-            //ubah id menjadi string
+            //convert to string untuk id
             $wo->id = (string) $wo->id;
 
             return ['success' => true, 'message' => 'Success...', 'data' => $wo];
