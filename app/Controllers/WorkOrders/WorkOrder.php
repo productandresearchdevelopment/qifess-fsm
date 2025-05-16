@@ -642,11 +642,13 @@ class WorkOrder extends Controller
                 $wo = Wo::create($input);
                 $actionId = null;
 
-                WoOngoing::create(array_merge($input, [
-                    'last_action' => null,
-                    'wo_id' => $wo->id,
-                    'id' => $wo->id
-                ]));
+                WoOngoing::firstOrCreate(
+                    ['wo_id' => $wo->id],
+                    array_merge($input, [
+                        'last_action' => null,
+                        'id' => $wo->id
+                    ])
+                );
             }
 
             $status = Master\Status::getStatusOpen($input['activity_id']);
