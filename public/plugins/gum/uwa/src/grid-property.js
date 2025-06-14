@@ -144,7 +144,9 @@ Uwa.GridProperty = function(property){
 
             let lastGroup = null;
             sources.forEach(function (source) {
-                if(source.required) source.name += ' (<i class="bi bi-asterisk" style="font-size: 7px"></i>)';
+                if (source.required && !source.name.includes('<i class="bi bi-asterisk"')) {
+                    source.name += ' (<i class="bi bi-asterisk" style="font-size: 7px"></i>)';
+                }
 
                 if(source.type != 'hide') {
                     let textGroup = source.group;

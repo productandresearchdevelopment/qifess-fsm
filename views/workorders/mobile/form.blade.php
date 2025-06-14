@@ -203,9 +203,9 @@
             status.details.forEach(function (detail) {
                 let fieldsTpl = null;
 
-                if(detail.required){
-                    detail.name += ' (<i class="bi bi-asterisk" style="font-size: 6px; color: #1d4bc0"></i>)';
-                }
+                if (detail.required && !detail.name.includes('<i class="bi bi-asterisk"')) {
+          detail.name += ' (<i class="bi bi-asterisk" style="font-size: 6px; color: #1d4bc0"></i>)';
+        }
 
 
                 if(detail.type == 'hide'){
