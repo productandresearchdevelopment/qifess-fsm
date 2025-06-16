@@ -1902,7 +1902,8 @@ class WorkOrder extends Controller
                     DATEDIFF(DATE(NOW()), A.start_date) AS duration,
                     Y.total_stb,
                     Z.alamat_instalasi,
-                    SO.sn_ont_activation
+                    SO.sn_ont_activation,
+                    CC.input_kabel_kode
                 FROM po_wo A
                     LEFT JOIN po_wo_action B ON A.last_action = B.id AND B.deleted_at IS NULL
                     LEFT JOIN po_wo_m_status B1 ON B.status_id = B1.id
@@ -1954,6 +1955,16 @@ class WorkOrder extends Controller
                         AND SD.status_id = 1420
                         GROUP BY X2.wo_id
                     ) SO ON A.id = SO.wo_id
+                    LEFT JOIN (
+                        SELECT X2.wo_id, MAX(X1.`value`) AS input_kabel_kode
+                        FROM po_wo_action_detail X1
+                        INNER JOIN po_wo_action X2 ON X1.action_id = X2.id
+                        INNER JOIN po_wo_m_status_detail SD ON X1.detail_id = SD.id
+                        WHERE X2.status_id = 1410
+                        AND SD.`name` = 'Input barcode kabel kode'
+                        AND SD.status_id = 1410
+                        GROUP BY X2.wo_id
+                    ) CC ON A.id = CC.wo_id
                 WHERE A.deleted_at IS NULL
                 $where";
 
@@ -1993,6 +2004,7 @@ class WorkOrder extends Controller
                 return $value == 1 ? 'HOLD' : '-';
             }],
             ["text" => "SN ACT", "dataIndex" => "sn_ont_activation", "width" => 200],
+            ["text" => "BARCODE KABEL KODE", "dataIndex" => "input_kabel_kode", "width" => 300],
         ];
 
         $footers = ['Total Count: ' . count($data) . ' Row', ' ', 'Asianet', 'Downloaded (QFEST)` (' . date('d F Y H:i:s') . ')'];
