@@ -146,8 +146,8 @@ class Site extends Controller
 
     public function exportExcel(Request $request)
     {
-        ini_set('memory_limit', '64048M');
-        ini_set('max_execution_time', '300');
+        ini_set('memory_limit', '4096M');
+        ini_set('max_execution_time', '600');
 
         $title = [];
 
@@ -187,7 +187,7 @@ class Site extends Controller
         }
 
 
-        $data = $this->data($request, false);
+        // $data = $this->data($request, false);
 
         $columns = [
             ['text' => 'LINK ID', 'dataIndex' => 'link_id', 'width' => 120, 'align' => 'center'],
@@ -233,12 +233,21 @@ class Site extends Controller
             ['text' => 'DESCRIPTION', 'dataIndex' => 'description', 'width' => 300]
         ];
 
+        $total = $this->data($request, true); // return total count aja
+        $limit = 5000;
+
         $params = array(
-            // 'title' => $title,
             'columns' => $columns,
-            'data' => $data,
             'filename' => 'Site' . '-' . date('YmdHi'),
             'footer' => [config('app.name') . ' (' . date('d F Y H:i:s') . ')'],
+            'title' => $title,
+
+            // Data provider function, hanya ambil sebagian data berdasarkan offset
+            'dataProvider' => function ($offset, $limit) use ($request) {
+                return $this->data($request, false, $offset, $limit);
+            },
+            'total' => $total,
+            'limit' => $limit,
         );
 
         return ExportExcel::export($params);
