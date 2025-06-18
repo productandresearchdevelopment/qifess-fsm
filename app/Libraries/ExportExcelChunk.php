@@ -568,6 +568,94 @@ class ExportExcelChunk
         }
     }
 
+    // public function renderChunk($chunkSize = 5000)
+    // {
+    //     $this->isUsingChunk = true;
+
+    //     $data      = collect($this->data)->all();
+    //     $total     = count($data);
+    //     $offset    = 0;
+    //     $rowIndex  = 0;
+
+    //     $count     = count($data);
+    //     $rangeSum  = [];
+    //     $rows      = 0;
+    //     $groups    = $this->groups;
+    //     $fields    = $this->fields;
+    //     $countFields = count($fields);
+
+    //     while ($offset < $total) {
+    //         $chunk = array_slice($data, $offset, $chunkSize);
+    //         $startGroup = 0;
+
+    //         foreach ($chunk as $index => $row) {
+    //             $realIndex = $offset + $index;
+
+    //             if ($groups) {
+    //                 $isGroup = $this->showGroup($realIndex, $countFields);
+    //                 if ($isGroup || !$realIndex) {
+    //                     $rows++;
+    //                     $rangeSum[] = $rows;
+    //                 }
+    //             }
+
+    //             echo '<Row>';
+    //             foreach ($fields as $col) {
+    //                 $dataIndex = $col->name;
+    //                 $text = (isset($row->$dataIndex)) ? $row->$dataIndex : '';
+
+    //                 if (is_callable($renderer = $col->renderer)) {
+    //                     $text = $renderer($text, $row);
+    //                 } else {
+    //                     $text = str_replace(["'", '"', '`', '<', '>', ';'], ' ', $text);
+    //                 }
+
+    //                 switch ($col->type) {
+    //                     case "int":
+    //                     case "float":
+    //                         $dataType = "Number";
+    //                         break;
+    //                     case "date":
+    //                     case "datetime":
+    //                         $dataType = "DateTime";
+    //                         $text = str_replace(' ', 'T', $text);
+    //                         break;
+    //                     case "time":
+    //                         $dataType = "DateTime";
+    //                         break;
+    //                     default:
+    //                         $dataType = "String";
+    //                 }
+
+    //                 $style = "tbody-$col->type-$col->align";
+
+    //                 if ($col->formula) {
+    //                     $col->formula = str_replace(["'", '"'], '&quot;', $col->formula);
+    //                     echo '<Cell ss:StyleID="' . $style . '" ss:Formula="' . $this->sformat($col->formula, $row) . '"><Data ss:Type="' . $dataType . '">' . $text . '</Data></Cell>';
+    //                 } else {
+    //                     echo '<Cell ss:StyleID="' . $style . '"><Data ss:Type="' . $dataType . '">' . $text . '</Data></Cell>';
+    //                 }
+    //             }
+    //             echo '</Row>';
+    //             $rows++;
+
+    //             if (isset($groups->summary) && $groups->summary) {
+    //                 $isSummary = $this->showGroupSummary($realIndex, $total, $startGroup);
+    //                 if ($isSummary) {
+    //                     $startGroup = 1;
+    //                     $rows++;
+    //                 }
+    //             }
+    //         }
+
+    //         $offset += $chunkSize;
+    //     }
+
+    //     if ($this->summary && $total) {
+    //         $this->showSummary($rangeSum, $total, ++$rows);
+    //     }
+    // }
+
     public function renderChunk($chunkSize = 5000)
     {
         $this->isUsingChunk = true;
@@ -649,13 +737,16 @@ class ExportExcelChunk
             }
 
             $offset += $chunkSize;
+
+            // ✅ Kirim output ke browser biar buffer gak numpuk
+            if (function_exists('ob_flush')) ob_flush();
+            flush();
         }
 
         if ($this->summary && $total) {
             $this->showSummary($rangeSum, $total, ++$rows);
         }
     }
-
 
 
     public function run()
