@@ -154,6 +154,9 @@ class Site extends Controller
         ini_set('memory_limit', '4096M');
         ini_set('max_execution_time', '600');
 
+        if (ob_get_length()) ob_end_clean();
+        ob_start();
+
         $title = [];
 
         $title[] = ['Site', 'h2'];
@@ -248,6 +251,10 @@ class Site extends Controller
         );
 
         $isChunked = ExportExcelChunk::export($params);
+
+        ob_end_flush();
+        flush();
+
         Log::info('Export Excel Site menggunakan chunk: ' . ($isChunked ? 'YA' : 'TIDAK'));
     }
 
