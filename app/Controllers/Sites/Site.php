@@ -6,6 +6,7 @@ use App\Exports\Sites\ImportFormat\Format;
 use App\Imports\Sites\Import;
 use App\Libraries\ExportExcel;
 use App\Http\Controllers\Controller;
+use App\Libraries\ExportExcelChunk;
 use App\Libraries\FileUpload;
 use App\Libraries\Query;
 use App\SystemModels\Globals\Upload;
@@ -17,6 +18,7 @@ use App\Models\Clients\Client;
 use App\Models\Services\Service;
 use App\Models\Vendors\Vendor;
 use App\Models\WorkOrders\Masters as Master;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -41,7 +43,7 @@ class Site extends Controller
         return view("sites.main", $params);
     }
 
-    public function data(Request $request, $counter = true)
+    public function data(Request $request, $counter = true, $asQuery = false)
     {
         $user = $request->user();
         $query = Mod::query();
@@ -82,6 +84,9 @@ class Site extends Controller
         $query->with(["workorders"]);
         $query->withCount(["workorders"]);
 
+        if ($asQuery) {
+            return $query;
+        }
         return Query::open($query, null, $counter);
     }
 
@@ -239,9 +244,11 @@ class Site extends Controller
             'data' => $data,
             'filename' => 'Site' . '-' . date('YmdHi'),
             'footer' => [config('app.name') . ' (' . date('d F Y H:i:s') . ')'],
+            'chunkSize' => 5000,
         );
 
-        return ExportExcel::export($params);
+        $isChunked = ExportExcelChunk::export($params);
+        Log::info('Export Excel Site menggunakan chunk: ' . ($isChunked ? 'YA' : 'TIDAK'));
     }
 
     public function importFormat(Request $request)
