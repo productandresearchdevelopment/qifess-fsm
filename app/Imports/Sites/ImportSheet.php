@@ -9,6 +9,7 @@ use App\Models\Sites\Site;
 use App\Models\Vendors\Vendor;
 use App\Models\WorkOrders\Action;
 use App\Models\WorkOrders\WorkOrder;
+use App\Models\WorkOrders\WorkOrderOngoing;
 use DateTime;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
@@ -23,12 +24,14 @@ class ImportSheet implements ToCollection, WithChunkReading
     private $user = null;
     private $activity = null;
 
-    public function __construct($user, $activity){
+    public function __construct($user, $activity)
+    {
         $this->user = $user;
         $this->activity = $activity;
     }
 
-    public function collection(Collection $rows) {
+    public function collection(Collection $rows)
+    {
         $startLine = 4;
         $totalRow = 0;
         $totalSuccess = 0;
@@ -42,7 +45,7 @@ class ImportSheet implements ToCollection, WithChunkReading
         $existingServices = Service::whereIn('id', $rows->pluck(5)->unique())->pluck('id')->toArray();
 
         for ($i = $startLine; $i < count($rows); $i++) {
-            if($link_id = $rows[$i][0]) {
+            if ($link_id = $rows[$i][0]) {
                 $error = null;
                 $uid = $this->user->id;
                 $data = (object) [
@@ -66,7 +69,7 @@ class ImportSheet implements ToCollection, WithChunkReading
                     'long' => $rows[$i][20],
                     'is_active' => 1,
                     'created_by' => $uid,
-                    'updated_by' =>$uid,
+                    'updated_by' => $uid,
                 ];
 
                 if (in_array($link_id, $existingSites)) $error = "Duplicate Link ID ($link_id)";
@@ -74,7 +77,7 @@ class ImportSheet implements ToCollection, WithChunkReading
                 else if (!in_array($data->client_id, $existingClients)) $error = "Undefined Client ($data->client_id)";
                 else if (!in_array($data->service_id, $existingServices)) $error = "Undefined Service ($data->service_id)";
                 else if (!$data->name) $error = "Name Not Found";
-                else{
+                else {
                     DB::beginTransaction();
                     try {
                         $site = Site::create((array) $data);
@@ -83,28 +86,26 @@ class ImportSheet implements ToCollection, WithChunkReading
                         $fieldtech = $rows[$i][23];
                         $slot = $rows[$i][25];
 
-                        if($this->activity) {
+                        if ($this->activity) {
                             $ticket = $this->createTicket($site, $ticketNumber, $ticketDescription, $fieldtech, $slot);
                         }
 
-                        if($ticket->success) {
+                        if ($ticket->success) {
                             DB::commit();
                             $totalSuccess++;
-                        }
-                        else{
+                        } else {
                             $error = $ticket->message;
                             DB::rollback();
                         }
-                    }
-                    catch(QueryException $e){
+                    } catch (QueryException $e) {
                         DB::rollback();
                         $error = $e->getMessage();
                     }
                 }
 
-                if($error) {
+                if ($error) {
                     $log[] = [
-                        'row' => ($i+1),
+                        'row' => ($i + 1),
                         'success' => false,
                         'message' => $error
                     ];
@@ -123,7 +124,8 @@ class ImportSheet implements ToCollection, WithChunkReading
         ];
     }
 
-    private function createTicket($site, $ticketNumber, $ticketDescription, $fieldtech, $slot){
+    private function createTicket($site, $ticketNumber, $ticketDescription, $fieldtech, $slot)
+    {
         try {
             $status = ($this->activity->id == 5) ? 5110 : 1110;
 
@@ -142,7 +144,9 @@ class ImportSheet implements ToCollection, WithChunkReading
                 'created_by' => $this->user->id,
                 'updated_by' => $this->user->id,
             ];
+
             $wo = WorkOrder::create($input);
+
             $action = Action::create([
                 'wo_id' => $wo->id,
                 'status_id' => $status,
@@ -150,25 +154,35 @@ class ImportSheet implements ToCollection, WithChunkReading
                 'created_by' => $this->user->id,
                 'updated_by' => $this->user->id,
             ]);
+
             $wo->update(['last_action' => $action->id]);
+
+            WorkOrderOngoing::create(array_merge($input, [
+                'last_action' => $action->id,
+                'wo_id' => $wo->id,
+                'id' => $wo->id,
+                'is_hold' => 0,
+                'close_date' => null,
+            ]));
+
             return (object)['success' => true, 'message' => 'Success...'];
-        }
-        catch(QueryException $e){
+        } catch (QueryException $e) {
             return (object)['success' => false, 'message' =>  $e->getMessage()];
         }
     }
 
-    private function getTeam($date, $vendor){
+    private function getTeam($date, $vendor)
+    {
         $sql = "SELECT A.id, MAX(B.slot_id) slot, SUM(IF(B.id, 1, 0)) count
                 FROM po_m_fieldtech A LEFT JOIN po_wo B ON A.id = B.fieldtech_id AND B.deleted_at IS NULL AND B.start_date = '$date'
                 WHERE A.vendor_id = '$vendor' GROUP BY A.id HAVING count < 2 ORDER BY count, slot LIMIT 1";
         $data = DB::select(DB::raw($sql));
-        if(count($data)){
+        if (count($data)) {
             $data = $data[0];
             $id = $data->id;
             $slot = $data->slot;
-            if($slot == 1) $slot = 2;
-            else if($slot == 2) $slot = 1;
+            if ($slot == 1) $slot = 2;
+            else if ($slot == 2) $slot = 1;
             else $slot = 1;
 
             return (object) ['fieldtech' => $id, 'slot' => $slot];
@@ -176,7 +190,8 @@ class ImportSheet implements ToCollection, WithChunkReading
         return null;
     }
 
-    public function chunkSize(): int{
+    public function chunkSize(): int
+    {
         return 1000;
     }
 }
