@@ -970,6 +970,9 @@ class WorkOrder extends Controller
         $bastURL = null;
         $evidenceURL = null;
 
+        $ontSerialFromActivation = null;
+        $ontSerialFromTesting = null;
+
         $ont  = ["type" => 'ont', "serialNumber" => "", "macaddressont" => ""];
         $stb1 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
         $stb2 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
@@ -985,7 +988,7 @@ class WorkOrder extends Controller
                 if (strtoupper($act->status->name) == 'ACTIVATION') {
                     if (strtolower($extra->detail->name) == 'sn ont') {
                         $ont['serialNumber'] = $extra->value;
-                        $serialNumber = $extra->value;
+                        $ontSerialFromActivation = $extra->value;
                     } else if (strtolower($extra->detail->name) == 'mac address ont') $ont['macaddressont'] = $extra->value;
                     else if (strtolower($extra->detail->name) == 'tipe stb 1') $stb1['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
                     else if (strtolower($extra->detail->name) == 'sn stb 1') $stb1['serialNumber'] = $extra->value;
@@ -1008,12 +1011,24 @@ class WorkOrder extends Controller
                 } else if (strtoupper($act->status->name) == 'ADDITIONAL MATERIAL') {
                     if (strtolower($extra->detail->name) == 'kelebihan kabel dw') $additionalDropCable = $extra->value;
                     else if (strtolower($extra->detail->name) == 'kelebihan kabel utp') $additionalUTP = $extra->value;
+                } else if (strtoupper($act->status->name) == 'TESTING') {
+                    if (strtolower($extra->detail->name) == 'sn ont') {
+                        $ontSerialFromTesting = $extra->value;
+                    }
                 }
                 // else if (strtoupper($act->status->name) == 'POST ACTIVATION') {
                 //     if (strtolower($extra->detail->name) == 'kelebihan kabel dw') $additionalDropCable = $extra->value;
                 //     else if (strtolower($extra->detail->name) == 'kelebihan kabel utp') $additionalUTP = $extra->value;
                 // }
             }
+        }
+
+        if (!empty($ontSerialFromTesting)) {
+            $ont['serialNumber'] = $ontSerialFromTesting;
+            $serialNumber = $ontSerialFromTesting;
+        } else if (!empty($ontSerialFromActivation)) {
+            $ont['serialNumber'] = $ontSerialFromActivation;
+            $serialNumber = $ontSerialFromActivation;
         }
 
         $cpe = [$ont, $stb1, $stb2, $stb3];
@@ -1903,6 +1918,7 @@ class WorkOrder extends Controller
                     Y.total_stb,
                     Z.alamat_instalasi,
                     SO.sn_ont_activation,
+                    ST.sn_ont_testing,
                     CC.input_kabel_kode
                 FROM po_wo A
                     LEFT JOIN po_wo_action B ON A.last_action = B.id AND B.deleted_at IS NULL
@@ -1956,6 +1972,16 @@ class WorkOrder extends Controller
                         GROUP BY X2.wo_id
                     ) SO ON A.id = SO.wo_id
                     LEFT JOIN (
+                        SELECT X2.wo_id, MAX(X1.`value`) AS sn_ont_testing
+                        FROM po_wo_action_detail X1
+                        INNER JOIN po_wo_action X2 ON X1.action_id = X2.id
+                        INNER JOIN po_wo_m_status_detail SD ON X1.detail_id = SD.id
+                        WHERE X2.status_id = 1430
+                        AND SD.`name` = 'SN ONT'
+                        AND SD.status_id = 1430
+                        GROUP BY X2.wo_id
+                    ) ST ON A.id = ST.wo_id
+                    LEFT JOIN (
                         SELECT X2.wo_id, MAX(X1.`value`) AS input_kabel_kode
                         FROM po_wo_action_detail X1
                         INNER JOIN po_wo_action X2 ON X1.action_id = X2.id
@@ -2004,6 +2030,7 @@ class WorkOrder extends Controller
                 return $value == 1 ? 'HOLD' : '-';
             }],
             ["text" => "SN ACT", "dataIndex" => "sn_ont_activation", "width" => 200],
+            ["text" => "SN TESTING", "dataIndex" => "sn_ont_testing", "width" => 200],
             ["text" => "BARCODE KABEL KODE", "dataIndex" => "input_kabel_kode", "width" => 300],
         ];
 
