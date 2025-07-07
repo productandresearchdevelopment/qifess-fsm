@@ -9,14 +9,15 @@ class Kernel extends ConsoleKernel
 {
     protected $commands = [];
 
-    protected function schedule(Schedule $schedule){
-        // $schedule->command('database:backup')->daily();
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->command('database:backup')->daily();
         $schedule->command('clean:woongoing')->dailyAt('02:00');
     }
 
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
         require base_path('routes/console.php');
     }
 }
