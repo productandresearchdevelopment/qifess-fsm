@@ -16,17 +16,81 @@ class DatabaseBackup extends Command
     const DIRECTORY = 'backup/db';
     const EXPIRED_DAY = 3;
 
-    public function __construct(){
+    public function __construct()
+    {
         parent::__construct();
     }
 
-    public function handle(){
-        try {
-            $filename = self::PREFIX.'_'.date('ymdH').".gz";
-            $pathfilename = self::DIRECTORY.'/'.$filename;
-            $pathfiledb = self::DIRECTORY.'/'.self::PREFIX.'.gz';
+    // public function handle()
+    // {
+    //     try {
+    //         $filename = self::PREFIX . '_' . date('ymdH') . ".gz";
+    //         $pathfilename = self::DIRECTORY . '/' . $filename;
+    //         $pathfiledb = self::DIRECTORY . '/' . self::PREFIX . '.gz';
 
-            $filetmp = 'tmp/'.((string)Str::uuid()).'.gz';
+    //         $filetmp = 'tmp/' . ((string)Str::uuid()) . '.gz';
+
+    //         $process = sprintf(
+    //             '/usr/bin/mysqldump --user="%s" --password="%s" --host="%s" "%s" | gzip > %s',
+    //             config('database.connections.mysql.username'),
+    //             config('database.connections.mysql.password'),
+    //             config('database.connections.mysql.host'),
+    //             config('database.connections.mysql.database'),
+    //             Storage::disk('local')->path($filetmp)
+    //         );
+
+    //         exec("$process");
+
+    //         while (!Storage::disk('local')->exists($filetmp)) {
+    //             sleep(2);
+    //         }
+
+    //         $file = @file_get_contents(Storage::disk('local')->path($filetmp));
+
+    //         if (Storage::disk(config('filesystems.upload_disk'))->exists($pathfiledb)) {
+    //             Storage::disk(config('filesystems.upload_disk'))->delete($pathfiledb);
+    //         }
+
+    //         Storage::disk(config('filesystems.upload_disk'))->put($pathfilename, $file, 'public');
+    //         Storage::disk(config('filesystems.upload_disk'))->copy($pathfilename, $pathfiledb);
+
+    //         Storage::disk('local')->delete($filetmp);
+
+    //         $expired = strtotime(date('Y-m-d 23:00:00'));
+    //         $expired = strtotime('-' . self::EXPIRED_DAY . ' day', $expired);
+
+    //         $this->info("EXPIRED >> " . date('Y-m-d', $expired));
+
+    //         $expired = date('ymdH', $expired);
+
+    //         $files = Storage::disk(config('filesystems.upload_disk'))->files("backup/db");
+    //         foreach ($files as $file) {
+    //             $datefile = str_replace(self::DIRECTORY, '', $file);
+    //             $datefile = str_replace(self::PREFIX, '', $datefile);
+    //             $datefile = str_replace('_', '', $datefile);
+    //             $datefile = str_replace('/', '', $datefile);
+    //             $datefile = str_replace('.gz', '', $datefile);
+
+    //             if ($datefile && $datefile < $expired) {
+    //                 Storage::disk(config('filesystems.upload_disk'))->delete($file);
+    //                 $this->info("REMOVE FILE $file");
+    //             }
+    //         }
+
+    //         $this->info("Backup DB successfully ($filename).");
+    //     } catch (ProcessFailedException $e) {
+    //         $this->error('The backup process has been failed, ' . $e->getMessage());
+    //     }
+    // }
+
+    public function handle()
+    {
+        try {
+            $filename = self::PREFIX . '_' . date('ymdH') . ".gz";
+            $pathfilename = self::DIRECTORY . '/' . $filename;
+            $pathfiledb = self::DIRECTORY . '/' . self::PREFIX . '.gz';
+
+            $filetmp = 'tmp/' . ((string)Str::uuid()) . '.gz';
 
             $process = sprintf(
                 '/usr/bin/mysqldump --user="%s" --password="%s" --host="%s" "%s" | gzip > %s',
@@ -39,37 +103,42 @@ class DatabaseBackup extends Command
 
             exec("$process");
 
-            while(!Storage::disk('local')->exists($filetmp)){
+            while (!Storage::disk('local')->exists($filetmp)) {
                 sleep(2);
             }
 
-            $file = @file_get_contents(Storage::disk('local')->path($filetmp));
-
-            if(Storage::disk(config('filesystems.upload_disk'))->exists($pathfiledb)){
+            // STREAM version (AMANKAN MEMORY)
+            if (Storage::disk(config('filesystems.upload_disk'))->exists($pathfiledb)) {
                 Storage::disk(config('filesystems.upload_disk'))->delete($pathfiledb);
             }
 
-            Storage::disk(config('filesystems.upload_disk'))->put($pathfilename, $file, 'public');
+            $sourceStream = fopen(Storage::disk('local')->path($filetmp), 'r');
+
+            Storage::disk(config('filesystems.upload_disk'))->put($pathfilename, $sourceStream, [
+                'visibility' => 'public',
+            ]);
+
+            fclose($sourceStream);
+
             Storage::disk(config('filesystems.upload_disk'))->copy($pathfilename, $pathfiledb);
 
             Storage::disk('local')->delete($filetmp);
 
-            $expired = strtotime (date('Y-m-d 23:00:00'));
-            $expired = strtotime ( '-'.self::EXPIRED_DAY.' day', $expired);
-
-            $this->info("EXPIRED >> ".date('Y-m-d', $expired));
-
+            // Cleanup expired
+            $expired = strtotime(date('Y-m-d 23:00:00'));
+            $expired = strtotime('-' . self::EXPIRED_DAY . ' day', $expired);
+            $this->info("EXPIRED >> " . date('Y-m-d', $expired));
             $expired = date('ymdH', $expired);
 
             $files = Storage::disk(config('filesystems.upload_disk'))->files("backup/db");
-            foreach ($files AS $file){
+            foreach ($files as $file) {
                 $datefile = str_replace(self::DIRECTORY, '', $file);
                 $datefile = str_replace(self::PREFIX, '', $datefile);
                 $datefile = str_replace('_', '', $datefile);
                 $datefile = str_replace('/', '', $datefile);
                 $datefile = str_replace('.gz', '', $datefile);
 
-                if($datefile && $datefile < $expired){
+                if ($datefile && $datefile < $expired) {
                     Storage::disk(config('filesystems.upload_disk'))->delete($file);
                     $this->info("REMOVE FILE $file");
                 }
@@ -77,7 +146,7 @@ class DatabaseBackup extends Command
 
             $this->info("Backup DB successfully ($filename).");
         } catch (ProcessFailedException $e) {
-            $this->error('The backup process has been failed, '.$e->getMessage());
+            $this->error('The backup process has been failed, ' . $e->getMessage());
         }
     }
 }
