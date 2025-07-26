@@ -796,8 +796,8 @@ class WorkOrder extends Controller
                 }
 
                 if (strtoupper(substr($wo->no_wo, 0, 2)) == 'OH') {
-                    if (in_array($wo->activity->name, ['INSTALLATION', 'SERVICE UPDATE', 'RELOCATION', 'DEVICE MOVING', 'TERMINATION'])) {
-                        if (in_array($action->status->name, ['PREPARATION', 'IN PROGRESS', 'ARRIVED', 'INSTALLATION', 'ACTIVATION', 'POST ACTIVATION', 'TESTING', 'ADDITIONAL MATERIAL'])) {
+                    if (in_array($wo->activity->name, ['INSTALLATION', 'SERVICE UPDATE', 'RELOCATION', 'DEVICE MOVING', 'TERMINATION', 'TROUBLESHOOT'])) {
+                        if (in_array($action->status->name, ['PREPARATION', 'IN PROGRESS', 'ARRIVED', 'INSTALLATION', 'ACTIVATION', 'POST ACTIVATION', 'TESTING', 'ADDITIONAL MATERIAL', 'TROUBLESHOOT ACTION', 'SOLVING', 'PENDING', 'TESTING & CLOSE'])) {
                             if ($pushapi = $this->pushApi($wo, $action, $details)) {
                                 if ($pushapi->success && ($pushapi->status == 200 || $pushapi->status == 206)) {
                                     if ($pushapi->status == 206 && $action->status->name == 'ACTIVATION') $wo->update(['is_hold' => 1]);
@@ -1149,7 +1149,12 @@ class WorkOrder extends Controller
         } elseif ($response->status >= 200 && $response->status <= 490) {
             if ($content = $response->content) {
                 if (isset($content->statusCode)) {
-                    if ($response->status == 200 || ($response->status == 206 && $action->status->name != "ACTIVATION")) {
+                    if ($response->status == 206 && $action->wo->activity->name == "TROUBLESHOOT") {
+                        $result->message = 'Error response code 206';
+                        $result->status = 206;
+
+                        Log::info("TROUBLESHOOT activity received 206 response - treated as error: " . $result->message);
+                    } else if ($response->status == 200 || ($response->status == 206 && $action->status->name != "ACTIVATION")) {
                         $result->success = true;
                         $result->status = 200;
                         $result->message = "Success";
