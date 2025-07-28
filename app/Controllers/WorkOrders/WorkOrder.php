@@ -1988,7 +1988,6 @@ class WorkOrder extends Controller
                     LEFT JOIN (
                         SELECT
                             X2.wo_id,
-                            X2.id as action_id,
                             MAX(CASE WHEN SD.name = 'Nama Jalan' THEN X1.value END) AS nama_jalan,
                             MAX(CASE WHEN SD.name = 'RT' THEN X1.value END) AS rt,
                             MAX(CASE WHEN SD.name = 'RW' THEN X1.value END) AS rw,
@@ -1999,8 +1998,8 @@ class WorkOrder extends Controller
                         INNER JOIN po_wo_m_status_detail SD ON X1.detail_id = SD.id
                         WHERE X2.status_id = 1330
                         AND SD.status_id = 1330
-                        GROUP BY X2.wo_id, X2.id
-                    ) ARR ON A.id = ARR.wo_id AND ARR.action_id = A.last_action
+                        GROUP BY X2.wo_id
+                    ) ARR ON A.id = ARR.wo_id
                     LEFT JOIN (
                         SELECT X2.wo_id, MAX(X1.`value`) AS sn_ont_activation
                         FROM po_wo_action_detail X1
