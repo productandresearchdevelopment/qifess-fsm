@@ -265,7 +265,7 @@
 
             <td width="33%" align="center">
                 @if($ttdFieldtech)
-                <img style="height: 100px;" src="{{ storage_path("app/public/uploads/".$ttdFieldtech->filename) }}">
+                <img style="height: 100px;" src="{{ storage_path("app/public/uploads/" . optional($ttdFieldtech)->filename) }}">
                 <div style="height: 20px; padding: 0px">{{ $ttdFieldtechName }}</div>
                 @else
                     <div style="height: 120px"></div>
@@ -275,7 +275,7 @@
 
             <td width="33%" align="center">
                 @if($ttdCustomer)
-                    <img style="height: 100px;" src="{{ storage_path("app/public/uploads/".$ttdCustomer->filename) }}">
+                    <img style="height: 100px;" src="{{ storage_path("app/public/uploads/" . optional($ttdCustomer)->filename) }}">
                     <div>{{ $ttdCustomerName ?: $data->site->name }}</div>
                 @else
                     <div style="height: 120px"></div>
