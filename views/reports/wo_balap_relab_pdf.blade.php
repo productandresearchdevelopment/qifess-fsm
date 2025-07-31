@@ -324,7 +324,7 @@
             $fileUrl = route('upload.file', ['id' => $ttdCustomer]);
           @endphp
           <img style="height: 100px;" src="{{ $fileUrl }}">
-          <div>{{ $ttdCustomerName ?: '-' }}</div>
+          <div style="height: 20px; padding: 0px">{{ $ttdCustomerName ?: '-' }}</div>
         @else
           <div style="height: 120px"></div>
         @endif

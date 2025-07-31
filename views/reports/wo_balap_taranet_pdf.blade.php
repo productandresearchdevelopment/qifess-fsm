@@ -317,7 +317,8 @@
           @php
             $fileUrl = route('upload.file', ['id' => $ttdFieldtech]);
           @endphp
-          <img style="height: 100px;"src="{{ $fileUrl }}">{{ $ttdFieldtechName ?: '-' }}</div>
+          <img style="height: 100px;" src="{{ $fileUrl }}">
+          <div style="height: 20px; padding: 0px">{{ $ttdFieldtechName ?: '-' }}</div>
         @else
           <div style="height: 120px"></div>
         @endif
@@ -330,8 +331,8 @@
           @php
             $fileUrl = route('upload.file', ['id' => $ttdCustomer]);
           @endphp
-          <img style="height: 100px;"src="{{ $fileUrl }}">
-          <div>{{ $ttdCustomerName ?: '-' }}</div>
+          <img style="height: 100px;" src="{{ $fileUrl }}">
+          <div style="height: 20px; padding: 0px">{{ $ttdCustomerName ?: '-' }}</div>
         @else
           <div style="height: 120px"></div>
         @endif
