@@ -299,9 +299,12 @@
   <table style="font-size: 11px;margin-top: 100px">
     <tr>
       <td width="33%" align="center">
-        @if (isset($ttdFieldtech) && is_object($ttdFieldtech) && $ttdFieldtech->filename)
-          <img style="height: 100px;" src="{{ storage_path('app/public/uploads/' . $ttdFieldtech->filename) }}">
-          <div style="height: 20px; padding: 0px">{{ $ttdFieldtechName ?? '-' }}</div>
+        @if ($ttdFieldtech)
+          @php
+            $fileUrl = route('upload.file', ['id' => $ttdFieldtech]);
+          @endphp
+          <img style="height: 100px;" src="{{ $fileUrl }}">
+          <div style="height: 20px; padding: 0px">{{ $ttdFieldtechName ?: '-' }}</div>
         @else
           <div style="height: 120px"></div>
         @endif
@@ -316,9 +319,12 @@
       </td>
 
       <td width="33%" align="center">
-        @if (isset($ttdCustomer) && is_object($ttdCustomer) && $ttdCustomer->filename)
-          <img style="height: 100px;" src="{{ storage_path('app/public/uploads/' . $ttdCustomer->filename) }}">
-          <div>{{ $ttdCustomerName ?? $data->site->name }}</div>
+        @if ($ttdCustomer)
+          @php
+            $fileUrl = route('upload.file', ['id' => $ttdCustomer]);
+          @endphp
+          <img style="height: 100px;" src="{{ $fileUrl }}">
+          <div>{{ $ttdCustomerName ?: '-' }}</div>
         @else
           <div style="height: 120px"></div>
         @endif
