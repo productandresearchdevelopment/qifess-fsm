@@ -24,7 +24,7 @@
 </style>
 
 <body>
-    <img src="{{ public_path('images/logo.jpg') }}" style="height: 40">
+    <img src="{{ public_path('images/logo.png') }}" style="height: 40">
     <table style="border-bottom: 2px solid #ccc;">
         <tr>
             <td style="padding-bottom: 10px" valign="top">
@@ -224,7 +224,7 @@
                         <div style="font-size: 12px;">{{ $detail ? date('d/m/Y', strtotime($detail->value)) : '-' }}</div>
                         @elseif($statusDetail->triger == 'wo.slot')
                         <div style="font-size: 12px;">{{ $detail ? $detail->slot->name : '-' }}</div>
-                        
+
                         @elseif($statusDetail->type == 'file')
                         <div style="font-size: 12px;">
                             @if ($detail)

@@ -43,7 +43,7 @@
 </colgroup>
   <tr>
     <th class="tg-0pky" colspan="1">
-        <img src="{{ public_path('images/logo.jpeg') }}" style="height: 50px">
+        <img src="{{ public_path('images/logo.png') }}" style="height: 50px">
     </th>
     <th class="tg-title" colspan="6">Berita Acara Serah Terima (BAST)</th>
   </tr>
