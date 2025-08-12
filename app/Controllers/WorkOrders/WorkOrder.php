@@ -2248,6 +2248,7 @@ class WorkOrder extends Controller
             else if (in_array($data->client_id, [5])) $view = 'reports.wo_balap_relab_pdf';
             else if (in_array($data->client_id, [6])) $view = 'reports.wo_balap_dankom_pdf';
             else if (in_array($data->client_id, [8])) $view = 'reports.wo_balap_viberlink_pdf';
+            else if (in_array($data->client_id, [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 21, 22, 23, 24, 25, 26, 28, 29, 30, 31, 32])) $view = 'reports.wo_balap_all_pdf';
 
 
             $html = view($view, $params);
