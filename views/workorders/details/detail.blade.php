@@ -350,7 +350,7 @@
           );
         }
 
-        if (action.status.name === "POST ACTIVATION") {
+        if (action.status.name === "POST ACTIVATION" || action.status.name === "CLOSED") {
           processAction(action);
           let attachmentAction = createAttachmentAction(action);
           actionTpl.push(String.format(`@require('tpl/detail_action')`, attachmentAction));
@@ -389,6 +389,11 @@
                           </div>
                        </div>`;
                   detailValue = String.format(tpl, val.fieldtech);
+                }
+              }
+              else if (detail.name == "MAC ADDRESS HSI") {
+                if (val.value) {
+                  detailValue = val.value;
                 }
               }
             } else if (detail.type == "file") {

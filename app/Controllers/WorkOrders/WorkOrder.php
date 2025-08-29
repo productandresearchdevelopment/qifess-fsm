@@ -25,6 +25,7 @@ use App\Models\Sites\Site;
 use App\Models\Clients\Client;
 use App\Models\Vendors\Vendor;
 use App\Models\WorkOrders\Masters as Master;
+use App\Models\WorkOrders\Masters\StatusDetail;
 use Illuminate\Support\Facades\Log;
 
 class WorkOrder extends Controller
@@ -253,7 +254,19 @@ class WorkOrder extends Controller
             }
 
             if (!$wo->is_hold) {
-                return response()->json(['success' => false, 'message' => 'Ticket is Ready. Please continue ONT ACTIVATION.']);
+                $lastStatus = strtoupper(optional($wo->lastAction->status)->name);
+
+                if ($lastStatus == 'ACTIVATION') {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Ticket is Ready. Please continue ONT ACTIVATION.'
+                    ]);
+                } elseif ($lastStatus == 'CHECK MAC ADDRESS HSI') {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Ticket is Ready. Please continue TESTING.'
+                    ]);
+                }
             }
 
             // Ambil last_action dari WO
@@ -279,7 +292,36 @@ class WorkOrder extends Controller
                     return response()->json(['success' => true, 'message' => 'Ticket successfully continued', 'status' => 200]);
                 } elseif ($apiResult->status == 206) {
                     DB::commit();
-                    return response()->json(['success' => true, 'message' => 'Hold, waiting for partner acknowledgment', 'status' => 206]);
+
+                    if (strtoupper($action->status->name) == 'ACTIVATION') {
+                        $message = 'Hold, waiting for partner acknowledgment';
+                    } elseif (strtoupper($action->status->name) == 'CHECK MAC ADDRESS HSI') {
+                        $message = 'Hold, waiting for MAC address verification';
+                    } elseif (strtoupper($action->status->name) == 'IPTV CUSTOMER') {
+                        $detailsArray = is_string($details) ? json_decode($details, true) : $details;
+
+                        $iptvHold = false;
+                        foreach ($detailsArray as $d) {
+                            if (
+                                isset($d['name'], $d['value']) &&
+                                strtolower($d['name']) == 'pelanggan iptv' &&
+                                $d['value'] == 430
+                            ) {
+                                $iptvHold = true;
+                                break;
+                            }
+                        }
+
+                        if ($iptvHold) {
+                            $message = 'Hold, waiting for IPTV customer provisioning';
+                        }
+                    }
+
+                    return response()->json([
+                        'success' => true,
+                        'message' => $message,
+                        'status' => 206
+                    ]);
                 } else {
                     return response()->json(['success' => false, 'message' => 'Unknown status', 'status' => $apiResult->status]);
                 }
@@ -310,243 +352,251 @@ class WorkOrder extends Controller
 
     private function hitExternalApi($wo, $action, $details)
     {
-        $result = (object) ['success' => false];
+        $result = $this->pushApi($wo, $action, $details);
 
-        // API Configuration
-        $baseUrl = config('site.asianet_api_url');
-        $email = config('site.asianet_api_user');
-        $password = config('site.asianet_api_password');
-
-        $urlLogin = $baseUrl . '/amt/1.1/atm/generateToken';
-        $urlPush = $baseUrl . '/amt/1.1/eda/engineerStatus';
-
-        $token = Cache::get('woaccesstoken', function () use ($urlLogin, $email, $password) {
-            $login = Curl::to($urlLogin)
-                ->withData(['email' => $email, 'password' => $password])
-                ->withTimeout(120)
-                ->asJson()
-                ->returnResponseObject()
-                ->post();
-
-            if (isset($login->content->body->accessToken)) {
-                $token = $login->content->body->accessToken;
-                Cache::put('woaccesstoken', $token, 10);
-                return $token;
-            }
-
-            return null;
-        });
-
-        if (!$token) {
-            $result->message = 'Failed to generate API token';
-            return $result;
-        }
-
-        // Prepare data for the API
-        $serialNumber = null;
-        $additionalUTP = null;
-        $additionalDropCable = null;
-        $fatPort = "";
-        $bastURL = null;
-        $evidenceURL = null;
-
-        $ont  = ["type" => 'ont', "serialNumber" => "", "macaddressont" => ""];
-        $stb1 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
-        $stb2 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
-        $stb3 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
-
-        if ($action->status->name == 'POST ACTIVATION') {
-            $bastURL = route('wo.export.balap', $wo->id);
-            $evidenceURL = route('wo.export.pdf', $wo->id);
-        }
-
-        foreach ($wo->actions as $act) {
-
-
-            foreach ($act->details as $extra) {
-                if (strtoupper($act->status->name) == 'ACTIVATION') {
-                    if (strtolower($extra->detail->name) == 'sn ont') {
-                        $ont['serialNumber'] = $extra->value;
-                        $serialNumber = $extra->value;
-                    } else if (strtolower($extra->detail->name) == 'mac address ont') $ont['macaddressont'] = $extra->value;
-                    else if (strtolower($extra->detail->name) == 'tipe stb 1') $stb1['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
-                    else if (strtolower($extra->detail->name) == 'sn stb 1') $stb1['serialNumber'] = $extra->value;
-                    else if (strtolower($extra->detail->name) == 'mac address stb 1') $stb1['macAddressstb'] = $extra->value;
-                    else if (strtolower($extra->detail->name) == 'tipe stb 2') $stb2['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
-                    else if (strtolower($extra->detail->name) == 'sn stb 2') $stb2['serialNumber'] = $extra->value;
-                    else if (strtolower($extra->detail->name) == 'mac address stb 2') $stb2['macAddressstb'] = $extra->value;
-                    else if (strtolower($extra->detail->name) == 'tipe stb 3') $stb3['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
-                    else if (strtolower($extra->detail->name) == 'sn stb 3') $stb3['serialNumber'] = $extra->value;
-                    else if (strtolower($extra->detail->name) == 'mac address stb 3') $stb3['macAddressstb'] = $extra->value;
-                    else if (strtolower($extra->detail->name) == 'serial number registration') $serialNumber = $extra->value;
-                } else if (strtoupper($act->status->name) == 'INSTALLATION') {
-                    if (strtolower($extra->detail->name) == 'fat port') {
-                        $fatPort = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
-                    }
-                } else if (strtoupper($act->status->name) == 'DE-ACTIVATION') {
-                    if (strtolower($extra->detail->name) == 'serial number unregistration') $serialNumber = $extra->value;
-                } else if (strtoupper($act->status->name) == 'PREPARATION') {
-                    if (strtolower($extra->detail->name) == 'ont serial number') $serialNumber = $extra->value;
-                } else if (strtoupper($act->status->name) == 'POST ACTIVATION') {
-                    if (strtolower($extra->detail->name) == 'kelebihan kabel dw') $additionalDropCable = $extra->value;
-                    else if (strtolower($extra->detail->name) == 'kelebihan kabel utp') $additionalUTP = $extra->value;
-                }
-            }
-        }
-
-        $cpe = [$ont, $stb1, $stb2, $stb3];
-
-        $data = [
-            'activityName' => (string) $action->wo->activity->name,
-            'orderNumber' => (string) $action->wo->no_wo,
-            'workFlowNumber' => (string) $action->wo->id,
-            'orderStatus' => $action->status->name,
-            'teamID' =>  $action->wo->fieldtech_id * 1,
-            'serialNumber' => (string) $serialNumber,
-            'longitude' => (float) $action->long,
-            'latitude' => (float) $action->lat,
-            'fatLongitude' => (float) $action->long,
-            'fatLatitude' => (float) $action->lat,
-            'additionalUTP' => (float) $additionalUTP,
-            'additionalDropCable' => (float) $additionalDropCable,
-            'bastURL' => $bastURL,
-            'evidenceURL' => $evidenceURL,
-            'fatport' => (string) $fatPort,
-            'cpe' => $cpe
-        ];
-
-        // Hit API
-        $response = Curl::to($urlPush)
-            ->withData($data)
-            ->withTimeout(120)
-            ->withBearer($token)
-            ->asJson()
-            ->returnResponseObject()
-            ->post();
-
-
-
-        // Tangani respons API
-        if ($response->status === 0) {
-            $result->message = "Connection to the API timed out. Please try again";
-            $result->status = 500;
-            Log::info('No response from API', ['data' => $data]);
-        } elseif ($response->status >= 200 && $response->status <= 490) {
-            if ($content = $response->content) {
-                if (isset($content->statusCode)) {
-                    if ($response->status == 200) {
-                        $result->success = true;
-                        $result->status = 200;
-                        $result->message = "Success";
-                    } else if ($response->status == 206) {
-                        $result->success = true;
-                        $result->status = 206;
-                        $result->message = 'Hold, waiting for partner acknowledgment';
-                    } else {
-                        $responseContent =
-                            json_encode($response);
-                        $responseArray = json_decode($responseContent, true);
-
-                        // $returnMessage
-                        //     = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
-
-                        $returnMessage = 'Unknown error';
-                        if ($responseArray && is_array($responseArray)) {
-                            if (isset($responseArray['content']['returnMessage']) && isset($responseArray['content']['statusCode'])) {
-                                $returnMessage = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
-                            } else {
-                                Log::info("Cek Response Status Return Message (RELOAD) Mobile: " .
-                                    (isset($responseArray['content']['returnMessage'])
-                                        ? $responseArray['content']['returnMessage']
-                                        : 'returnMessage not found'));
-                                Log::info("Cek Response Status Status Code (RELOAD) Mobile: " .
-                                    (isset($responseArray['content']['statusCode'])
-                                        ? $responseArray['content']['statusCode']
-                                        : 'statusCode not found'));
-                            }
-                        } else {
-                            Log::info("Cek Response RELOAD Mobile" . json_encode($responseArray));
-                        }
-
-                        $result->message = $returnMessage;
-                        $result->status = $response->status ?? 500;
-                    }
-                }
-            } else {
-                $responseContent =
-                    json_encode($response);
-                $responseArray = json_decode($responseContent, true);
-
-                // $returnMessage
-                //     = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
-
-                $returnMessage = 'Unknown error';
-                if ($responseArray && is_array($responseArray)) {
-                    if (isset($responseArray['content']['returnMessage']) && isset($responseArray['content']['statusCode'])) {
-                        $returnMessage = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
-                    } else {
-                        Log::info("Cek Response Status Return Message (RELOAD) Mobile : " .
-                            (isset($responseArray['content']['returnMessage'])
-                                ? $responseArray['content']['returnMessage']
-                                : 'returnMessage not found'));
-                        Log::info("Cek Response Status Status Code (RELOAD) Mobile : " .
-                            (isset($responseArray['content']['statusCode'])
-                                ? $responseArray['content']['statusCode']
-                                : 'statusCode not found'));
-                    }
-                } else {
-                    Log::info("Cek Response RELOAD Mobile (Tidak ada response array)" . json_encode($responseArray));
-                }
-
-                $result->message = $returnMessage;
-                $result->status = $response->status ?? 500;
-            }
-        } else {
-            // Tangani kesalahan respons
-            $responseContent =
-                json_encode($response);
-            $responseArray = json_decode($responseContent, true);
-
-            // $returnMessage
-            //     = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
-
-            $returnMessage = 'Unknown error';
-            if ($responseArray && is_array($responseArray)) {
-                if (isset($responseArray['content']['returnMessage']) && isset($responseArray['content']['statusCode'])) {
-                    $returnMessage = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
-                } else {
-                    Log::info("Cek Response Status Return Message (RELOAD) SELAIN STATUS 200-490 : " .
-                        (isset($responseArray['content']['returnMessage'])
-                            ? $responseArray['content']['returnMessage']
-                            : 'returnMessage not found'));
-                    Log::info("Cek Response Status Status Code (RELOAD) SELAIN STATUS 200-490 : " .
-                        (isset($responseArray['content']['statusCode'])
-                            ? $responseArray['content']['statusCode']
-                            : 'statusCode not found'));
-                }
-            } else {
-                Log::info("Cek Response RELOAD (SELAIN STATUS 200-490 & TIDAK ADA RESPON ARRAY)" . json_encode($responseArray));
-            }
-
-
-            $result->message = $returnMessage;
-            $result->status = $response->status ?? 500;
-        }
-
-        // dd($result);
-
-        $result->data = [
-            'url' => $urlPush,
-            'dataPush' => $data,
-            'statusCode' => ($response && isset($response->status)) ? $response->status : 'null',
-            'response' => isset($content) ? ((array) $content) : null,
-        ];
-
-        Log::info('Response dari API Reload:', $result->data);
+        Log::info('RELOAD - Response dari API:', $result->data ?? []);
 
         return $result;
     }
 
+    // private function hitExternalApi($wo, $action, $details)
+    // {
+    //     $result = (object) ['success' => false];
+
+    //     // API Configuration
+    //     $baseUrl = config('site.asianet_api_url');
+    //     $email = config('site.asianet_api_user');
+    //     $password = config('site.asianet_api_password');
+
+    //     $urlLogin = $baseUrl . '/amt/1.1/atm/generateToken';
+    //     $urlPush = $baseUrl . '/amt/1.1/eda/engineerStatus';
+
+    //     $token = Cache::get('woaccesstoken', function () use ($urlLogin, $email, $password) {
+    //         $login = Curl::to($urlLogin)
+    //             ->withData(['email' => $email, 'password' => $password])
+    //             ->withTimeout(120)
+    //             ->asJson()
+    //             ->returnResponseObject()
+    //             ->post();
+
+    //         if (isset($login->content->body->accessToken)) {
+    //             $token = $login->content->body->accessToken;
+    //             Cache::put('woaccesstoken', $token, 10);
+    //             return $token;
+    //         }
+
+    //         return null;
+    //     });
+
+    //     if (!$token) {
+    //         $result->message = 'Failed to generate API token';
+    //         return $result;
+    //     }
+
+    //     // Prepare data for the API
+    //     $serialNumber = null;
+    //     $additionalUTP = null;
+    //     $additionalDropCable = null;
+    //     $fatPort = "";
+    //     $bastURL = null;
+    //     $evidenceURL = null;
+
+    //     $ont  = ["type" => 'ont', "serialNumber" => "", "macaddressont" => ""];
+    //     $stb1 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
+    //     $stb2 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
+    //     $stb3 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
+
+    //     if ($action->status->name == 'POST ACTIVATION') {
+    //         $bastURL = route('wo.export.balap', $wo->id);
+    //         $evidenceURL = route('wo.export.pdf', $wo->id);
+    //     }
+
+    //     foreach ($wo->actions as $act) {
+
+
+    //         foreach ($act->details as $extra) {
+    //             if (strtoupper($act->status->name) == 'ACTIVATION') {
+    //                 if (strtolower($extra->detail->name) == 'sn ont') {
+    //                     $ont['serialNumber'] = $extra->value;
+    //                     $serialNumber = $extra->value;
+    //                 } else if (strtolower($extra->detail->name) == 'mac address ont') $ont['macaddressont'] = $extra->value;
+    //                 else if (strtolower($extra->detail->name) == 'tipe stb 1') $stb1['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
+    //                 else if (strtolower($extra->detail->name) == 'sn stb 1') $stb1['serialNumber'] = $extra->value;
+    //                 else if (strtolower($extra->detail->name) == 'mac address stb 1') $stb1['macAddressstb'] = $extra->value;
+    //                 else if (strtolower($extra->detail->name) == 'tipe stb 2') $stb2['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
+    //                 else if (strtolower($extra->detail->name) == 'sn stb 2') $stb2['serialNumber'] = $extra->value;
+    //                 else if (strtolower($extra->detail->name) == 'mac address stb 2') $stb2['macAddressstb'] = $extra->value;
+    //                 else if (strtolower($extra->detail->name) == 'tipe stb 3') $stb3['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
+    //                 else if (strtolower($extra->detail->name) == 'sn stb 3') $stb3['serialNumber'] = $extra->value;
+    //                 else if (strtolower($extra->detail->name) == 'mac address stb 3') $stb3['macAddressstb'] = $extra->value;
+    //                 else if (strtolower($extra->detail->name) == 'serial number registration') $serialNumber = $extra->value;
+    //             } else if (strtoupper($act->status->name) == 'INSTALLATION') {
+    //                 if (strtolower($extra->detail->name) == 'fat port') {
+    //                     $fatPort = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
+    //                 }
+    //             } else if (strtoupper($act->status->name) == 'DE-ACTIVATION') {
+    //                 if (strtolower($extra->detail->name) == 'serial number unregistration') $serialNumber = $extra->value;
+    //             } else if (strtoupper($act->status->name) == 'PREPARATION') {
+    //                 if (strtolower($extra->detail->name) == 'ont serial number') $serialNumber = $extra->value;
+    //             } else if (strtoupper($act->status->name) == 'POST ACTIVATION') {
+    //                 if (strtolower($extra->detail->name) == 'kelebihan kabel dw') $additionalDropCable = $extra->value;
+    //                 else if (strtolower($extra->detail->name) == 'kelebihan kabel utp') $additionalUTP = $extra->value;
+    //             }
+    //         }
+    //     }
+
+    //     $cpe = [$ont, $stb1, $stb2, $stb3];
+
+    //     $data = [
+    //         'activityName' => (string) $action->wo->activity->name,
+    //         'orderNumber' => (string) $action->wo->no_wo,
+    //         'workFlowNumber' => (string) $action->wo->id,
+    //         'orderStatus' => $action->status->name,
+    //         'teamID' =>  $action->wo->fieldtech_id * 1,
+    //         'serialNumber' => (string) $serialNumber,
+    //         'longitude' => (float) $action->long,
+    //         'latitude' => (float) $action->lat,
+    //         'fatLongitude' => (float) $action->long,
+    //         'fatLatitude' => (float) $action->lat,
+    //         'additionalUTP' => (float) $additionalUTP,
+    //         'additionalDropCable' => (float) $additionalDropCable,
+    //         'bastURL' => $bastURL,
+    //         'evidenceURL' => $evidenceURL,
+    //         'fatport' => (string) $fatPort,
+    //         'cpe' => $cpe
+    //     ];
+
+    //     // Hit API
+    //     $response = Curl::to($urlPush)
+    //         ->withData($data)
+    //         ->withTimeout(120)
+    //         ->withBearer($token)
+    //         ->asJson()
+    //         ->returnResponseObject()
+    //         ->post();
+
+
+
+    //     // Tangani respons API
+    //     if ($response->status === 0) {
+    //         $result->message = "Connection to the API timed out. Please try again";
+    //         $result->status = 500;
+    //         Log::info('No response from API', ['data' => $data]);
+    //     } elseif ($response->status >= 200 && $response->status <= 490) {
+    //         if ($content = $response->content) {
+    //             if (isset($content->statusCode)) {
+    //                 if ($response->status == 200) {
+    //                     $result->success = true;
+    //                     $result->status = 200;
+    //                     $result->message = "Success";
+    //                 } else if ($response->status == 206) {
+    //                     $result->success = true;
+    //                     $result->status = 206;
+    //                     $result->message = 'Hold, waiting for partner acknowledgment';
+    //                 } else {
+    //                     $responseContent =
+    //                         json_encode($response);
+    //                     $responseArray = json_decode($responseContent, true);
+
+    //                     // $returnMessage
+    //                     //     = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
+
+    //                     $returnMessage = 'Unknown error';
+    //                     if ($responseArray && is_array($responseArray)) {
+    //                         if (isset($responseArray['content']['returnMessage']) && isset($responseArray['content']['statusCode'])) {
+    //                             $returnMessage = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
+    //                         } else {
+    //                             Log::info("Cek Response Status Return Message (RELOAD) Mobile: " .
+    //                                 (isset($responseArray['content']['returnMessage'])
+    //                                     ? $responseArray['content']['returnMessage']
+    //                                     : 'returnMessage not found'));
+    //                             Log::info("Cek Response Status Status Code (RELOAD) Mobile: " .
+    //                                 (isset($responseArray['content']['statusCode'])
+    //                                     ? $responseArray['content']['statusCode']
+    //                                     : 'statusCode not found'));
+    //                         }
+    //                     } else {
+    //                         Log::info("Cek Response RELOAD Mobile" . json_encode($responseArray));
+    //                     }
+
+    //                     $result->message = $returnMessage;
+    //                     $result->status = $response->status ?? 500;
+    //                 }
+    //             }
+    //         } else {
+    //             $responseContent =
+    //                 json_encode($response);
+    //             $responseArray = json_decode($responseContent, true);
+
+    //             // $returnMessage
+    //             //     = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
+
+    //             $returnMessage = 'Unknown error';
+    //             if ($responseArray && is_array($responseArray)) {
+    //                 if (isset($responseArray['content']['returnMessage']) && isset($responseArray['content']['statusCode'])) {
+    //                     $returnMessage = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
+    //                 } else {
+    //                     Log::info("Cek Response Status Return Message (RELOAD) Mobile : " .
+    //                         (isset($responseArray['content']['returnMessage'])
+    //                             ? $responseArray['content']['returnMessage']
+    //                             : 'returnMessage not found'));
+    //                     Log::info("Cek Response Status Status Code (RELOAD) Mobile : " .
+    //                         (isset($responseArray['content']['statusCode'])
+    //                             ? $responseArray['content']['statusCode']
+    //                             : 'statusCode not found'));
+    //                 }
+    //             } else {
+    //                 Log::info("Cek Response RELOAD Mobile (Tidak ada response array)" . json_encode($responseArray));
+    //             }
+
+    //             $result->message = $returnMessage;
+    //             $result->status = $response->status ?? 500;
+    //         }
+    //     } else {
+    //         // Tangani kesalahan respons
+    //         $responseContent =
+    //             json_encode($response);
+    //         $responseArray = json_decode($responseContent, true);
+
+    //         // $returnMessage
+    //         //     = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
+
+    //         $returnMessage = 'Unknown error';
+    //         if ($responseArray && is_array($responseArray)) {
+    //             if (isset($responseArray['content']['returnMessage']) && isset($responseArray['content']['statusCode'])) {
+    //                 $returnMessage = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
+    //             } else {
+    //                 Log::info("Cek Response Status Return Message (RELOAD) SELAIN STATUS 200-490 : " .
+    //                     (isset($responseArray['content']['returnMessage'])
+    //                         ? $responseArray['content']['returnMessage']
+    //                         : 'returnMessage not found'));
+    //                 Log::info("Cek Response Status Status Code (RELOAD) SELAIN STATUS 200-490 : " .
+    //                     (isset($responseArray['content']['statusCode'])
+    //                         ? $responseArray['content']['statusCode']
+    //                         : 'statusCode not found'));
+    //             }
+    //         } else {
+    //             Log::info("Cek Response RELOAD (SELAIN STATUS 200-490 & TIDAK ADA RESPON ARRAY)" . json_encode($responseArray));
+    //         }
+
+
+    //         $result->message = $returnMessage;
+    //         $result->status = $response->status ?? 500;
+    //     }
+
+    //     // dd($result);
+
+    //     $result->data = [
+    //         'url' => $urlPush,
+    //         'dataPush' => $data,
+    //         'statusCode' => ($response && isset($response->status)) ? $response->status : 'null',
+    //         'response' => isset($content) ? ((array) $content) : null,
+    //     ];
+
+    //     Log::info('Response dari API Reload:', $result->data);
+
+    //     return $result;
+    // }
 
     public function push(Request $request, $id = null)
     {
@@ -796,12 +846,28 @@ class WorkOrder extends Controller
                 }
 
                 if (strtoupper(substr($wo->no_wo, 0, 2)) == 'OH') {
-                    if (in_array($wo->activity->name, ['INSTALLATION', 'SERVICE UPDATE', 'RELOCATION', 'DEVICE MOVING', 'TERMINATION', 'TROUBLESHOOT'])) {
-                        if (in_array($action->status->name, ['PREPARATION', 'IN PROGRESS', 'ARRIVED', 'INSTALLATION', 'ACTIVATION', 'POST ACTIVATION', 'TESTING', 'ADDITIONAL MATERIAL', 'TROUBLESHOOT ACTION', 'SOLVING', 'PENDING', 'TESTING & CLOSE'])) {
+                    if (in_array($wo->activity->name, ['INSTALLATION', 'SERVICE UPDATE', 'RELOCATION', 'DEVICE MOVING', 'TERMINATION', 'TROUBLESHOOT', 'CPE REPLACEMENT'])) {
+                        if (in_array($action->status->name, ['PREPARATION', 'IN PROGRESS', 'ARRIVED', 'INSTALLATION', 'ACTIVATION', 'POST ACTIVATION', 'TESTING', 'ADDITIONAL MATERIAL', 'TROUBLESHOOT ACTION', 'SOLVING', 'PENDING', 'TESTING & CLOSE', 'CHANGE CPE', 'IPTV CUSTOMER', 'CHECK MAC ADDRESS HSI', 'CLOSED'])) {
                             if ($pushapi = $this->pushApi($wo, $action, $details)) {
                                 if ($pushapi->success && ($pushapi->status == 200 || $pushapi->status == 206)) {
-                                    if ($pushapi->status == 206 && $action->status->name == 'ACTIVATION') $wo->update(['is_hold' => 1]);
-                                    else $wo->update(['is_hold' => 0]);
+
+                                    $detailsArray = is_string($details) ? json_decode($details, true) : $details;
+
+                                    if ($pushapi->status == 206 && in_array($action->status->name, ['ACTIVATION', 'CHECK MAC ADDRESS HSI'])) {
+                                        $wo->update(['is_hold' => 1]);
+                                    }
+
+                                    if ($pushapi->status == 206 && $action->status->name === 'IPTV CUSTOMER') {
+                                        foreach ($detailsArray as $d) {
+                                            if (isset($d['id'], $d['value']) && $d['id'] == 281909 && $d['value'] == 430) {
+                                                $wo->update(['is_hold' => 1]);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if ($pushapi->status == 200) {
+                                        $wo->update(['is_hold' => 0]);
+                                    }
 
                                     DB::commit();
                                     return (array) $pushapi;
@@ -1026,6 +1092,11 @@ class WorkOrder extends Controller
                     if (strtolower($extra->detail->name) == 'sn ont') {
                         $ontSerialFromTesting = $extra->value;
                     }
+                } else if (strtoupper($act->status->name) == 'CHANGE CPE') {
+                    if (strtolower($extra->detail->name) == 'serial number ont baru') {
+                        $serialNumber = $extra->value;
+                        $ont['serialNumber'] = $extra->value;
+                    }
                 }
                 // else if (strtoupper($act->status->name) == 'POST ACTIVATION') {
                 //     if (strtolower($extra->detail->name) == 'kelebihan kabel dw') $additionalDropCable = $extra->value;
@@ -1152,16 +1223,53 @@ class WorkOrder extends Controller
                     if ($response->status == 206 && $action->wo->activity->name == "TROUBLESHOOT") {
                         $result->message = 'Error response code 206';
                         $result->status = 206;
-
                         Log::info("TROUBLESHOOT activity received 206 response - treated as error: " . $result->message);
-                    } else if ($response->status == 200 || ($response->status == 206 && $action->status->name != "ACTIVATION")) {
-                        $result->success = true;
-                        $result->status = 200;
-                        $result->message = "Success";
                     } else if ($response->status == 206 && $action->status->name == "ACTIVATION") {
                         $result->success = true;
                         $result->status = 206;
                         $result->message = "Hold, waiting from partner acknowledgements";
+                    } else if ($response->status == 206 && $action->status->name == "CHECK MAC ADDRESS HSI") {
+                        $result->success = true;
+                        $result->status = 206;
+                        $result->message = "Hold, waiting for MAC address verification";
+                    } else if ($response->status == 206 && $action->status->name == "IPTV CUSTOMER") {
+                        $result->success = true;
+                        $result->status = 206;
+                        $result->message = "Hold, waiting for IPTV acknowledgement";
+                    } else if ($response->status == 200 || ($response->status == 206 && !in_array($action->status->name, ["ACTIVATION", "CHECK MAC ADDRESS HSI"]))) {
+                        $result->success = true;
+                        $result->status = 200;
+                        $result->message = "Success";
+
+                        if (isset($content->bodyExtended) && isset($content->bodyExtended->macAddressHsi)) {
+                            $macAddressHsi = $content->bodyExtended->macAddressHsi;
+
+                            try {
+                                $detailId = StatusDetail::where('name', 'MAC ADDRESS HSI')->value('id');
+                                if ($detailId) {
+                                    ActionDetail::updateOrCreate(
+                                        [
+                                            'action_id' => $action->id,
+                                            'detail_id' => $detailId,
+                                        ],
+                                        [
+                                            'value' => $macAddressHsi,
+                                        ]
+                                    );
+                                    Log::info("MAC ADDRESS HSI berhasil disimpan", [
+                                        'wo_id' => $wo->id,
+                                        'action_id' => $action->id,
+                                        'value' => $macAddressHsi
+                                    ]);
+                                } else {
+                                    Log::warning("StatusDetail 'MAC ADDRESS HSI' belum ada di master table");
+                                }
+                            } catch (\Exception $e) {
+                                Log::error("Gagal simpan MAC ADDRESS HSI", ['error' => $e->getMessage()]);
+                            }
+                        } else {
+                            Log::warning("MAC ADDRESS HSI tidak ditemukan di response body");
+                        }
                     } else {
                         // Extract only the returnMessage for error cases
                         $responseContent =
@@ -1240,7 +1348,7 @@ class WorkOrder extends Controller
             'url' => $urlPush,
             'dataPush' => $data,
             'statusCode' => ($response && isset($response->status)) ? $response->status : 'null',
-            'response' => isset($content) ? ((array) $content) : null,
+            'response' => isset($content) ? json_decode(json_encode($content), true) : null,
         ];
 
         Log::info('Response dari API:', $result->data);
@@ -2237,6 +2345,20 @@ class WorkOrder extends Controller
                                 $params['stbType3'] = $detail->valueOption ? $detail->valueOption->option : null;
                             } else if (strtoupper($detail->detail->name) == 'SN STB 3') {
                                 $params['stbSN3'] = $detail->value;
+                            }
+                        }
+                    } else if (str_contains(strtoupper($action->status->name), 'CLOSED')) {
+                        $params['lastNote'] = $action->note;
+                        $params['time_finish'] = $action->created_at;
+                        foreach ($action->details as $detail) {
+                            if (strtoupper($detail->detail->name) == 'SIGNATURE INSTALLER') {
+                                $params['ttdFieldtech'] = $detail->value;
+                            } else if (strtoupper($detail->detail->name) == 'SIGNATURE CUSTOMER') {
+                                $params['ttdCustomer'] = $detail->value;
+                            } else if (strtoupper($detail->detail->name) == 'CUSTOMER NAME') {
+                                $params['ttdCustomerName'] = $detail->value;
+                            } else if (strtoupper($detail->detail->name) == 'TECHNICIAN NAME') {
+                                $params['ttdFieldtechName'] = $detail->value;
                             }
                         }
                     }
