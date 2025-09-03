@@ -1037,6 +1037,8 @@ class WorkOrder extends Controller
         $fatPort = "";
         $bastURL = null;
         $evidenceURL = null;
+        // $fatSignalMeasurement = null;
+        // $signalLevelRX = null;
 
         $ontSerialFromActivation = null;
         $ontSerialFromTesting = null;
@@ -1078,6 +1080,9 @@ class WorkOrder extends Controller
                     if (strtolower($extra->detail->name) == 'fat port') {
                         $fatPort = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
                     }
+                    //else if ((strtolower($extra->detail->name) == 'fat signal measurement (dbm)') && ($extra->detail->type == "number")) {
+                    //     $fatSignalMeasurement = $extra->value;
+                    // }
                 } else if (strtoupper($act->status->name) == 'SOLVING') {
                     if ((strtolower($extra->detail->name) == 'new ont serial number') && ($extra->detail->type == "text")) {
                         $ontSerialFromSolving = $extra->value;
@@ -1092,6 +1097,9 @@ class WorkOrder extends Controller
                     if (strtolower($extra->detail->name) == 'sn ont') {
                         $ontSerialFromTesting = $extra->value;
                     }
+                    //else if ((strtolower($extra->detail->name) == 'signal level rx (dbm)') && ($extra->detail->type == "number")) {
+                    //     $signalLevelRX = $extra->value;
+                    // }
                 } else if (strtoupper($act->status->name) == 'CHANGE CPE') {
                     if (strtolower($extra->detail->name) == 'serial number ont baru') {
                         $serialNumber = $extra->value;
@@ -1199,6 +1207,8 @@ class WorkOrder extends Controller
             'bastURL' => $bastURL,
             'evidenceURL' => $evidenceURL,
             'fatport' => (string) $fatPort,
+            // 'fatSignalMeasurement(dBm)' => (string) $fatSignalMeasurement,
+            // 'signalLevelRX(dBm)' => (string) $signalLevelRX,
             'cpe' => $cpe
         ];
 

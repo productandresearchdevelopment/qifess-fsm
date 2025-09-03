@@ -369,15 +369,47 @@ Uwa.GridProperty = function(property){
         },
 
         number: function (source) {
+            let prop = source.property || {};
+            let negativeOnly = prop.negativeOnly || false;
+
+            let editorConfig = {
+                xtype: 'numberfield',
+                hideTrigger: true,
+                allowBlank: true,
+                cls: me.styleCls
+            };
+
+            if (negativeOnly) {
+                editorConfig.maxValue = -0.01;
+                editorConfig.step = -1;
+                editorConfig.minValue = Number.NEGATIVE_INFINITY;
+
+                editorConfig.validator = function(value) {
+                    if (value > 0) {
+                        return 'Only negative numbers are allowed';
+                    }
+                    return true;
+                };
+
+                editorConfig.listeners = {
+                    change: function(field, newValue) {
+                        if (newValue > 0) {
+                            field.setValue(-Math.abs(newValue));
+                        }
+                    },
+                    blur: function(field) {
+                        let value = field.getValue();
+                        if (value > 0) {
+                            field.setValue(-Math.abs(value));
+                        }
+                    }
+                };
+            }
+
             return {
                 displayName: source.name,
                 type: 'int',
-                editor: {
-                    xtype: 'numberfield',
-                    hideTrigger: true,
-                    allowBlank: true,
-                    cls: me.styleCls
-                },
+                editor: editorConfig,
                 renderer: function (val) {
                     if (source.property == 'currency') {
                         return Ext.util.Format.number(val, '0,000');
