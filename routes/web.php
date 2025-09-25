@@ -160,4 +160,13 @@ Route::group(['middleware' => ['auth', 'roles']], function () {
         Route::get('/export/excel', 'Maps\Map@exportExcel')->name('map.export.excel');
         Route::get('/export/raw/excel', 'Maps\Map@exportRawExcel')->name('map.export.raw.excel');
     });
+
+    Route::group(['prefix' => 'listvendor'], function () {
+        Route::get('/', 'ListVendor\ListVendor@index')->name('listvendor');
+        Route::get('/data', 'ListVendor\ListVendor@data')->name('listvendor.data');
+        Route::post('/push/{id?}', 'ListVendor\ListVendor@push')->name('listvendor.push');
+        Route::put('/restore', 'ListVendor\ListVendor@restore')->name('listvendor.restore');
+        Route::delete('/delete', 'ListVendor\ListVendor@delete')->name('listvendor.delete');
+        Route::delete('/forcedelete', 'ListVendor\ListVendor@forceDelete')->name('listvendor.forcedelete');
+    });
 });

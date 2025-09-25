@@ -19,6 +19,7 @@ use App\Libraries\ExportExcel;
 use App\Libraries\FileUpload;
 use App\SystemModels\Auth;
 use App\Libraries\Query;
+use App\Models\ListVendor\ListVendor;
 use App\SystemModels\Auth\Role;
 use App\SystemModels\Auth\User as AuthUser;
 use App\SystemModels\Globals\Upload;
@@ -44,6 +45,7 @@ class User extends Controller
             'owners' => Owner::all(),
             'clients' => $user->client_id ? Client::where('id', $user->client_id)->get() : Client::all(),
             'vendors' => $vendors,
+            'listvendors' => ListVendor::all()
         ];
         return view($view, $params);
     }
@@ -53,7 +55,7 @@ class User extends Controller
         $user   = $request->user();
 
         $search = ['id', 'name', 'username', 'last_ip', 'email', 'phone'];
-        $query  = Auth\User::with('fieldtech', 'vendors');
+        $query  = Auth\User::with('fieldtech', 'vendors', 'listvendors');
 
         $query->where('role_id', '>=', $user->role_id);
 
@@ -117,6 +119,7 @@ class User extends Controller
                 'vendor_id' => ($val = $request->input('vendor_id')) ? $val : null,
                 'client_id' => ($val = $request->input('client_id')) ? $val : null,
                 'fieldtech_id' => ($val = $request->input('fieldtech_id')) ? $val : null,
+                'listvendor_id' => ($val = $request->input('listvendor_id')) ? $val : null,
                 'owners' => null,
                 'activities' => null,
             ];

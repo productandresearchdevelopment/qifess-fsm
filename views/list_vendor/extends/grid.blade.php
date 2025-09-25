@@ -1,80 +1,32 @@
-@require('form_import')
 
+@require('form_import')
 <script>
   var Grids = function() {
     let me = Ext.utils.grids(this);
     me.init = function() {
+
       me.formImport = new FormImport();
 
-      me.store = me.httpStore('{{ route('fieldtech.data') }}', [{
+      me.store = me.httpStore('{{ route('listvendor.data') }}', [{
           name: 'id',
           type: 'int'
-        },
-        {
-          name: 'nik',
-          type: 'string'
-        },
-        {
-          name: 'fieldtech1',
-          type: 'string'
-        },
-        {
-          name: 'fieldtech2',
-          type: 'string'
         },
         {
           name: 'name',
           type: 'string'
         },
         {
-          name: 'phone',
+          name: 'description',
           type: 'string'
-        },
-        {
-          name: 'address',
-          type: 'string'
-        },
-        {
-          name: 'email',
-          type: 'string'
-        },
-        {
-          name: 'photo',
-          type: 'string'
-        },
-        {
-          name: 'vendor_id',
-          type: 'int'
-        },
-        {
-          name: 'vendor_name',
-          type: 'string'
-        },
-        {
-          name: 'files',
-          type: 'auto'
-        },
-        {
-          name: 'users',
-          type: 'auto'
-        },
-        {
-          name: 'workorders',
-          type: 'auto'
-        },
-        {
-          name: 'workorders_count',
-          type: 'int'
         },
         {
           name: 'deleted_at',
-          type: 'date'
+          type: 'string'
         },
         {
-          name: 'listvendors',
-          type: 'auto'
+          name: 'deleted_at',
+          type: 'string'
         },
-
       ], {
         beforeload: function(store, operation, opts) {
           let filters = me.store.proxy.extraParams;
@@ -87,7 +39,7 @@
 
       me.menus = Ext.create('Ext.menu.Menu', {
         items: [
-          @if ($user->hasRoute('fieldtech.push'))
+          @if ($user->hasRoute('listvendor.push'))
             {
               text: 'Create',
               iconCls: 'icon-add',
@@ -99,16 +51,16 @@
             },
           @endif
 
-          @if ($user->hasRoute('fieldtech.delete'))
+          @if ($user->hasRoute('listvendor.delete'))
             {
               text: 'Delete',
               iconCls: 'icon-remove',
               handler: function() {
                 let data = me.getValues();
                 if (data.length) {
-                  Ext.ajaxConfirm('Remove Team', {
+                  Ext.ajaxConfirm('Remove Name Vendor', {
                     mask: me.grid,
-                    url: '{{ route('fieldtech.delete') }}',
+                    url: '{{ route('listvendor.delete') }}',
                     params: {
                       '_method': 'DELETE',
                       '_token': '{{ csrf_token() }}',
@@ -120,23 +72,22 @@
               }
             },
           @endif
-
-          @if ($user->hasRoute('fieldtech.restore') || $user->hasRoute('fieldtech.forcedelete'))
+          @if ($user->hasRoute('listvendor.restore') || $user->hasRoute('listvendor.forcedelete'))
             {
               text: 'Trashed',
               iconCls: 'icon-trash',
               menu: {
                 items: [
-                  @if ($user->hasRoute('fieldtech.restore'))
+                  @if ($user->hasRoute('listvendor.restore'))
                     {
                       text: 'Restore',
                       iconCls: 'icon-refresh',
                       handler: function() {
                         let recs = me.getValues();
                         if (recs.length) {
-                          Ext.ajaxConfirm('Restore Team', {
+                          Ext.ajaxConfirm('Restore Name Vendor', {
                             mask: me.grid,
-                            url: '{{ route('fieldtech.restore') }}',
+                            url: '{{ route('listvendor.restore') }}',
                             params: {
                               '_method': 'PUT',
                               '_token': '{{ csrf_token() }}',
@@ -149,7 +100,7 @@
                     },
                   @endif
 
-                  @if ($user->hasRoute('fieldtech.forcedelete'))
+                  @if ($user->hasRoute('listvendor.forcedelete'))
                     {
                       text: 'Forever Remove',
                       iconCls: 'icon-remove',
@@ -157,11 +108,11 @@
                         let recs = me.getValues();
                         if (recs.length) {
                           Ext.Msg.confirm('Confirm',
-                            'Are you sure you want to permanently remove the selected teams?',
+                            'Are you sure you want to permanently remove the selected name vendor?',
                             function(btn) {
                               if (btn === 'yes') {
                                 Ext.Ajax.request({
-                                  url: '{{ route('fieldtech.forcedelete') }}',
+                                  url: '{{ route('listvendor.forcedelete') }}',
                                   method: 'DELETE',
                                   params: {
                                     '_method': 'DELETE',
@@ -171,7 +122,7 @@
                                   success: function(response) {
                                     me.storeLoad();
                                     Ext.Msg.alert('Success',
-                                      'The selected teams has been permanently removed.');
+                                      'The selected name vendor has been permanently removed.');
                                   },
                                   failure: function(response) {
                                     console.log(response.responseText);
@@ -203,13 +154,11 @@
                       }
                     }
                   @endif
-
                 ]
               }
             },
           @endif
-
-          @if ($user->hasRoute('fieldtech.import'))
+          @if ($user->hasRoute('service.import'))
             '-',
             {
               text: 'Import Data',
@@ -218,7 +167,7 @@
                   text: 'Download Format',
                   iconCls: 'icon-cloud',
                   handler: function() {
-                    window.location = '{{ route('fieldtech.export.excel.format.import') }}';
+                    window.location = '{{ route('service.export.excel.format.import') }}';
                   }
                 },
                 {
@@ -244,7 +193,8 @@
             iconCls: 'icon-menu',
             menu: me.menus
           },
-          @if ($user->hasRoute('fieldtech.export.excel'))
+
+          @if ($user->hasRoute('listvendor.export.excel'))
             {
               text: 'Export Data',
               iconCls: 'icon-excel',
@@ -259,11 +209,12 @@
                   params.push(key + '=' + value)
                 }
 
-                window.location = '{{ route('fieldtech.export.excel') }}?' + params.join('&');
+                window.location = '{{ route('service.export.excel') }}?' + params.join('&');
               }
             },
           @endif
-          '->', {
+          '->',
+          {
             xtype: 'searchfield',
             flex: 1,
             maxWidth: 300,
@@ -271,114 +222,49 @@
             store: me.store
           }
         ],
+        bbar: me.bbar([{
+          id: 'trash',
+          name: 'Trash',
+          param: 'trash',
+          iconCls: 'icon-trash',
+          items: [{
+              id: 1,
+              name: 'ACTIVE',
+              checked: true
+            },
+            {
+              id: 2,
+              name: 'TRASH'
+            }
+          ]
+        }]),
         cls: 'large-grid',
         columns: [{
-            text: "ID",
+            text: "#",
             dataIndex: 'id',
             width: 80,
             hidden: true
           },
-          {
-            text: "AREA",
-            dataIndex: 'vendor_id',
-            minWidth: 200,
-            renderer: function(val, meta, rec) {
-              let data = find(vendor, val);
-              return data ? me.renderText(data.name, data.name, meta) : '';
-            }
-          },
-          {
-            text: "NIK",
-            dataIndex: 'nik',
-            width: 200,
-            hidden: true
-          },
+        //   {
+        //     text: "ALIAS",
+        //     dataIndex: 'alias',
+        //     minWidth: 80,
+        //     renderer: function(val, meta, rec) {
+        //       return rec.data ? me.renderBox(rec.data.alias, rec.data.color, rec.data.name, meta) : '';
+        //     }
+        //   },
           {
             text: "NAME",
             dataIndex: 'name',
-            width: 300
+            minWidth: 200
           },
           {
-            text: "USER",
-            dataIndex: 'users',
-            minWidth: 200,
-            flex: 1,
-            renderer: function(val) {
-              let result = [];
-              val.forEach(function(e) {
-                result.push(e.name)
-              });
-
-              return result.join('<br>')
-            }
-          },
-          {
-            text: "ADDRESS",
-            dataIndex: 'address',
-            minWidth: 250,
-            flex: 1,
-            hidden: true
-          },
-          {
-            text: "EMAIL",
-            dataIndex: 'email',
-            minWidth: 200,
-            hidden: true
-          },
-          {
-            text: "FIELDTECH 1",
-            dataIndex: 'fieldtech1',
-            minWidth: 200,
-            hidden: true
-          },
-          {
-            text: "FIELDTECH 2",
-            dataIndex: 'fieldtech2',
-            minWidth: 200,
-            hidden: true
-          },
-          //   {
-          //     text: "VENDOR NAME",
-          //     dataIndex: 'vendor_name',
-          //     minWidth: 200
-          //   },
-          {
-            text: "VENDOR NAME",
-            dataIndex: 'listvendors',
-            width: 200,
-            renderer: function(val, meta) {
-              return val ? val.name : '';
-            }
-          },
-          {
-            text: "PHONE",
-            dataIndex: 'phone',
-            width: 150
+            text: "DESCRIPTION",
+            dataIndex: 'description',
+            minWidth: 150,
+            flex: 1
           },
         ],
-        @if (!$user->vendor_id)
-          bbar: me.bbar([{
-            id: 'trash',
-            name: 'Trash',
-            param: 'trash',
-            iconCls: 'icon-trash',
-            items: [{
-                id: 1,
-                name: 'ACTIVE',
-                checked: true
-              },
-              {
-                id: 2,
-                name: 'TRASH'
-              }
-            ]
-          }, {
-            id: 'vendor',
-            name: 'Area',
-            items: vendor
-          }]),
-        @endif
-
         viewConfig: {
           stripeRows: false,
           getRowClass: function(rec) {
@@ -388,34 +274,6 @@
             itemcontextmenu: function(obj, rec, node, index, e) {
               e.stopEvent();
               me.menus.showAt(e.getXY());
-            },
-            itemclick: function(obj, rec) {
-              data = rec.data;
-              if (data) {
-                detailFieldtech(data, '#view-detail');
-                Ext.getCmp('panel-detail').setTitle('View (' + data.name + ')');
-                if (data.workorders_count <= 0)
-                  setTimeout(function() {
-                    $('#list-wo').hide();
-                  }, 10);
-                else
-                  setTimeout(function() {
-                    $('#list-wo').show();
-                  }, 10);
-              } else {
-
-                Ext.getCmp('panel-detail').update(`<div id="view-detail" style="position: absolute; top: 0; left:0; right:0; background: #FAFAFA">
-                                        <div style="font-size: 11px; padding: 30px 0px; color: #ccc; text-align: center">
-                                            NO DISPLAY DATA
-                                        </div>
-                                   </div>`);
-                Ext.getCmp('panel-detail').setTitle('View (No Data)');
-              }
-
-            },
-            itemdblclick: function(obj, rec) {
-              Ext.getCmp('panel-detail').expand();
-
             }
           }
         }

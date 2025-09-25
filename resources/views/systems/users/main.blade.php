@@ -14,6 +14,8 @@
         var clients = @json($clients);
         var owners = @json($owners);
         var activities = @json($activities);
+        var listvendors = @json($listvendors);
+
 
         var grids = new Grids();
         var forms = new Forms();

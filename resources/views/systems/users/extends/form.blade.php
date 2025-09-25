@@ -141,6 +141,37 @@
 
                                             {
                                                 xtype: 'combo',
+                                                name: 'listvendor_id',
+                                                fieldLabel: 'Vendor Name',
+                                                flex: 1,
+                                                hidden: true,
+                                                forceSelection: true,
+                                                editable: false,
+                                                queryMode: 'local',
+                                                triggerAction: 'all',
+                                                displayField: 'name',
+                                                valueField: 'id',
+                                                allowBlank: true,
+                                                store: Ext.create('Ext.data.Store', {
+                                                    fields: [{
+                                                        name: 'id',
+                                                        type: 'int'
+                                                    },
+                                                    {
+                                                        name: 'name',
+                                                        type: 'string'
+                                                    },
+                                                    ],
+                                                    data: [{
+                                                    id: null,
+                                                    name: '-'
+                                                    }].concat(listvendors)
+                                                }),
+                                            },
+
+
+                                            {
+                                                xtype: 'combo',
                                                 name: 'vendor_id',
                                                 fieldLabel: 'Area',
                                                 flex: 1,
@@ -354,6 +385,7 @@
 
                 me.setField('client_id', rec.client_id);
                 me.setField('vendor_id', rec.vendor_id);
+                me.setField('listvendor_id',rec.listvendors.id)
 
                 if(rec.fieldtech) {
                     let fieldtech = forms.getField('fieldtech_id');
@@ -385,6 +417,7 @@
             let activities = me.getField('activities[]');
             let owners = me.getField('owners[]');
             let gridVendor = Ext.getCmp('grid_area');
+            let listvendor = me.getField('listvendor_id');
 
             client.hide();
             vendor.hide();
@@ -398,6 +431,7 @@
             me.setField('fieldtech_id', null);
             me.setField('activities[]', null);
             me.setField('owners[]', null);
+            me.setField('listvendor_id', null);
             gridVendor.store.loadData([]);
 
             let role = me.getField('role_id');
@@ -413,6 +447,7 @@
                         if (find(properties, 'activities')) activities.show();
                         if (find(properties, 'owners')) owners.show();
                         if (find(properties, 'vendors')) gridVendor.show();
+                        if (find(properties, 'listvendor')) listvendor.show();
                     }
                 }
             }

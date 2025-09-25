@@ -140,6 +140,13 @@ class WorkOrder extends Controller
             $query->whereIn('vendor_id', $user->vendors->pluck('id')->toArray());
         }
 
+        if (!empty($user->listvendor_id)) {
+            $query->whereHas('fieldtech', function ($q) use ($user) {
+                $q->where('listvendor_id', $user->listvendor_id);
+            });
+        }
+
+
         // FILTER
         if ($ftr = $request->input('filter-status')) {
             $query->whereHas('lastAction', function ($query) use ($ftr) {

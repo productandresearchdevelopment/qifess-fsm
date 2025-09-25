@@ -13,6 +13,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use App\SystemModels\Auth;
 use App\Models\Fieldteches\Fieldtech as Mod;
+use App\Models\ListVendor\ListVendor;
 use App\Models\Vendors\Vendor;
 use Illuminate\Http\Request;
 use App\SystemModels\Globals\Upload;
@@ -34,7 +35,8 @@ class Fieldtech extends Controller
             'vendors' => $vendors,
             'activity' => Master\Activity::all(),
             'service' => Master\Service::all(),
-            'title' => 'Fieldtech Data'
+            'title' => 'Fieldtech Data',
+            'listvendors' => ListVendor::all()
         ];
         return view('fieldtechs.main', $params);
     }
@@ -43,7 +45,7 @@ class Fieldtech extends Controller
     {
         $user = $request->user();
         $search = ['nik', 'name'];
-        $query = Mod::with(['users', 'files']);
+        $query = Mod::with(['users', 'files', 'listvendors']);
         $query->withCount(['workorders']);
         if ($user->vendor_id) $query = $query->where('vendor_id', $user->vendor_id);
         if (count($user->vendors)) {

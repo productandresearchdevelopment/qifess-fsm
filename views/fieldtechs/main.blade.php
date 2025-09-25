@@ -16,6 +16,7 @@
         var grids = new Grids();
         var forms = new Forms();
         var formdetail = new FormDetail();
+        var listvendors = @json($listvendors);
 
         Ext.onReady(function(){
             Ext.tip.QuickTipManager.init();

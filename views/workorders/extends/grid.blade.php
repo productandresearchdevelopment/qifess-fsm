@@ -200,7 +200,7 @@
           property: {
             display: '<b style="color: #{color}">{alias}</b>'
           },
-          @if (!$archive)
+        //   @if (!$archive)
             handler: function(val) {
               let fstatus = Ext.getCmp('filter-status');
               let mstatus = fstatus.menu.items.items;
@@ -226,9 +226,9 @@
                 }
               })
             }
-          @endif
+        //   @endif
         },
-        @if (!$archive)
+        // @if (!$archive)
           {
             id: 'status',
             name: 'Status',
@@ -238,7 +238,7 @@
               display: '<b style="color: #{color}">{alias}</b>'
             },
           },
-        @endif
+        // @endif
 
         @if (!$user->vendor_id && !$user->fieldtech_id)
           {

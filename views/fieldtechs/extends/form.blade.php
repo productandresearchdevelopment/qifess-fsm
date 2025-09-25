@@ -63,10 +63,34 @@
             name: 'name',
             fieldLabel: 'Team Name'
           },
+          //   {
+          //     name: 'vendor_name',
+          //     fieldLabel: 'Vendor Name',
+          //       allowBlank: true
+          //   },
           {
-            name: 'vendor_name',
+            xtype: 'combo',
+            name: 'listvendor_id',
+            id: 'listvendors',
             fieldLabel: 'Vendor Name',
-              allowBlank: true
+            forceSelection: true,
+            editable: false,
+            queryMode: 'local',
+            triggerAction: 'all',
+            displayField: 'name',
+            valueField: 'id',
+            store: Ext.create('Ext.data.Store', {
+              data: listvendors,
+              fields: [{
+                  name: 'id',
+                  type: 'int'
+                },
+                {
+                  name: 'name',
+                  type: 'string'
+                }
+              ]
+            }),
           },
         ],
         buttons: [{
@@ -99,7 +123,9 @@
         me.form.url = '{{ route('fieldtech.push') }}/' + rec.id;
         me.setField('name', rec.name);
         me.setField('vendor_id', rec.vendor_id);
-        me.setField('vendor_name', rec.vendor_name);
+        // me.setField('vendor_name', rec.vendor_name);
+        me.setField('listvendor_id', rec.listvendors.id);
+
       } else Ext.example.msg('Warning!', 'Please select data!');
     }
 

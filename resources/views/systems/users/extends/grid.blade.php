@@ -106,6 +106,11 @@
           name: 'vendors',
           type: 'auto'
         },
+        {
+          name: 'listvendors',
+          type: 'auto'
+        },
+
       ], {
         beforeload: function(store, operation, opts) {
           let filters = me.store.proxy.extraParams;
@@ -386,6 +391,15 @@
               return val ? val.name : '';
             }
           },
+          {
+            text: "VENDOR NAME",
+            dataIndex: 'listvendors',
+            width: 200,
+            renderer: function(val, meta) {
+              return val ? val.name : '';
+            }
+          },
+
           {
             text: "ACTIVITIES",
             dataIndex: 'activities',
