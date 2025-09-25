@@ -124,7 +124,7 @@
         me.setField('name', rec.name);
         me.setField('vendor_id', rec.vendor_id);
         // me.setField('vendor_name', rec.vendor_name);
-        me.setField('listvendor_id', rec.listvendors.id);
+        me.setField('listvendor_id', rec.listvendors ? rec.listvendors.id : '');
 
       } else Ext.example.msg('Warning!', 'Please select data!');
     }
