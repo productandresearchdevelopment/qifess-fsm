@@ -15,6 +15,7 @@ use App\Models\WorkOrders\Part;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Libraries\BuildExtrafieldWo;
 use App\Libraries\Query;
 use App\Models\WorkOrders\WorkOrder as Wo;
 use App\Models\WorkOrders\WorkOrderOngoing as WoOngoing;
@@ -812,6 +813,8 @@ class WorkOrder extends Controller
                 'is_hold' => $wo->is_hold,
                 'close_date' => $wo->close_date
             ]);
+
+            BuildExtrafieldWo::build($wo->id);
 
             DB::commit();
             return ['success' => true, 'message' => 'Action updated successfully'];
