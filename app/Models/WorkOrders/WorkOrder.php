@@ -22,6 +22,7 @@ class WorkOrder extends Model
 
     protected $table   = 'po_wo';
     protected $guarded = ['id'];
+    protected $casts = ['extrafield' => 'object'];
 
     public $paternId = 'prefix';
 
