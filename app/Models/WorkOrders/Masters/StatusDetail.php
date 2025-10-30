@@ -10,15 +10,29 @@ class StatusDetail extends Model
     protected $table   = 'po_wo_m_status_detail';
     protected $casts = ['property' => 'object', 'default' => 'object'];
 
-    public function status(){
+    public function status()
+    {
         return $this->hasOne(Status::class, 'id', 'status_id');
     }
 
-    public function options(){
+    public function options()
+    {
         return $this->hasMany(StatusDetailOption::class, 'detail_id', 'id')->orderBy('option');
     }
 
-    public function actionDetails(){
+    public function actionDetails()
+    {
         return $this->hasMany(ActionDetail::class, 'detail_id', 'id');
+    }
+
+    public function getPropertyAttribute($value)
+    {
+        $decoded = json_decode($value, true);
+
+        if (json_last_error() === JSON_ERROR_NONE && $decoded !== null) {
+            return (object) $decoded;
+        }
+
+        return $value;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models\WorkOrders;
 
 use App\Models\Fieldteches\Fieldtech;
+use App\Models\TechnicianVendors\TechnicianVendor;
 use App\Models\WorkOrders\Masters\Slot;
 use App\Models\WorkOrders\Masters\StatusDetail;
 use App\Models\WorkOrders\Masters\StatusDetailOption;
@@ -22,32 +23,43 @@ class ActionDetail extends Model
     public $timestamps = false;
     public $paternId   = 'uuid';
 
-    public function action(){
+    public function action()
+    {
         return $this->hasOne(Action::class, 'id', 'action_id');
     }
 
-    public function detail(){
+    public function detail()
+    {
         return $this->hasOne(StatusDetail::class, 'id', 'detail_id');
     }
 
-    public function valueOption(){
+    public function valueOption()
+    {
         return $this->hasOne(StatusDetailOption::class, 'id', 'value');
     }
 
-    public function fieldtech(){
+    public function fieldtech()
+    {
         return $this->hasOne(Fieldtech::class, 'id', 'value')->withTrashed();
     }
 
-    public function slot(){
+    public function slot()
+    {
         return $this->hasOne(Slot::class, 'id', 'value');
     }
 
-    public function files(){
+    public function files()
+    {
         return $this->belongsToMany(
             Upload::class,
             'po_wo_action_detail_file',
             'detail_id',
             'file_id'
         );
+    }
+
+    public function technicianVendor()
+    {
+        return $this->belongsTo(TechnicianVendor::class, 'value', 'id');
     }
 }

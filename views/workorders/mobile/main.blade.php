@@ -27,6 +27,7 @@
     var statusAction = @json($status);
     var slots = @json($slots);
     var user = @json($user);
+    var technicianvendor = @json($technicianvendors);
 
     var detailWo = null;
 

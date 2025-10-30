@@ -195,6 +195,31 @@
                         options: tplOptions.join('')
                     });
                 },
+
+                list: function(detail) {
+                    let listData = window[detail.property] || [];
+
+                    if (me.data && me.data.fieldtech.listvendor_id) {
+                        listData = listData.filter(opt => opt.listvendor_id === me.data.fieldtech.listvendor_id);
+                    }
+
+                    listData = [{
+                        id: '1',
+                        name: '-'
+                    }, ...listData];
+
+                    let options = listData.map(opt => {
+                        let selected = (detail.default == opt.id) ? 'selected' : '';
+                        return `<option value="${opt.id}" ${selected}>${opt.name}</option>`;
+                    }).join('');
+
+                    return `
+                            <label>${detail.name}</label>
+                            <ons-select id="${prefixId + detail.id}" class="select" modifier="material">
+                                ${options}
+                            </ons-select>
+                        `;
+                },
             }
 
             let group = null;
@@ -254,6 +279,7 @@
                             case 'time': fieldsTpl = fields.datetime(detail, 'timepicker'); break;
                             case 'check': fieldsTpl = fields.check(detail); break;
                             case 'combo': fieldsTpl = fields.combo(detail); break;
+                            case 'list': fieldsTpl = fields.list(detail); break;
                         }
 
                         if(fieldsTpl) dom.append(fieldsTpl);
@@ -320,7 +346,7 @@
                             let val = $(id).is(":checked");
                             result.push({id: detail.id, value: val ? 1 : 0});
                         }
-                        else if(detail.type == 'combo'){
+                        else if(detail.type == 'combo' || detail.type == 'list'){
                             let val = $(id+' option:selected').val();
                             result.push({id: detail.id, value: val});
                         }
@@ -442,6 +468,3 @@
         }
     }
 </script>
-
-
-

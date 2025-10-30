@@ -442,26 +442,31 @@
                     detailValue = opt ? opt.option : null;
                   }
                 } else {
-                  switch (detail.type) {
-                    case "text":
-                      detailValue = val.value;
-                      break;
-                    case "textarea":
-                      detailValue = val.value.replace(/\n/g, "<br/>");
-                      break;
-                    case "datetime":
-                      detailValue = dates.format(val.value, "d M Y, H:i a");
-                      break;
-                    case "date":
-                      detailValue = dates.format(val.value, "d M Y");
-                      break;
-                    case "time":
-                      detailValue = dates.format(val.value, "H:i a");
-                      break;
-                    default:
-                      detailValue = val.value;
-                      break;
-                  }
+                  if (detail.type == "list" && detail.property == "technicianvendor") {
+                        const tech = (window.technicianvendor || []).find(v => v.id == val.value);
+                        detailValue = tech ? tech.name : val.value;
+                    }else{
+                        switch (detail.type) {
+                          case "text":
+                            detailValue = val.value;
+                            break;
+                          case "textarea":
+                            detailValue = val.value.replace(/\n/g, "<br/>");
+                            break;
+                          case "datetime":
+                            detailValue = dates.format(val.value, "d M Y, H:i a");
+                            break;
+                          case "date":
+                            detailValue = dates.format(val.value, "d M Y");
+                            break;
+                          case "time":
+                            detailValue = dates.format(val.value, "H:i a");
+                            break;
+                          default:
+                            detailValue = val.value;
+                            break;
+                        }
+                    }
                 }
               }
             }

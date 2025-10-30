@@ -179,6 +179,7 @@ Uwa.GridProperty = function(property){
                             case ('check'): me.sources.sourceConfig[sid] = me.sourceConfig.check(source); break;
                             case ('number'): me.sources.sourceConfig[sid] = me.sourceConfig.number(source); break;
                             case ('combo'): me.sources.sourceConfig[sid] = me.sourceConfig.combo(source); break;
+                            case ('list'): me.sources.sourceConfig[sid] = me.sourceConfig.list(source); break;
                             //default: me.configEditor.text(sid, source);
                         }
 
@@ -279,7 +280,7 @@ Uwa.GridProperty = function(property){
         }
 
         m.get = function () {
-            return m.sig.signature('toDataURL', 'image/jpeg');
+            return m.sig?.signature('toDataURL', 'image/jpeg');
         }
 
         m.init();
@@ -518,6 +519,51 @@ Uwa.GridProperty = function(property){
                 }
             }
         },
+
+        list: function (source) {
+            const dataList = Array.isArray(technicianvendors)
+                ? [...technicianvendors]
+                : [];
+
+            dataList.unshift({ id: 1, name: '-' });
+
+            const store = Ext.create('Ext.data.Store', {
+                fields: ['id', 'name'],
+                data: dataList.map(item => ({
+                    id: item.id,
+                    name: item.name
+                }))
+            });
+
+            return {
+                type: 'list',
+                displayName: source.name,
+                editor: {
+                    xtype: 'combo',
+                    allowBlank: true,
+                    forceSelection: true,
+                    editable: false,
+                    queryMode: 'local',
+                    triggerAction: 'all',
+                    displayField: 'name',
+                    valueField: 'id',
+                    store: store,
+                    cls: me.styleCls,
+                    emptyText: 'Select...',
+                    listeners: {
+                        change: function (combo, newVal) {
+                            const record = combo.findRecord('id', newVal);
+                            if (!record) combo.setValue(null);
+                        }
+                    }
+                },
+                renderer: function (value) {
+                    const item = dataList.find(v => v.id == value);
+                    return item ? item.name : value;
+                }
+            };
+        },
+
 
         file: function (source, prefixFile) {
             return {

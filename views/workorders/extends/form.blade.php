@@ -392,6 +392,7 @@
                                     fields : [
                                         {name: 'id', type: 'int'},
                                         {name: 'name', type: 'name'},
+                                        {name: 'listvendor_id',type: 'int'},
                                         {name: 'workorders_count', type: 'int'}
                                     ],
                                     proxy: {type: 'ajax', url: '{{ route('wo.data.fieldtech') }}'},
@@ -419,6 +420,29 @@
                                         return '<b>{name}</b> ({workorders_count})';
                                     }
                                 },
+                                listeners: {
+                                    change: function(combo, newValue) {
+                                        if (!newValue) {
+                                        window.technicianvendors = [];
+                                        me.loadDetails(me.detailProperty.get());
+                                        return;
+                                        }
+
+                                        let rec = combo.findRecordByValue(newValue);
+                                        if (rec) {
+                                        let listvendorId = rec.get('listvendor_id');
+
+                                        if (listvendorId) {
+                                            window.technicianvendors = window.technicianvendor.filter(function(tv) {
+                                            return tv.listvendor_id == listvendorId;
+                                            });
+                                        } else {
+                                            window.technicianvendors = [];
+                                        }
+                                        me.loadDetails(me.detailProperty.get());
+                                        }
+                                    }
+                                }
                             },
 
                             // PROPERTIES GRID ---------------------------------------------------------
@@ -511,6 +535,28 @@
         me.loadDetails = function(value){
             let status = me.actionStatus;
             if(status){
+
+                let fieldtechId = me.getValue('fieldtech_id');
+                let fieldtechListVendorId = null;
+
+                if (fieldtechId) {
+                    let fieldtechStore = me.getField('fieldtech_id').store;
+                    let fieldtechRec = fieldtechStore.findRecord('id', fieldtechId);
+                    if (fieldtechRec) {
+                        fieldtechListVendorId = fieldtechRec.get('listvendor_id');
+                        if (fieldtechListVendorId) {
+                        console.log(fieldtechListVendorId, "fieldtechListVendorId");
+                        window.technicianvendors = window.technicianvendor.filter(function(tv) {
+                            return tv.listvendor_id == fieldtechListVendorId;
+                        });
+                        } else {
+                        window.technicianvendors = [];
+                        }
+                    }
+                } else {
+                    window.technicianvendors = [];
+                }
+
                 me.detailProperty.loadSource({
                     sources: status.details,
                     values: value || [],

@@ -66,12 +66,14 @@ class BuildExtrafieldWo
                 if ($detail->detail_id == '281890') $this->pushExtrafield($wo, 'input_kabel_kode', $detail->value);
             }
         }
+
         if ($action = $wo->actions()->whereIn('status_id', [3610, 1610, 2610, 4610, 5610, 6610, 8610])->orderBy('created_at', 'desc')->first()) {
             $details = ActionDetail::where('action_id', $action->id)
                 ->whereIn('detail_id', [281783, 281785, 281787, 281789, 281791, 281793, 281908])
                 ->get();
             foreach ($details as $detail) {
-                $this->pushExtrafield($wo, 'technician_name', $detail->value);
+                $techName = $detail->technicianVendor ? $detail->technicianVendor->name : $detail->value;
+                $this->pushExtrafield($wo, 'technician_name', $techName);
             }
         }
 
@@ -92,23 +94,6 @@ class BuildExtrafieldWo
             $this->pushExtrafield($wo, 'arrived_time', $arrivedTime);
         }
     }
-
-
-
-    // private function pushExtrafield($wo, $index, $value)
-    // {
-    //     $extrafield = (array) $wo->extrafield ?: [];
-    //     $exsist = false;
-    //     foreach ($extrafield as $key => $value) {
-    //         if ($key == $index) {
-    //             $extra[$key] = $value;
-    //             $exsist = true;
-    //             break;
-    //         }
-    //     }
-    //     if (!$exsist) $extrafield[$index] = $value;
-    //     $wo->update(['extrafield' => $extrafield]);
-    // }
 
     private function pushExtrafield($wo, $index, $value)
     {

@@ -169,4 +169,13 @@ Route::group(['middleware' => ['auth', 'roles']], function () {
         Route::delete('/delete', 'ListVendor\ListVendor@delete')->name('listvendor.delete');
         Route::delete('/forcedelete', 'ListVendor\ListVendor@forceDelete')->name('listvendor.forcedelete');
     });
+
+    Route::group(['prefix' => 'technicianvendor'], function () {
+        Route::get('/', 'TechnicianVendors\TechnicianVendor@index')->name('technicianvendor');
+        Route::get('/data', 'TechnicianVendors\TechnicianVendor@data')->name('technicianvendor.data');
+        Route::post('/push/{id?}', 'TechnicianVendors\TechnicianVendor@push')->name('technicianvendor.push');
+        Route::put('/restore', 'TechnicianVendors\TechnicianVendor@restore')->name('technicianvendor.restore');
+        Route::delete('/delete', 'TechnicianVendors\TechnicianVendor@delete')->name('technicianvendor.delete');
+        Route::delete('/forcedelete', 'TechnicianVendors\TechnicianVendor@forceDelete')->name('technicianvendor.forcedelete');
+    });
 });
