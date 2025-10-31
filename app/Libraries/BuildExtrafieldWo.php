@@ -85,14 +85,6 @@ class BuildExtrafieldWo
                 $this->pushExtrafield($wo, 'ont_serial', $detail->value);
             }
         }
-
-        if ($action = $wo->actions()->whereIn('status_id', [1330, 2330, 3330, 4330, 5330, 6330, 7330])->orderBy('created_at', 'desc')->first()) {
-            $arrivedDate = date('Y-m-d', strtotime($action->created_at));
-            $arrivedTime = date('H:i:s', strtotime($action->created_at));
-
-            $this->pushExtrafield($wo, 'arrived_date', $arrivedDate);
-            $this->pushExtrafield($wo, 'arrived_time', $arrivedTime);
-        }
     }
 
     private function pushExtrafield($wo, $index, $value)
