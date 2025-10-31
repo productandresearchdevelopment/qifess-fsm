@@ -2274,34 +2274,6 @@ class WorkOrder extends Controller
                     return "";
                 }
             ],
-            [
-                "text" => "ARRIVED DATE",
-                "dataIndex" => "extrafield",
-                "width" => 100,
-                "renderer" => function ($value) {
-                    $data = json_decode($value);
-
-                    if (isset($data->arrived_date)) {
-                        return $data->arrived_date;
-                    }
-
-                    return "";
-                }
-            ],
-            [
-                "text" => "ARRIVED TIME",
-                "dataIndex" => "extrafield",
-                "width" => 100,
-                "renderer" => function ($value) {
-                    $data = json_decode($value);
-
-                    if (isset($data->arrived_time)) {
-                        return $data->arrived_time;
-                    }
-
-                    return "";
-                }
-            ],
         ];
 
         $footers = ['Total Count: ' . count($data) . ' Row', ' ', 'Asianet', 'Downloaded (QFEST)` (' . date('d F Y H:i:s') . ')'];
