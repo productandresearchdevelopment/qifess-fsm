@@ -347,7 +347,6 @@ class WorkOrder extends Controller
     {
         $details = [];
 
-        // Iterasi details dari action terakhir
         foreach ($action->details as $extra) {
             $details[] = [
                 'name' => strtolower($extra->detail->name),
@@ -367,244 +366,6 @@ class WorkOrder extends Controller
         return $result;
     }
 
-    // private function hitExternalApi($wo, $action, $details)
-    // {
-    //     $result = (object) ['success' => false];
-
-    //     // API Configuration
-    //     $baseUrl = config('site.asianet_api_url');
-    //     $email = config('site.asianet_api_user');
-    //     $password = config('site.asianet_api_password');
-
-    //     $urlLogin = $baseUrl . '/amt/1.1/atm/generateToken';
-    //     $urlPush = $baseUrl . '/amt/1.1/eda/engineerStatus';
-
-    //     $token = Cache::get('woaccesstoken', function () use ($urlLogin, $email, $password) {
-    //         $login = Curl::to($urlLogin)
-    //             ->withData(['email' => $email, 'password' => $password])
-    //             ->withTimeout(120)
-    //             ->asJson()
-    //             ->returnResponseObject()
-    //             ->post();
-
-    //         if (isset($login->content->body->accessToken)) {
-    //             $token = $login->content->body->accessToken;
-    //             Cache::put('woaccesstoken', $token, 10);
-    //             return $token;
-    //         }
-
-    //         return null;
-    //     });
-
-    //     if (!$token) {
-    //         $result->message = 'Failed to generate API token';
-    //         return $result;
-    //     }
-
-    //     // Prepare data for the API
-    //     $serialNumber = null;
-    //     $additionalUTP = null;
-    //     $additionalDropCable = null;
-    //     $fatPort = "";
-    //     $bastURL = null;
-    //     $evidenceURL = null;
-
-    //     $ont  = ["type" => 'ont', "serialNumber" => "", "macaddressont" => ""];
-    //     $stb1 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
-    //     $stb2 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
-    //     $stb3 = ["type" => 'stb', "stbType" => "", "serialNumber" => "", "macAddressstb" => ""];
-
-    //     if ($action->status->name == 'POST ACTIVATION') {
-    //         $bastURL = route('wo.export.balap', $wo->id);
-    //         $evidenceURL = route('wo.export.pdf', $wo->id);
-    //     }
-
-    //     foreach ($wo->actions as $act) {
-
-
-    //         foreach ($act->details as $extra) {
-    //             if (strtoupper($act->status->name) == 'ACTIVATION') {
-    //                 if (strtolower($extra->detail->name) == 'sn ont') {
-    //                     $ont['serialNumber'] = $extra->value;
-    //                     $serialNumber = $extra->value;
-    //                 } else if (strtolower($extra->detail->name) == 'mac address ont') $ont['macaddressont'] = $extra->value;
-    //                 else if (strtolower($extra->detail->name) == 'tipe stb 1') $stb1['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
-    //                 else if (strtolower($extra->detail->name) == 'sn stb 1') $stb1['serialNumber'] = $extra->value;
-    //                 else if (strtolower($extra->detail->name) == 'mac address stb 1') $stb1['macAddressstb'] = $extra->value;
-    //                 else if (strtolower($extra->detail->name) == 'tipe stb 2') $stb2['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
-    //                 else if (strtolower($extra->detail->name) == 'sn stb 2') $stb2['serialNumber'] = $extra->value;
-    //                 else if (strtolower($extra->detail->name) == 'mac address stb 2') $stb2['macAddressstb'] = $extra->value;
-    //                 else if (strtolower($extra->detail->name) == 'tipe stb 3') $stb3['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
-    //                 else if (strtolower($extra->detail->name) == 'sn stb 3') $stb3['serialNumber'] = $extra->value;
-    //                 else if (strtolower($extra->detail->name) == 'mac address stb 3') $stb3['macAddressstb'] = $extra->value;
-    //                 else if (strtolower($extra->detail->name) == 'serial number registration') $serialNumber = $extra->value;
-    //             } else if (strtoupper($act->status->name) == 'INSTALLATION') {
-    //                 if (strtolower($extra->detail->name) == 'fat port') {
-    //                     $fatPort = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
-    //                 }
-    //             } else if (strtoupper($act->status->name) == 'DE-ACTIVATION') {
-    //                 if (strtolower($extra->detail->name) == 'serial number unregistration') $serialNumber = $extra->value;
-    //             } else if (strtoupper($act->status->name) == 'PREPARATION') {
-    //                 if (strtolower($extra->detail->name) == 'ont serial number') $serialNumber = $extra->value;
-    //             } else if (strtoupper($act->status->name) == 'POST ACTIVATION') {
-    //                 if (strtolower($extra->detail->name) == 'kelebihan kabel dw') $additionalDropCable = $extra->value;
-    //                 else if (strtolower($extra->detail->name) == 'kelebihan kabel utp') $additionalUTP = $extra->value;
-    //             }
-    //         }
-    //     }
-
-    //     $cpe = [$ont, $stb1, $stb2, $stb3];
-
-    //     $data = [
-    //         'activityName' => (string) $action->wo->activity->name,
-    //         'orderNumber' => (string) $action->wo->no_wo,
-    //         'workFlowNumber' => (string) $action->wo->id,
-    //         'orderStatus' => $action->status->name,
-    //         'teamID' =>  $action->wo->fieldtech_id * 1,
-    //         'serialNumber' => (string) $serialNumber,
-    //         'longitude' => (float) $action->long,
-    //         'latitude' => (float) $action->lat,
-    //         'fatLongitude' => (float) $action->long,
-    //         'fatLatitude' => (float) $action->lat,
-    //         'additionalUTP' => (float) $additionalUTP,
-    //         'additionalDropCable' => (float) $additionalDropCable,
-    //         'bastURL' => $bastURL,
-    //         'evidenceURL' => $evidenceURL,
-    //         'fatport' => (string) $fatPort,
-    //         'cpe' => $cpe
-    //     ];
-
-    //     // Hit API
-    //     $response = Curl::to($urlPush)
-    //         ->withData($data)
-    //         ->withTimeout(120)
-    //         ->withBearer($token)
-    //         ->asJson()
-    //         ->returnResponseObject()
-    //         ->post();
-
-
-
-    //     // Tangani respons API
-    //     if ($response->status === 0) {
-    //         $result->message = "Connection to the API timed out. Please try again";
-    //         $result->status = 500;
-    //         Log::info('No response from API', ['data' => $data]);
-    //     } elseif ($response->status >= 200 && $response->status <= 490) {
-    //         if ($content = $response->content) {
-    //             if (isset($content->statusCode)) {
-    //                 if ($response->status == 200) {
-    //                     $result->success = true;
-    //                     $result->status = 200;
-    //                     $result->message = "Success";
-    //                 } else if ($response->status == 206) {
-    //                     $result->success = true;
-    //                     $result->status = 206;
-    //                     $result->message = 'Hold, waiting for partner acknowledgment';
-    //                 } else {
-    //                     $responseContent =
-    //                         json_encode($response);
-    //                     $responseArray = json_decode($responseContent, true);
-
-    //                     // $returnMessage
-    //                     //     = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
-
-    //                     $returnMessage = 'Unknown error';
-    //                     if ($responseArray && is_array($responseArray)) {
-    //                         if (isset($responseArray['content']['returnMessage']) && isset($responseArray['content']['statusCode'])) {
-    //                             $returnMessage = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
-    //                         } else {
-    //                             Log::info("Cek Response Status Return Message (RELOAD) Mobile: " .
-    //                                 (isset($responseArray['content']['returnMessage'])
-    //                                     ? $responseArray['content']['returnMessage']
-    //                                     : 'returnMessage not found'));
-    //                             Log::info("Cek Response Status Status Code (RELOAD) Mobile: " .
-    //                                 (isset($responseArray['content']['statusCode'])
-    //                                     ? $responseArray['content']['statusCode']
-    //                                     : 'statusCode not found'));
-    //                         }
-    //                     } else {
-    //                         Log::info("Cek Response RELOAD Mobile" . json_encode($responseArray));
-    //                     }
-
-    //                     $result->message = $returnMessage;
-    //                     $result->status = $response->status ?? 500;
-    //                 }
-    //             }
-    //         } else {
-    //             $responseContent =
-    //                 json_encode($response);
-    //             $responseArray = json_decode($responseContent, true);
-
-    //             // $returnMessage
-    //             //     = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
-
-    //             $returnMessage = 'Unknown error';
-    //             if ($responseArray && is_array($responseArray)) {
-    //                 if (isset($responseArray['content']['returnMessage']) && isset($responseArray['content']['statusCode'])) {
-    //                     $returnMessage = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
-    //                 } else {
-    //                     Log::info("Cek Response Status Return Message (RELOAD) Mobile : " .
-    //                         (isset($responseArray['content']['returnMessage'])
-    //                             ? $responseArray['content']['returnMessage']
-    //                             : 'returnMessage not found'));
-    //                     Log::info("Cek Response Status Status Code (RELOAD) Mobile : " .
-    //                         (isset($responseArray['content']['statusCode'])
-    //                             ? $responseArray['content']['statusCode']
-    //                             : 'statusCode not found'));
-    //                 }
-    //             } else {
-    //                 Log::info("Cek Response RELOAD Mobile (Tidak ada response array)" . json_encode($responseArray));
-    //             }
-
-    //             $result->message = $returnMessage;
-    //             $result->status = $response->status ?? 500;
-    //         }
-    //     } else {
-    //         // Tangani kesalahan respons
-    //         $responseContent =
-    //             json_encode($response);
-    //         $responseArray = json_decode($responseContent, true);
-
-    //         // $returnMessage
-    //         //     = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
-
-    //         $returnMessage = 'Unknown error';
-    //         if ($responseArray && is_array($responseArray)) {
-    //             if (isset($responseArray['content']['returnMessage']) && isset($responseArray['content']['statusCode'])) {
-    //                 $returnMessage = $responseArray['content']['returnMessage'] . ", Status Code: " . $responseArray['content']['statusCode'] ?? 'Unknown error';
-    //             } else {
-    //                 Log::info("Cek Response Status Return Message (RELOAD) SELAIN STATUS 200-490 : " .
-    //                     (isset($responseArray['content']['returnMessage'])
-    //                         ? $responseArray['content']['returnMessage']
-    //                         : 'returnMessage not found'));
-    //                 Log::info("Cek Response Status Status Code (RELOAD) SELAIN STATUS 200-490 : " .
-    //                     (isset($responseArray['content']['statusCode'])
-    //                         ? $responseArray['content']['statusCode']
-    //                         : 'statusCode not found'));
-    //             }
-    //         } else {
-    //             Log::info("Cek Response RELOAD (SELAIN STATUS 200-490 & TIDAK ADA RESPON ARRAY)" . json_encode($responseArray));
-    //         }
-
-
-    //         $result->message = $returnMessage;
-    //         $result->status = $response->status ?? 500;
-    //     }
-
-    //     // dd($result);
-
-    //     $result->data = [
-    //         'url' => $urlPush,
-    //         'dataPush' => $data,
-    //         'statusCode' => ($response && isset($response->status)) ? $response->status : 'null',
-    //         'response' => isset($content) ? ((array) $content) : null,
-    //     ];
-
-    //     Log::info('Response dari API Reload:', $result->data);
-
-    //     return $result;
-    // }
 
     public function push(Request $request, $id = null)
     {
@@ -670,7 +431,6 @@ class WorkOrder extends Controller
                 'fieldtech_id' => $fieldtechId,
                 'expire_date' => $request->input('expire_date'),
                 'is_hold' => 0,
-                'close_date' => null,
                 'last_action' => null,
                 'created_by' => auth()->user()->id,
                 'updated_by' => auth()->user()->id
@@ -681,6 +441,8 @@ class WorkOrder extends Controller
             if ($id) {
                 if ($wo = Wo::find($id)) {
                     $input['is_hold'] = $wo->is_hold;
+
+                    $input['close_date'] = $wo->close_date;
 
                     if (!isset($input['last_action'])) {
                         $input['last_action'] = $wo->last_action;
@@ -699,6 +461,7 @@ class WorkOrder extends Controller
                     return ['success' => false, 'message' => "Undefined WorkOrder"];
                 }
             } else {
+                $input['close_date'] = null;
                 $wo = Wo::create($input);
                 $actionId = null;
 
@@ -1049,6 +812,7 @@ class WorkOrder extends Controller
         $evidenceURL = null;
         // $fatSignalMeasurement = null;
         // $signalLevelRX = null;
+        $iptvCustomer = null;
 
         $ontSerialFromActivation = null;
         $ontSerialFromTesting = null;
@@ -1114,6 +878,11 @@ class WorkOrder extends Controller
                     if (strtolower($extra->detail->name) == 'serial number ont baru') {
                         $serialNumber = $extra->value;
                         $ont['serialNumber'] = $extra->value;
+                    } else if (strtolower($extra->detail->name) == 'pelanggan iptv') {
+                        $option = StatusDetailOption::find($extra->value);
+                        if ($option) {
+                            $iptvCustomer = (strtolower(trim($option->option)) == 'ya, stb (set top box)');
+                        }
                     }
                 }
                 // else if (strtoupper($act->status->name) == 'POST ACTIVATION') {
@@ -1147,60 +916,6 @@ class WorkOrder extends Controller
 
         $cpe = [$ont, $stb1, $stb2, $stb3];
 
-        /*
-        foreach (json_decode($details) AS $extra){
-            if($extra && isset($extra->id)) {
-                if ($detail = Master\StatusDetail::find($extra->id)) {
-                    if ($detail->type != 'file') {
-                        if (strtolower($detail->name) == 'ont serial number') $serialNumber = $extra->value;
-                        else if (strtolower($detail->name) == 'serial number registration') $serialNumber = $extra->value;
-                        else if (strtolower($detail->name) == 'serial number unregistration') $serialNumber = $extra->value;
-
-                        else if (strtolower($detail->name) == 'excess material - drop wire') $additionalDropCable = $extra->value;
-                        else if (strtolower($detail->name) == 'excess material - utp') $additionalUTP = $extra->value;
-
-                        else if (strtolower($detail->name) == 'fat port') {
-                            if($extra->value){
-                                if($opt = StatusDetailOption::find($extra->value)){
-                                    $fatPort = $opt->option;
-                                }
-                            }
-                        }
-
-                        // CPE --------------------------------------------------------------------------------------------------------------------------------------
-
-                        else if (strtolower($detail->name) == 'sn ont') $ont['serialNumber'] = $extra->value;
-                        else if (strtolower($detail->name) == 'mac address ont') $ont['macaddressont'] = $extra->value;
-
-                        else if (strtolower($detail->name) == 'tipe stb 1') $stb1['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
-                        else if (strtolower($detail->name) == 'sn stb 1') $stb1['serialNumber'] = $extra->value;
-                        else if (strtolower($detail->name) == 'mac address stb 1') $stb1['macAddressstb'] = $extra->value;
-
-                        else if (strtolower($detail->name) == 'tipe stb 2') $stb2['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
-                        else if (strtolower($detail->name) == 'sn stb 2') $stb2['serialNumber'] = $extra->value;
-                        else if (strtolower($detail->name) == 'mac address stb 2') $stb2['macAddressstb'] = $extra->value;
-
-                        else if (strtolower($detail->name) == 'tipe stb 3') $stb3['stbType'] = ($opt = StatusDetailOption::find($extra->value)) ? $opt->option : '';
-                        else if (strtolower($detail->name) == 'sn stb 3') $stb3['serialNumber'] = $extra->value;
-                        else if (strtolower($detail->name) == 'mac address stb 3') $stb3['macAddressstb'] = $extra->value;
-                    }
-                }
-            }
-        }
-        */
-
-
-        /*
-            if($action->status->name == "PREPARATION") $status = 'PREPARED';
-            else if($action->status->name == "IN PROGRESS") $status = 'ONGOING';
-            else if($action->status->name == "ARRIVED") $status = 'ARRIVED';
-            else if($action->status->name == "INSTALLATION") $status = 'TAGGED';
-            else if($action->status->name == "DE-INSTALLATION") $status = 'TAGGED';
-            else if($action->status->name == "ACTIVATION") $status = 'ACTIVATED';
-            else if($action->status->name == "DE-ACTIVATION") $status = 'ACTIVATED';
-            else if($action->status->name == "POST ACTIVATION") $status = 'COMPLETED';
-        */
-
         $data = [
             'activityName' => (string) $action->wo->activity->name,
             'orderNumber' => (string) $action->wo->no_wo,
@@ -1217,6 +932,7 @@ class WorkOrder extends Controller
             'bastURL' => $bastURL,
             'evidenceURL' => $evidenceURL,
             'fatport' => (string) $fatPort,
+            'isIPTV' => (bool) $iptvCustomer,
             // 'fatSignalMeasurement(dBm)' => (string) $fatSignalMeasurement,
             // 'signalLevelRX(dBm)' => (string) $signalLevelRX,
             'cpe' => $cpe
