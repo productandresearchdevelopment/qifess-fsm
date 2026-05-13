@@ -1,7 +1,8 @@
 <div class="app-header">
     <div class="app-header__logo">
         <div class="logo-src" style="background-image: none !important; font-size: 20px; margin-top: -10px">
-            <img src="{{ asset('images/logoqifess.png') }}" alt="Logo" style="max-height: 24px;">
+            <!-- <img src="{{ asset('images/logoqifess.png') }}" alt="Logo" style="max-height: 24px;"> -->
+             <p>TESSSSS</p>
         </div>
         <div class="header__pane ml-auto">
             <div>
