@@ -1,7 +1,7 @@
 <div class="app-header">
     <div class="app-header__logo">
         <div class="logo-src" style="background-image: none !important; font-size: 20px; margin-top: -10px">
-            <b>{{ config('site.title') }}</b>
+            <img src="{{ asset('images/logoqifess.png') }}" alt="Logo" style="max-height: 24px;">
         </div>
         <div class="header__pane ml-auto">
             <div>

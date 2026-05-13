@@ -1,12 +1,12 @@
 <?php
 
 return [
-	'title' => 'AsiaNet',
+	'title' => 'QIFESS',
 	'subtitle' => 'FMS',
-	'company' => 'Asia Net',
-	'description' => 'Asia Net',
+	'company' => 'QIFESS',
+	'description' => 'QIFESS',
 	'version' => '1.0',
-	'year' => '2022',
+	'year' => '2025',
 	'email' => '-',
 	'phone' => '-',
 	'address' => 'Address',
