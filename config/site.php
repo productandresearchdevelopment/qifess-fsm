@@ -4,7 +4,7 @@ return [
 	'title' => 'QIFESS',
 	'subtitle' => 'FMS',
 	'company' => 'QIFESS',
-	'description' => 'QIFESS',
+	'description' => 'Field Service Management',
 	'version' => '1.0',
 	'year' => '2025',
 	'email' => '-',

@@ -1229,7 +1229,7 @@ class WorkOrder extends Controller
                         if ($statusDetail->type == 'file') {
                             if ($detail->value && count($detail->value)) {
                                 $actionDetail = ActionDetail::create(['action_id' => $action->id, 'detail_id' => $statusDetail->id]);
-                                $watermark  = "ASIANET (WO: $action->wo_id) - (" . strtoupper(date('d M Y H:i')) . ")";
+                                $watermark  = "QIFESS (WO: $action->wo_id) - (" . strtoupper(date('d M Y H:i')) . ")";
                                 $watermark .= "\n" . $action->status->name;
                                 $watermark .= "\n" . $statusDetail->name;
                                 if ($action->lat && $action->long) $watermark .= "\nCoordinate ($action->lat, $action->long)";
@@ -1829,169 +1829,169 @@ class WorkOrder extends Controller
             ["text" => "CREATED DATE", "dataIndex" => "created_at", "type" => "date", "align" => "center", "width" => 100],
             ["text" => "LAST STATUS", "dataIndex" => "status_name", "width" => 200],
             ["text" => "LAST STATUS DATE", "dataIndex" => "lastupdate_at", "type" => "date", "align" => "center", "width" => 100],
-            [
-                "text" => "TOTAL STB",
-                "dataIndex" => "extrafield",
-                "width" => 100,
-                "align" => "center",
-                "renderer" => function ($value) {
+            // [
+            //     "text" => "TOTAL STB",
+            //     "dataIndex" => "extrafield",
+            //     "width" => 100,
+            //     "align" => "center",
+            //     "renderer" => function ($value) {
 
-                    $data = json_decode($value);
+            //         $data = json_decode($value);
 
-                    if (isset($data->total_stb)) {
-                        return $data->total_stb;
-                    }
+            //         if (isset($data->total_stb)) {
+            //             return $data->total_stb;
+            //         }
 
-                    return ($value === null || $value == 0) ? '-' : $value;
-                }
-            ],
-            [
-                "text" => "ONT SERIALNUMBER",
-                "dataIndex" => "extrafield",
-                "width" => 200,
-                "renderer" => function ($value) {
-                    $data = json_decode($value);
+            //         return ($value === null || $value == 0) ? '-' : $value;
+            //     }
+            // ],
+            // [
+            //     "text" => "ONT SERIALNUMBER",
+            //     "dataIndex" => "extrafield",
+            //     "width" => 200,
+            //     "renderer" => function ($value) {
+            //         $data = json_decode($value);
 
-                    if (isset($data->ont_serial)) {
-                        return $data->ont_serial;
-                    }
+            //         if (isset($data->ont_serial)) {
+            //             return $data->ont_serial;
+            //         }
 
-                    return "";
-                }
-            ],
+            //         return "";
+            //     }
+            // ],
             ["text" => "DESCRIPTION", "dataIndex" => "description", "width" => 500],
-            [
-                "text" => "NAMA JALAN",
-                "dataIndex" => "extrafield",
-                "width" => 400,
-                "renderer" => function ($value) {
-                    $data = json_decode($value);
+            // [
+            //     "text" => "NAMA JALAN",
+            //     "dataIndex" => "extrafield",
+            //     "width" => 400,
+            //     "renderer" => function ($value) {
+            //         $data = json_decode($value);
 
-                    if (isset($data->contact_address)) {
-                        return $data->contact_address;
-                    }
+            //         if (isset($data->contact_address)) {
+            //             return $data->contact_address;
+            //         }
 
-                    return "";
-                }
-            ],
-            [
-                "text" => "RW",
-                "dataIndex" => "extrafield",
-                "width" => 100,
-                "renderer" => function ($value) {
-                    $data = json_decode($value);
+            //         return "";
+            //     }
+            // ],
+            // [
+            //     "text" => "RW",
+            //     "dataIndex" => "extrafield",
+            //     "width" => 100,
+            //     "renderer" => function ($value) {
+            //         $data = json_decode($value);
 
-                    if (isset($data->contact_rw)) {
-                        return $data->contact_rw;
-                    }
+            //         if (isset($data->contact_rw)) {
+            //             return $data->contact_rw;
+            //         }
 
-                    return "";
-                }
-            ],
-            [
-                "text" => "RT",
-                "dataIndex" => "extrafield",
-                "width" => 100,
-                "renderer" => function ($value) {
-                    $data = json_decode($value);
+            //         return "";
+            //     }
+            // ],
+            // [
+            //     "text" => "RT",
+            //     "dataIndex" => "extrafield",
+            //     "width" => 100,
+            //     "renderer" => function ($value) {
+            //         $data = json_decode($value);
 
-                    if (isset($data->contact_rt)) {
-                        return $data->contact_rt;
-                    }
+            //         if (isset($data->contact_rt)) {
+            //             return $data->contact_rt;
+            //         }
 
-                    return "";
-                }
-            ],
-            [
-                "text" => "NOMOR RUMAH",
-                "dataIndex" => "extrafield",
-                "width" => 100,
-                "renderer" => function ($value) {
-                    $data = json_decode($value);
+            //         return "";
+            //     }
+            // ],
+            // [
+            //     "text" => "NOMOR RUMAH",
+            //     "dataIndex" => "extrafield",
+            //     "width" => 100,
+            //     "renderer" => function ($value) {
+            //         $data = json_decode($value);
 
-                    if (isset($data->contact_no)) {
-                        return $data->contact_no;
-                    }
+            //         if (isset($data->contact_no)) {
+            //             return $data->contact_no;
+            //         }
 
-                    return "";
-                }
-            ],
-            [
-                "text" => "NOMOR KONTAK PELANGGAN",
-                "dataIndex" => "extrafield",
-                "width" => 200,
-                "renderer" => function ($value) {
-                    $data = json_decode($value);
+            //         return "";
+            //     }
+            // ],
+            // [
+            //     "text" => "NOMOR KONTAK PELANGGAN",
+            //     "dataIndex" => "extrafield",
+            //     "width" => 200,
+            //     "renderer" => function ($value) {
+            //         $data = json_decode($value);
 
-                    if (isset($data->contact_phone)) {
-                        return $data->contact_phone;
-                    }
+            //         if (isset($data->contact_phone)) {
+            //             return $data->contact_phone;
+            //         }
 
-                    return "";
-                }
-            ],
-            ["text" => "HOLD", "dataIndex" => "is_hold", "width" => 100, "align" => "center", "renderer" => function ($value) {
-                return $value == 1 ? 'HOLD' : '-';
-            }],
-            [
-                "text" => "SN ACT",
-                "dataIndex" => "extrafield",
-                "width" => 200,
-                "renderer" => function ($value) {
-                    $data = json_decode($value);
+            //         return "";
+            //     }
+            // ],
+            // ["text" => "HOLD", "dataIndex" => "is_hold", "width" => 100, "align" => "center", "renderer" => function ($value) {
+            //     return $value == 1 ? 'HOLD' : '-';
+            // }],
+            // [
+            //     "text" => "SN ACT",
+            //     "dataIndex" => "extrafield",
+            //     "width" => 200,
+            //     "renderer" => function ($value) {
+            //         $data = json_decode($value);
 
-                    if (isset($data->sn_ont_activation)) {
-                        return $data->sn_ont_activation;
-                    }
+            //         if (isset($data->sn_ont_activation)) {
+            //             return $data->sn_ont_activation;
+            //         }
 
-                    return "";
-                }
-            ],
-            [
-                "text" => "SN TESTING",
-                "dataIndex" => "extrafield",
-                "width" => 200,
-                "renderer" => function ($value) {
-                    $data = json_decode($value);
+            //         return "";
+            //     }
+            // ],
+            // [
+            //     "text" => "SN TESTING",
+            //     "dataIndex" => "extrafield",
+            //     "width" => 200,
+            //     "renderer" => function ($value) {
+            //         $data = json_decode($value);
 
-                    if (isset($data->sn_ont_testing)) {
-                        return $data->sn_ont_testing;
-                    }
+            //         if (isset($data->sn_ont_testing)) {
+            //             return $data->sn_ont_testing;
+            //         }
 
-                    return "";
-                }
-            ],
-            [
-                "text" => "BARCODE KABEL KODE",
-                "dataIndex" => "extrafield",
-                "width" => 300,
-                "renderer" => function ($value) {
-                    $data = json_decode($value);
+            //         return "";
+            //     }
+            // ],
+            // [
+            //     "text" => "BARCODE KABEL KODE",
+            //     "dataIndex" => "extrafield",
+            //     "width" => 300,
+            //     "renderer" => function ($value) {
+            //         $data = json_decode($value);
 
-                    if (isset($data->input_kabel_kode)) {
-                        return $data->input_kabel_kode;
-                    }
+            //         if (isset($data->input_kabel_kode)) {
+            //             return $data->input_kabel_kode;
+            //         }
 
-                    return "";
-                }
-            ],
-            [
-                "text" => "TECHNICIAN NAME",
-                "dataIndex" => "extrafield",
-                "width" => 300,
-                "renderer" => function ($value) {
-                    $data = json_decode($value);
+            //         return "";
+            //     }
+            // ],
+            // [
+            //     "text" => "TECHNICIAN NAME",
+            //     "dataIndex" => "extrafield",
+            //     "width" => 300,
+            //     "renderer" => function ($value) {
+            //         $data = json_decode($value);
 
-                    if (isset($data->technician_name)) {
-                        return $data->technician_name;
-                    }
+            //         if (isset($data->technician_name)) {
+            //             return $data->technician_name;
+            //         }
 
-                    return "";
-                }
-            ],
+            //         return "";
+            //     }
+            // ],
         ];
 
-        $footers = ['Total Count: ' . count($data) . ' Row', ' ', 'Asianet', 'Downloaded (QFEST)` (' . date('d F Y H:i:s') . ')'];
+        $footers = ['Total Count: ' . count($data) . ' Row', ' ', 'Field Service Management', 'Downloaded (QIFESS)` (' . date('d F Y H:i:s') . ')'];
         $params = array(
             // 'title' => $titles,
             'columns' => $columns,
@@ -2079,7 +2079,7 @@ class WorkOrder extends Controller
                                 $params['emUtp'] = $detail->value;
                             } else if (strtoupper($detail->detail->name) == 'SIGNATURE INSTALLER') {
                                 $params['ttdFieldtech'] = $detail->value;
-                            } else if (strtoupper($detail->detail->name) == 'SIGNATURE CUSTOMER') {
+                            } else if (strtoupper($detail->detail->name) == 'SIGNATURE PIC') {
                                 $params['ttdCustomer'] = $detail->value;
                             } else if (strtoupper($detail->detail->name) == 'CUSTOMER NAME') {
                                 $params['ttdCustomerName'] = $detail->value;
@@ -2159,7 +2159,7 @@ class WorkOrder extends Controller
                         foreach ($action->details as $detail) {
                             if (strtoupper($detail->detail->name) == 'SIGNATURE INSTALLER') {
                                 $params['ttdFieldtech'] = $detail->value;
-                            } else if (strtoupper($detail->detail->name) == 'SIGNATURE CUSTOMER') {
+                            } else if (strtoupper($detail->detail->name) == 'SIGNATURE PIC') {
                                 $params['ttdCustomer'] = $detail->value;
                             } else if (strtoupper($detail->detail->name) == 'CUSTOMER NAME') {
                                 $params['ttdCustomerName'] = $detail->value;

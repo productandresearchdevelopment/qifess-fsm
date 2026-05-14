@@ -41,7 +41,7 @@
                     @endif
 
                     <p style="font-size: 9px; color: #FFF; margin-top: 10px">
-                        Development by Qifess
+                        Development by Qualita Indonesia
                         <br>
                         ©{{config('site.year')}} (version: {{config('site.version')}})<br>
                     </p>

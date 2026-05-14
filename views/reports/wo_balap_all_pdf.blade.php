@@ -236,7 +236,7 @@
       </td>
     </tr>
     <tr>
-      <td align="center">VIDEO/TV</td>
+      <td align="center">ONLINE</td>
       <td>
         <img style="height: 16px;" src="{{ public_path('images/uncheck.jpg') }}">
       </td>
@@ -266,13 +266,13 @@
       <td align="center">OTHERS/ SERIAL NUMBER</td>
     </tr>
     <tr>
-      <td>ONT</td>
+      <td>Smartbox</td>
       <td>{{ $ontType ?: '-' }}</td>
       <td></td>
       <td></td>
       <td> {{ $OntSN ?? '-' }} </td>
     </tr>
-    <tr>
+    <!-- <tr>
       <td>Drop Cable</td>
       <td>{{ $emWire ?: 0 }}m</td>
       <td></td>
@@ -285,9 +285,9 @@
       <td>-</td>
       <td></td>
       <td></td>
-    </tr>
+    </tr> -->
     <tr>
-      <td>Connector</td>
+      <td>Sensor</td>
       <td>-</td>
       <td>-</td>
       <td></td>
