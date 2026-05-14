@@ -24,7 +24,7 @@
 </style>
 
 <body>
-    <img src="{{ public_path('images/logo.png') }}" style="height: 68px; width: auto;">
+    <img src="{{ public_path('images/logoqifess.png') }}" style="height: 68px; width: auto;">
     <table style="border-bottom: 2px solid #ccc;">
         <tr>
             <td style="padding-bottom: 10px" valign="top">
@@ -149,10 +149,7 @@
                     @foreach ($action->status->details as $statusDetail)
                     @php
                         $status_ids = [1610, 2610, 3610, 4610, 6610];
-                        $isAllowedToShow =
-                            $statusDetail->type === 'hide' &&
-                            in_array($statusDetail->status_id, $status_ids) &&
-                            $statusDetail->name === 'Speed Test';
+                        $isAllowedToShow =false;
                     @endphp
                     @continue(!$isAllowedToShow && $statusDetail->type === 'hide')
                     @php
